@@ -9,7 +9,7 @@ import org.xblink.ClassLoaderSwitcher;
 import org.xblink.XType;
 import org.xblink.ImplClasses;
 import org.xblink.XMLObject;
-import org.xblink.annotations.XBlinkNotSerializeAndUnserialize;
+import org.xblink.annotations.XBlinkNotSerialize;
 
 /**
  * XML类对象反序列化操作类.
@@ -39,8 +39,8 @@ public class XMLObjectReader extends XMLObject {
 		for (Field field : fields) {
 			field.setAccessible(true);
 			// 是否进行过序列化
-			XBlinkNotSerializeAndUnserialize xNotSerialize = field
-					.getAnnotation(XBlinkNotSerializeAndUnserialize.class);
+			XBlinkNotSerialize xNotSerialize = field
+					.getAnnotation(XBlinkNotSerialize.class);
 			if (null != xNotSerialize) {
 				continue;
 			}

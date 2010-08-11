@@ -55,7 +55,7 @@ public class XList extends XType {
 			writer.writeStartElement(fieldName.toString());
 			// 列表内容
 			for (Object object : objList) {
-				new XMLObjectWriter().write(object, writer);
+				new XMLObjectWriter().write(object, writer, null);
 			}
 			// 后缀
 			writer.writeEndElement();

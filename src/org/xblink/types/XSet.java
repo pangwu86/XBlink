@@ -55,7 +55,7 @@ public class XSet extends XType {
 			writer.writeStartElement(fieldName.toString());
 			// Set集合内容
 			for (Object object : objSet) {
-				new XMLObjectWriter().write(object, writer);
+				new XMLObjectWriter().write(object, writer, null);
 			}
 			// 后缀
 			writer.writeEndElement();

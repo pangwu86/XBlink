@@ -31,13 +31,13 @@ public class XObject extends XType {
 
 	public void writeItem(Object obj, XMLWriterUtil writer) throws Exception {
 		for (Field field : fieldTypes) {
-			new XMLObjectWriter().write(field.get(obj), writer);
+			new XMLObjectWriter().write(field.get(obj), writer , field.getName());
 		}
 	}
 
 	public void readItem(Object obj, Node baseNode) throws Exception {
 		for (Field field : fieldTypes) {
-			Node tarNode = NodeUtil.getTarNode(baseNode, ClassUtil.getClassName(field.getType()).toString());
+			Node tarNode = NodeUtil.getTarNode(baseNode, field.getName());
 			if (null == tarNode) {
 				continue;
 			}

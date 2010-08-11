@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 
 import org.xblink.XMLObject;
 import org.xblink.XType;
-import org.xblink.annotations.XBlinkNotSerializeAndUnserialize;
+import org.xblink.annotations.XBlinkNotSerialize;
 import org.xblink.util.ClassUtil;
 
 /**
@@ -23,7 +23,7 @@ public class XMLObjectWriter extends XMLObject {
 	 * @param writer
 	 * @throws Exception
 	 */
-	public void write(Object obj, XMLWriterUtil writer) throws Exception {
+	public void write(Object obj, XMLWriterUtil writer, String objectName) throws Exception {
 		Field[] fields = obj.getClass().getDeclaredFields();
 		boolean isXBlinkClass = false;
 		// 将所有变量进行分类
@@ -34,8 +34,8 @@ public class XMLObjectWriter extends XMLObject {
 				continue;
 			}
 			// 是否需要序列化
-			XBlinkNotSerializeAndUnserialize xNotSerialize = field
-					.getAnnotation(XBlinkNotSerializeAndUnserialize.class);
+			XBlinkNotSerialize xNotSerialize = field
+					.getAnnotation(XBlinkNotSerialize.class);
 			if (null != xNotSerialize) {
 				continue;
 			}
@@ -49,7 +49,13 @@ public class XMLObjectWriter extends XMLObject {
 		}
 		// XBlink序列化对象
 		if (isXBlinkClass) {
-			writer.writeStartElement(ClassUtil.getClassName(obj).toString());
+			String startElement = null;
+			if (objectName != null) {
+				startElement = objectName;
+			} else {
+				startElement = ClassUtil.getClassName(obj).toString();
+			}
+			writer.writeStartElement(startElement);
 			// 开始进行分类处理
 			for (XType xtype : xTypes) {
 				if (xtype.isFieldsEmpty()) {

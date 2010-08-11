@@ -54,7 +54,7 @@ public class XArray extends XType {
 			writer.writeStartElement(fieldName.toString());
 			// 数组内容
 			for (Object object : objs) {
-				new XMLObjectWriter().write(object, writer);
+				new XMLObjectWriter().write(object, writer, null);
 			}
 			// 后缀
 			writer.writeEndElement();

@@ -106,7 +106,7 @@ public class XMLWriter implements Constants {
 			}
 			// 开始序列化
 			writer.writeStartDocument();
-			new XMLObjectWriter().write(obj, writer);
+			new XMLObjectWriter().write(obj, writer, null);
 			writer.writeEndDocument();
 		} finally {
 			if (out != null) {
