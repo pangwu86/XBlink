@@ -21,6 +21,7 @@ public class XMLObjectWriter extends XMLObject {
 	 * 
 	 * @param obj
 	 * @param writer
+	 * @param objectName
 	 * @throws Exception
 	 */
 	public void write(Object obj, XMLWriterUtil writer, String objectName) throws Exception {
@@ -34,8 +35,7 @@ public class XMLObjectWriter extends XMLObject {
 				continue;
 			}
 			// 是否需要序列化
-			XBlinkNotSerialize xNotSerialize = field
-					.getAnnotation(XBlinkNotSerialize.class);
+			XBlinkNotSerialize xNotSerialize = field.getAnnotation(XBlinkNotSerialize.class);
 			if (null != xNotSerialize) {
 				continue;
 			}

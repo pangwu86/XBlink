@@ -1,6 +1,8 @@
 package org.xblink;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+
+import java.io.File;
 
 import org.junit.Test;
 import org.xblink.model.person.Person;
@@ -25,6 +27,7 @@ public class PersonTest {
 		joe.setFax(fax);
 
 		XBlink.toXml("C:/joe.xml", joe);
+		assertTrue(new File("C:/joe.xml").exists());
 	}
 
 	@Test
