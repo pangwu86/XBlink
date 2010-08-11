@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.xblink.model.School.Grade;
-import org.xblink.model.School.School;
-import org.xblink.model.School.Student;
+import org.xblink.model.school.Grade;
+import org.xblink.model.school.School;
+import org.xblink.model.school.Student;
 
 public class SchoolFactory {
 

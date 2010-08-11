@@ -7,10 +7,10 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.xblink.model.SchoolFactory;
-import org.xblink.model.School.School;
+import org.xblink.model.school.School;
 import org.xblink.util.OsUtil;
 
-public class XBlinkTest {
+public class SchoolTest {
 
 	static String xmlPath;
 
@@ -42,14 +42,14 @@ public class XBlinkTest {
 	}
 
 	@Test
-	public void testToXML() throws Exception {
+	public void testToXml() throws Exception {
 		XBlink.toXml(xmlName, school);
 		File xml = new File(xmlName);
 		Assert.assertTrue(xml.exists());
 	}
 
 	@Test
-	public void testFromXML() throws Exception {
+	public void testFromXml() throws Exception {
 		School school = (School) XBlink.fromXml(xmlName, School.class);
 		Assert.assertTrue(school != null);
 		Assert.assertTrue(school.getGrades().size() == gruNum);
