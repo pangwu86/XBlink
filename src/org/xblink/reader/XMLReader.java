@@ -22,7 +22,7 @@ import org.xblink.XRoot;
 /**
  * XML反序列化工具类.
  */
-public class XMLReader implements Constants {
+public class XMLReader {
 
 	/** 实现类集合 */
 	private ImplClasses xmlImplClasses = new ImplClasses();
@@ -123,24 +123,24 @@ public class XMLReader implements Constants {
 			Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(in);
 			Node baseNode = document.getFirstChild();
 			String root = baseNode.getNodeName();
-			if (root.equals(ROOT)) {
+			if (root.equals(Constants.ROOT)) {
 				Node rootCollectionNode = baseNode.getFirstChild().getNextSibling();
 				String rootCollectionNodeName = rootCollectionNode.getNodeName();
 				XRoot xmlRoot = new XRoot();
 				// 判断是否是集合类型，是的话放入root对象中再进行序列化
-				if (rootCollectionNodeName.endsWith(ARRAY)) {
+				if (rootCollectionNodeName.endsWith(Constants.ARRAY)) {
 					Object[] result = ((XRoot) xmlObjectRead.read(xmlRoot, baseNode,
 							xmlImplClasses, classLoaderSwitcher)).getArray();
 					return result;
-				} else if (rootCollectionNodeName.endsWith(LIST)) {
+				} else if (rootCollectionNodeName.endsWith(Constants.LIST)) {
 					List<?> result = ((XRoot) xmlObjectRead.read(xmlRoot, baseNode, xmlImplClasses,
 							classLoaderSwitcher)).getList();
 					return result;
-				} else if (rootCollectionNodeName.endsWith(SET)) {
+				} else if (rootCollectionNodeName.endsWith(Constants.SET)) {
 					Set<?> result = ((XRoot) xmlObjectRead.read(xmlRoot, baseNode, xmlImplClasses,
 							classLoaderSwitcher)).getSet();
 					return result;
-				} else if (rootCollectionNodeName.endsWith(MAP)) {
+				} else if (rootCollectionNodeName.endsWith(Constants.MAP)) {
 					Map<?, ?> result = ((XRoot) xmlObjectRead.read(xmlRoot, baseNode,
 							xmlImplClasses, classLoaderSwitcher)).getMap();
 					return result;

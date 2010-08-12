@@ -16,28 +16,28 @@ import org.xblink.annotations.XBlinkAlias;
  * @author pangwu86(pangwu86@gmail.com)
  * 
  */
-public class ClassUtil implements Constants {
+public class ClassUtil{
 
 	/** 八种基本类型 */
 	static private HashMap<Class<?>, Integer> classMap = new HashMap<Class<?>, Integer>();
 
 	static {
-		classMap.put(byteClass, 1);
-		classMap.put(shortClass, 2);
-		classMap.put(intClass, 3);
-		classMap.put(floatClass, 4);
-		classMap.put(doubleClass, 5);
-		classMap.put(longClass, 6);
-		classMap.put(charClass, 7);
-		classMap.put(booleanClass, 8);
-		classMap.put(ByteClass, 9);
-		classMap.put(ShortClass, 9);
-		classMap.put(IntClass, 9);
-		classMap.put(FloatClass, 9);
-		classMap.put(DoubleClass, 9);
-		classMap.put(LongClass, 9);
-		classMap.put(CharClass, 9);
-		classMap.put(BooleanClass, 9);
+		classMap.put(Constants.byteClass, 1);
+		classMap.put(Constants.shortClass, 2);
+		classMap.put(Constants.intClass, 3);
+		classMap.put(Constants.floatClass, 4);
+		classMap.put(Constants.doubleClass, 5);
+		classMap.put(Constants.longClass, 6);
+		classMap.put(Constants.charClass, 7);
+		classMap.put(Constants.booleanClass, 8);
+		classMap.put(Constants.ByteClass, 9);
+		classMap.put(Constants.ShortClass, 9);
+		classMap.put(Constants.IntClass, 9);
+		classMap.put(Constants.FloatClass, 9);
+		classMap.put(Constants.DoubleClass, 9);
+		classMap.put(Constants.LongClass, 9);
+		classMap.put(Constants.CharClass, 9);
+		classMap.put(Constants.BooleanClass, 9);
 	}
 
 	/**
@@ -111,18 +111,18 @@ public class ClassUtil implements Constants {
 		Integer num = classMap.get(field.getGenericType());
 		// Class类型 其中包括Class和Interface
 		if (field.getType().getSimpleName().equals("Class")) {
-			if (value.startsWith(CLASS_PREFIX)) {
+			if (value.startsWith(Constants.CLASS_PREFIX)) {
 				try {
 					field.set(obj, classLoaderSwitcher.forName(new String(value.replaceAll(
-							CLASS_PREFIX, EMPTY_STRING))));
+							Constants.CLASS_PREFIX, Constants.EMPTY_STRING))));
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
 				}
 			}
-			if (value.startsWith(INTERFACE_PREFIX)) {
+			if (value.startsWith(Constants.INTERFACE_PREFIX)) {
 				try {
 					field.set(obj, classLoaderSwitcher.forName(new String(value.replaceAll(
-							INTERFACE_PREFIX, EMPTY_STRING))));
+							Constants.INTERFACE_PREFIX, Constants.EMPTY_STRING))));
 				} catch (ClassNotFoundException e) {
 					e.printStackTrace();
 				}
@@ -166,7 +166,7 @@ public class ClassUtil implements Constants {
 			field.setBoolean(obj, Boolean.parseBoolean(value));
 			break;
 		case 9:// 八种基本类型的包装类
-			if (field.getType().equals(CharClass)) {
+			if (field.getType().equals(Constants.CharClass)) {
 				field.set(
 						obj,
 						field.getType().getDeclaredConstructor(char.class)
@@ -218,21 +218,21 @@ public class ClassUtil implements Constants {
 	 */
 	public static Object getSimpleInstance(Class<?> clz) throws Exception {
 		try {
-			if (clz.equals(IntClass)) {
+			if (clz.equals(Constants.IntClass)) {
 				return new Integer(0);
-			} else if (clz.equals(FloatClass)) {
+			} else if (clz.equals(Constants.FloatClass)) {
 				return new Float(0);
-			} else if (clz.equals(DoubleClass)) {
+			} else if (clz.equals(Constants.DoubleClass)) {
 				return new Double(0);
-			} else if (clz.equals(ByteClass)) {
+			} else if (clz.equals(Constants.ByteClass)) {
 				return new Byte((byte) 0);
-			} else if (clz.equals(BooleanClass)) {
+			} else if (clz.equals(Constants.BooleanClass)) {
 				return new Boolean(true);
-			} else if (clz.equals(ShortClass)) {
+			} else if (clz.equals(Constants.ShortClass)) {
 				return new Short((short) 0);
-			} else if (clz.equals(LongClass)) {
+			} else if (clz.equals(Constants.LongClass)) {
 				return new Long(0);
-			} else if (clz.equals(CharClass)) {
+			} else if (clz.equals(Constants.CharClass)) {
 				return new Character((char) 0);
 			} else if (clz.equals(Class.class)) {
 				return clz;

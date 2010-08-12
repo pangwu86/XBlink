@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xblink.Constants;
 import org.xblink.XType;
 import org.xblink.annotations.XBlinkAlias;
 import org.xblink.annotations.XBlinkAsSet;
@@ -50,7 +51,7 @@ public class XSet extends XType {
 			// 前缀
 			boolean addSuffix = field.getAnnotation(XBlinkAlias.class) == null ? true : false;
 			if (addSuffix) {
-				fieldName.append(SET);
+				fieldName.append(Constants.SET);
 			}
 			writer.writeStartElement(fieldName.toString());
 			// Set集合内容
@@ -71,7 +72,7 @@ public class XSet extends XType {
 			StringBuffer fieldName = ClassUtil.getFieldName(field);
 			boolean addSuffix = field.getAnnotation(XBlinkAlias.class) == null ? true : false;
 			if (addSuffix) {
-				fieldName.append(SET);
+				fieldName.append(Constants.SET);
 			}
 			Node tarNode = NodeUtil.getTarNode(baseNode, fieldName.toString());
 			if (null == tarNode) {

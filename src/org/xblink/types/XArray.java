@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xblink.Constants;
 import org.xblink.XType;
 import org.xblink.annotations.XBlinkAlias;
 import org.xblink.annotations.XBlinkAsArray;
@@ -49,7 +50,7 @@ public class XArray extends XType {
 			// 前缀
 			boolean addSuffix = field.getAnnotation(XBlinkAlias.class) == null ? true : false;
 			if (addSuffix) {
-				fieldName.append(ARRAY);
+				fieldName.append(Constants.ARRAY);
 			}
 			writer.writeStartElement(fieldName.toString());
 			// 数组内容
@@ -71,7 +72,7 @@ public class XArray extends XType {
 			StringBuffer fieldName = ClassUtil.getFieldName(field);
 			boolean addSuffix = field.getAnnotation(XBlinkAlias.class) == null ? true : false;
 			if (addSuffix) {
-				fieldName.append(ARRAY);
+				fieldName.append(Constants.ARRAY);
 			}
 			Node tarNode = NodeUtil.getTarNode(baseNode, fieldName.toString());
 			if (null == tarNode) {
@@ -79,7 +80,7 @@ public class XArray extends XType {
 			}
 			Class<?> fieldClass;
 			// 特殊情况root的array
-			if (tarNode.getNodeName().equals(ROOT + ARRAY)) {
+			if (tarNode.getNodeName().equals(Constants.ROOT + Constants.ARRAY)) {
 				fieldClass = getImplClass().getNewInstanceClass();
 			} else {
 				fieldClass = field.getType().getComponentType();

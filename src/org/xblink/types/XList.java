@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xblink.Constants;
 import org.xblink.XType;
 import org.xblink.annotations.XBlinkAlias;
 import org.xblink.annotations.XBlinkAsList;
@@ -50,7 +51,7 @@ public class XList extends XType {
 			// 前缀
 			boolean addSuffix = field.getAnnotation(XBlinkAlias.class) == null ? true : false;
 			if (addSuffix) {
-				fieldName.append(LIST);
+				fieldName.append(Constants.LIST);
 			}
 			writer.writeStartElement(fieldName.toString());
 			// 列表内容
@@ -71,7 +72,7 @@ public class XList extends XType {
 			StringBuffer fieldName = ClassUtil.getFieldName(field);
 			boolean addSuffix = field.getAnnotation(XBlinkAlias.class) == null ? true : false;
 			if (addSuffix) {
-				fieldName.append(LIST);
+				fieldName.append(Constants.LIST);
 			}
 			Node tarNode = NodeUtil.getTarNode(baseNode, fieldName.toString());
 			if (null == tarNode) {

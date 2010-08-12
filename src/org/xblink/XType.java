@@ -17,7 +17,7 @@ import org.xblink.writer.XMLWriterUtil;
  * @author pangwu86(pangwu86@gmail.com)
  * 
  */
-public abstract class XType implements Constants {
+public abstract class XType{
 
 	/** 类加载器切换器 */
 	protected ClassLoaderSwitcher classLoaderSwitcher;
@@ -155,16 +155,16 @@ public abstract class XType implements Constants {
 			type = ((ParameterizedType) gtype).getActualTypeArguments()[0];
 		}
 		if (type != null) {
-			if (GENERICS.equals(type.toString())) {
+			if (Constants.GENERICS.equals(type.toString())) {
 				// TODO 为了最外层的实现类 root层使用
 				fieldInnerClass = getImplClass().getNewInstanceClass();
 			} else {
 				if (type instanceof ParameterizedType) {
 					Type innerType = null;
 					innerType = ((ParameterizedType) type).getActualTypeArguments()[0];
-					if (innerType != null && GENERICS.equals(innerType.toString())) {
+					if (innerType != null && Constants.GENERICS.equals(innerType.toString())) {
 						if (type.toString().startsWith(
-								Class.class.toString().replaceAll(CLASS_PREFIX, EMPTY_STRING))) {
+								Class.class.toString().replaceAll(Constants.CLASS_PREFIX, Constants.EMPTY_STRING))) {
 							fieldInnerClass = Class.class;
 						} else {
 							// FIXME

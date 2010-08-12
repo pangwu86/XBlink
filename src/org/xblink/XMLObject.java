@@ -3,6 +3,8 @@ package org.xblink;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.xblink.Constants;
+
 import org.xblink.types.XArray;
 import org.xblink.types.XAttribute;
 import org.xblink.types.XList;
@@ -18,7 +20,7 @@ import org.xblink.types.XElement;
  * @author pangwu86(pangwu86@gmail.com)
  * 
  */
-public abstract class XMLObject implements Constants {
+public abstract class XMLObject {
 
 	/** 字段各种类型列表 */
 	protected List<XType> xTypes = new ArrayList<XType>();

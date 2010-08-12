@@ -6,6 +6,7 @@ import java.lang.reflect.Field;
 import org.w3c.dom.Node;
 
 import org.xblink.ClassLoaderSwitcher;
+import org.xblink.Constants;
 import org.xblink.XType;
 import org.xblink.ImplClasses;
 import org.xblink.XMLObject;
@@ -62,14 +63,14 @@ public class XMLObjectReader extends XMLObject {
 				xtype.readItem(obj, baseNode);
 			}
 		} else {
-			Node att = baseNode.getAttributes().getNamedItem(OBJ_VALUE);
+			Node att = baseNode.getAttributes().getNamedItem(Constants.OBJ_VALUE);
 			String xPathValue = att == null ? null : att.getNodeValue();
 			if (null == xPathValue || xPathValue.length() == 0) {
 				obj = null;
 			} else {
-				if (xPathValue.startsWith(CLASS_PREFIX)) {
+				if (xPathValue.startsWith(Constants.CLASS_PREFIX)) {
 					obj = classLoaderSwitcher.forName(new String(xPathValue.replaceAll(
-							CLASS_PREFIX, EMPTY_STRING)));
+							Constants.CLASS_PREFIX, Constants.EMPTY_STRING)));
 				} else {
 					Constructor<?> constructor = obj.getClass()
 							.getDeclaredConstructor(String.class);

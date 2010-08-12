@@ -21,7 +21,7 @@ import org.xblink.XRoot;
  * @author pangwu86(pangwu86@gmail.com)
  * 
  */
-public class XMLWriter implements Constants {
+public class XMLWriter {
 
 	/**
 	 * 

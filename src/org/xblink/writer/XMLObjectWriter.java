@@ -2,6 +2,7 @@ package org.xblink.writer;
 
 import java.lang.reflect.Field;
 
+import org.xblink.Constants;
 import org.xblink.XMLObject;
 import org.xblink.XType;
 import org.xblink.annotations.XBlinkNotSerialize;
@@ -64,9 +65,9 @@ public class XMLObjectWriter extends XMLObject {
 				xtype.writeItem(obj, writer);
 			}
 		} else {
-			writer.writeStartElement(obj.getClass().toString().replaceAll(SPACE, UNDERLINE));
+			writer.writeStartElement(obj.getClass().toString().replaceAll(Constants.SPACE, Constants.UNDERLINE));
 			// 调用toString
-			writer.writeAttribute(OBJ_VALUE, obj.toString());
+			writer.writeAttribute(Constants.OBJ_VALUE, obj.toString());
 		}
 		writer.writeEndElement();
 	}

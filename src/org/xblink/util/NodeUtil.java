@@ -14,7 +14,7 @@ import org.xblink.Constants;
  * @author geor.wupeiwen
  * 
  */
-public class NodeUtil implements Constants {
+public class NodeUtil {
 
 	/**
 	 * 获得基本节点.
@@ -48,15 +48,15 @@ public class NodeUtil implements Constants {
 			throws Exception {
 		Object obj = null;
 		Class<?> objClass = classLoaderSwitcher.forName(new String(baseNode.getNodeName()
-				.replaceAll(CLASS_AND_PREFIX, EMPTY_STRING)));
-		Node att = baseNode.getAttributes().getNamedItem(OBJ_VALUE);
+				.replaceAll(Constants.CLASS_AND_PREFIX, Constants.EMPTY_STRING)));
+		Node att = baseNode.getAttributes().getNamedItem(Constants.OBJ_VALUE);
 		String xPathValue = att == null ? null : att.getNodeValue();
 		if (null == xPathValue || xPathValue.length() == 0) {
 			obj = null;
 		} else {
-			if (xPathValue.startsWith(CLASS_PREFIX)) {
-				obj = classLoaderSwitcher.forName(new String(xPathValue.replaceAll(CLASS_PREFIX,
-						EMPTY_STRING)));
+			if (xPathValue.startsWith(Constants.CLASS_PREFIX)) {
+				obj = classLoaderSwitcher.forName(new String(xPathValue.replaceAll(Constants.CLASS_PREFIX,
+				                                                                   Constants.EMPTY_STRING)));
 			} else {
 				Constructor<?> constructor = objClass.getDeclaredConstructor(String.class);
 				if (constructor != null) {
