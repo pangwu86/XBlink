@@ -5,6 +5,7 @@ package org.xblink;
  * 
  * 
  * @author pangwu86(pangwu86@gmail.com)
+ * @author E-Hunter(xjf1986518@gmail.com)
  * 
  */
 public final class Constants {
