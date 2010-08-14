@@ -32,7 +32,7 @@ public class WatchTimer {
 
 	public String getTimer() {
 		long span = getSpan();
-		return span / 1000 + " 微秒, " + span / 1000000 + " 毫秒";
+		return span / 1000000000 + " 秒, " + span / 1000000 + " 毫秒, " + span / 1000 + " 微秒.";
 	}
 
 	/**
@@ -51,11 +51,12 @@ public class WatchTimer {
 	 * @return
 	 */
 	public float getSpeedKPerSecond() {
-		return (float) (bytes / 1024) / (float) (getSpan() / (float)(1000 * 1000 * 1000));
+		return (float) (bytes / 1024) / (float) (getSpan() / (float) (1000 * 1000 * 1000));
 	}
-	
+
 	/**
 	 * 每秒M字节
+	 * 
 	 * @return
 	 */
 	public float getSpeedMPerSecond() {
