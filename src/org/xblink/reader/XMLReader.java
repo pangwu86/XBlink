@@ -17,6 +17,7 @@ import org.w3c.dom.Node;
 import org.xblink.ClassLoaderSwitcher;
 import org.xblink.Constants;
 import org.xblink.ImplClasses;
+import org.xblink.XMLObject;
 import org.xblink.XRoot;
 
 /**
@@ -148,6 +149,8 @@ public class XMLReader {
 			}
 			Object result = xmlObjectRead.read(getInstance(clz), baseNode, xmlImplClasses,
 					classLoaderSwitcher);
+			// 去掉XRoot的信息
+			XMLObject.cleanXRoot();
 			return result;
 		} finally {
 			if (null != in) {

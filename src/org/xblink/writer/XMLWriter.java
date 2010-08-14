@@ -12,7 +12,7 @@ import java.util.Set;
 
 import javax.xml.stream.XMLStreamException;
 
-import org.xblink.Constants;
+import org.xblink.XMLObject;
 import org.xblink.XRoot;
 
 /**
@@ -106,8 +106,11 @@ public class XMLWriter {
 			}
 			// 开始序列化
 			writer.writeStartDocument();
-			new XMLObjectWriter().write(obj, writer, null);
+			XMLObjectWriter xmlObjectWriter = new XMLObjectWriter();
+			xmlObjectWriter.write(obj, writer, null);
 			writer.writeEndDocument();
+			// 去掉XRoot的信息
+			XMLObject.cleanXRoot();
 		} finally {
 			if (out != null) {
 				out.close();

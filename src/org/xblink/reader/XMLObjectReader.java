@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 
 import org.w3c.dom.Node;
 
+import org.xblink.AnalysisedObject;
 import org.xblink.ClassLoaderSwitcher;
 import org.xblink.Constants;
 import org.xblink.XType;
@@ -33,29 +34,39 @@ public class XMLObjectReader extends XMLObject {
 	 */
 	public Object read(Object obj, Node baseNode, ImplClasses xmlImplClasses,
 			ClassLoaderSwitcher clzLoaderSwitcher) throws Exception {
-		this.classLoaderSwitcher = clzLoaderSwitcher;
-		Field[] fields = obj.getClass().getDeclaredFields();
-		// 将所有变量进行分类
-		boolean isXBlinkClass = false;
-		for (Field field : fields) {
-			field.setAccessible(true);
-			// 是否进行过序列化
-			XBlinkNotSerialize xNotSerialize = field
-					.getAnnotation(XBlinkNotSerialize.class);
-			if (null != xNotSerialize) {
-				continue;
-			}
-			for (XType xtype : xTypes) {
-				if (xtype.getAnnotation(field)) {
-					xtype.setClassLoaderSwitcher(classLoaderSwitcher);
-					isXBlinkClass = true;
-					break;
+		// 记录解析过的对象
+		AnalysisedObject analysisedObject;
+		String className = obj.getClass().getName();
+		analysisedObject = xmlReadObjects.get(className);
+		if (null == analysisedObject) {
+			analysisedObject = new AnalysisedObject();
+			analysisedObject.setXmlObject(this);
+			xmlReadObjects.put(className, analysisedObject);
+			this.classLoaderSwitcher = clzLoaderSwitcher;
+			Field[] fields = obj.getClass().getDeclaredFields();
+			// 将所有变量进行分类
+			boolean isXBlinkClass = false;
+			for (Field field : fields) {
+				field.setAccessible(true);
+				// 是否进行过序列化
+				XBlinkNotSerialize xNotSerialize = field.getAnnotation(XBlinkNotSerialize.class);
+				if (null != xNotSerialize) {
+					continue;
+				}
+				init();
+				for (XType xtype : xTypes) {
+					if (xtype.getAnnotation(field)) {
+						xtype.setClassLoaderSwitcher(classLoaderSwitcher);
+						isXBlinkClass = true;
+						break;
+					}
 				}
 			}
+			analysisedObject.setXBlinkClass(isXBlinkClass);
 		}
-		if (isXBlinkClass) {
+		if (analysisedObject.isXBlinkClass()) {
 			// 开始进行分类处理
-			for (XType xtype : xTypes) {
+			for (XType xtype : analysisedObject.getXmlObject().getXTypes()) {
 				if (xtype.isFieldsEmpty()) {
 					continue;
 				}

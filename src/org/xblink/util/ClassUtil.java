@@ -16,7 +16,10 @@ import org.xblink.annotations.XBlinkAlias;
  * @author pangwu86(pangwu86@gmail.com)
  * 
  */
-public class ClassUtil{
+public class ClassUtil {
+
+	/** 记录所有解析过的ClassName,FiledName **/
+	static private HashMap<String, StringBuffer> names = new HashMap<String, StringBuffer>();
 
 	/** 八种基本类型 */
 	static private HashMap<Class<?>, Integer> classMap = new HashMap<Class<?>, Integer>();
@@ -43,21 +46,15 @@ public class ClassUtil{
 	/**
 	 * 获得类名称(别名).
 	 * 
-	 * @param obj
-	 * @return 类名称(别名)
-	 */
-	public static StringBuffer getClassName(Object obj) {
-		XBlinkAlias classNameAlias = (XBlinkAlias) obj.getClass().getAnnotation(XBlinkAlias.class);
-		return getClassName(classNameAlias, obj.getClass());
-	}
-
-	/**
-	 * 获得类名称(别名).
-	 * 
 	 * @param clz
 	 * @return 类名称(别名)
 	 */
 	public static StringBuffer getClassName(Class<?> clz) {
+		// 判断是否解析过
+		StringBuffer cn = names.get(clz.getName());
+		if (null != cn) {
+			return cn;
+		}
 		XBlinkAlias classNameAlias = (XBlinkAlias) clz.getAnnotation(XBlinkAlias.class);
 		return getClassName(classNameAlias, clz);
 	}
@@ -76,6 +73,8 @@ public class ClassUtil{
 		} else {
 			className.append(clz.getSimpleName().toLowerCase());
 		}
+		// 记录ClassName
+		names.put(clz.getName(), className);
 		return className;
 	}
 
@@ -133,13 +132,13 @@ public class ClassUtil{
 		if (null == num) {
 			// TODO 这里以后对各种对象进行解析，然后实例化
 			Constructor<?> constructor = field.getType().getDeclaredConstructor(String.class);
-			if(constructor != null){
+			if (constructor != null) {
 				field.set(obj, constructor.newInstance(value));
 				return;
 			}
 			throw new Exception("没有找到 " + field.getType().getName() + " 的合适的构造函数，无法进行賦值.");
 		}
-		//  八种基本类型
+		// 八种基本类型
 		switch (num) {
 		case 1:// byteClass
 			field.setByte(obj, Byte.parseByte(value));
