@@ -1,15 +1,22 @@
-package org.xblink.model.school;
+package org.xblinkvsxstream.model.school;
 
+import org.xblink.annotations.XBlinkAlias;
 import org.xblink.annotations.XBlinkAsArray;
 import org.xblink.annotations.XBlinkAsAttribute;
 
-public class Grade {
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
-	@XBlinkAsAttribute
-	private long level;
+@XBlinkAlias("grade")
+@XStreamAlias("grade")
+public class Grade {
 
 	@XBlinkAsArray
 	private Student[] students;
+
+	@XBlinkAsAttribute
+	@XStreamAsAttribute
+	private long level;
 
 	public long getLevel() {
 		return level;

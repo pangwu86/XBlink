@@ -1,13 +1,14 @@
-package org.xblink.model;
+package org.xblinkvsxstream.model;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.xblink.model.school.Grade;
-import org.xblink.model.school.School;
-import org.xblink.model.school.Student;
+import org.xblinkvsxstream.model.school.Grade;
+import org.xblinkvsxstream.model.school.School;
+import org.xblinkvsxstream.model.school.Student;
+
 
 public class SchoolFactory {
 

@@ -1,24 +1,36 @@
-package org.xblink.model.school;
+package org.xblinkvsxstream.model.school;
 
 import java.util.Date;
 import java.util.List;
 
+import org.xblink.annotations.XBlinkAlias;
 import org.xblink.annotations.XBlinkAsAttribute;
 import org.xblink.annotations.XBlinkAsList;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
+
+@XBlinkAlias("school")
+@XStreamAlias("school")
 public class School {
 
 	@XBlinkAsAttribute
+	@XStreamAsAttribute
 	private String schoolName;
 
+	@XBlinkAsList
+	@XStreamImplicit
+	private List<Grade> grades;
+	
 	@XBlinkAsAttribute
+	@XStreamAsAttribute
 	private Date build;
 
 	@XBlinkAsAttribute
+	@XStreamAsAttribute
 	private int area;
 
-	@XBlinkAsList
-	private List<Grade> grades;
 
 	public int getArea() {
 		return area;
