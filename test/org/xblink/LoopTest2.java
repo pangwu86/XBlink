@@ -5,49 +5,59 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.xblink.model.loop.ObjectA;
-import org.xblink.model.loop.ObjectB;
+import org.xblink.model.loop2.ObjectA;
+import org.xblink.model.loop2.ObjectB;
 import org.xblink.util.WatchTimer;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.XppDriver;
 
-public class LoopTest {
+public class LoopTest2 {
 
 	private ObjectA objectA;
 
-	private ObjectB objectB;
+	private ObjectB objectB1;
+
+	private ObjectB objectB2;
+
+	private ObjectB objectB3;
 
 	private ObjectA objectC;
 
-	private ObjectB objectD;
-
 	@Before
 	public void setUp() {
-
 		objectA = new ObjectA();
-		objectB = new ObjectB();
 		objectC = new ObjectA();
-		objectD = new ObjectB();
+		objectB1 = new ObjectB();
+		objectB2 = new ObjectB();
+		objectB3 = new ObjectB();
 
-		objectA.setObjectB(objectB);
-		objectB.setObjectA(objectC);
-		objectC.setObjectB(objectD);
-		objectD.setObjectA(objectA);
+		List<ObjectB> objectBs = new ArrayList<ObjectB>();
+		objectA.setObjectBs(objectBs);
 
-		objectA.setStrA("a");
-		objectB.setStrB("b");
-		objectC.setStrA("c");
-		objectD.setStrB("d");
+		objectBs.add(objectB1);
+		objectBs.add(objectB2);
+		objectBs.add(objectB3);
 
+		objectB1.setObjectA(objectC);
+		objectB2.setObjectA(objectC);
+		objectB3.setObjectA(objectC);
+
+		objectB1.setStrB("b1");
+		objectB2.setStrB("b2");
+		objectB3.setStrB("b3");
+
+		objectC.setObjectBs(objectBs);
 	}
 
 	@Test
-	public void testLoop() throws Exception {
-		System.out.println("***testLoop***");
+	public void testLoop2() throws Exception {
+		System.out.println("***testLoop2***");
 		WatchTimer timer = new WatchTimer();
 		// XStream
 		System.out.println("XStream:");

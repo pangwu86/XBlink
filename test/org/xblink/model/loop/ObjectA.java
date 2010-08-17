@@ -5,15 +5,17 @@ import org.xblink.annotations.XBlinkAsAttribute;
 import org.xblink.annotations.XBlinkAsObject;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
-@XBlinkAlias("object_A")
-@XStreamAlias("object_A")
+@XBlinkAlias("objectA")
+@XStreamAlias("objectA")
 public class ObjectA {
 
 	@XBlinkAsObject
 	private ObjectB objectB;
 
 	@XBlinkAsAttribute
+	@XStreamAsAttribute
 	private String strA;
 
 	public String getStrA() {
