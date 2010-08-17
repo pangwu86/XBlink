@@ -26,6 +26,7 @@ public final class Constants {
 	public final static String ROOT = "root";
 	public final static String GENERICS = "?";
 	public final static String OBJ_VALUE = "obj-value";
+	public final static String OBJ_REFERENCE = "obj-reference";
 	public final static String SPACE = " ";
 	public final static String UNDERLINE = "_";
 

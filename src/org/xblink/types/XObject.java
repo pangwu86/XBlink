@@ -1,8 +1,10 @@
 package org.xblink.types;
 
 import java.lang.reflect.Field;
+import java.util.Map;
 
 import org.w3c.dom.Node;
+import org.xblink.ReferenceObject;
 import org.xblink.XType;
 import org.xblink.annotations.XBlinkAsObject;
 import org.xblink.reader.XMLObjectReader;
@@ -29,13 +31,18 @@ public class XObject extends XType {
 		return false;
 	}
 
-	public void writeItem(Object obj, XMLWriterUtil writer) throws Exception {
+	public void writeItem(Object obj, XMLWriterUtil writer,
+			Map<Integer, ReferenceObject> referenceObjects) throws Exception {
 		for (Field field : fieldTypes) {
-			new XMLObjectWriter().write(field.get(obj), writer , field.getName());
+			if (isFieldEmpty(field, obj)) {
+				continue;
+			}
+			new XMLObjectWriter().write(field.get(obj), writer, field.getName(), referenceObjects);
 		}
 	}
 
-	public void readItem(Object obj, Node baseNode) throws Exception {
+	public void readItem(Object obj, Node baseNode, Map<Integer, ReferenceObject> referenceObjects)
+			throws Exception {
 		for (Field field : fieldTypes) {
 			Node tarNode = NodeUtil.getTarNode(baseNode, field.getName());
 			if (null == tarNode) {
@@ -43,7 +50,7 @@ public class XObject extends XType {
 			}
 			Object value = new XMLObjectReader().read(
 					ClassUtil.getInstance(field.getType(), getImplClass()), tarNode,
-					getImplClass(), getClassLoaderSwitcher());
+					getImplClass(), getClassLoaderSwitcher(), referenceObjects);
 			field.set(obj, value);
 		}
 	}

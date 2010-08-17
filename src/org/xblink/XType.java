@@ -5,6 +5,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.w3c.dom.Node;
 import org.xblink.writer.XMLWriterUtil;
@@ -17,7 +18,7 @@ import org.xblink.writer.XMLWriterUtil;
  * @author pangwu86(pangwu86@gmail.com)
  * 
  */
-public abstract class XType{
+public abstract class XType {
 
 	/** 类加载器切换器 */
 	protected ClassLoaderSwitcher classLoaderSwitcher;
@@ -43,7 +44,8 @@ public abstract class XType{
 	 * @param obj
 	 * @throws Exception
 	 */
-	public abstract void writeItem(Object obj, XMLWriterUtil writer) throws Exception;
+	public abstract void writeItem(Object obj, XMLWriterUtil writer,
+			Map<Integer, ReferenceObject> referenceObjects) throws Exception;
 
 	/**
 	 * 读项目.
@@ -52,7 +54,8 @@ public abstract class XType{
 	 * @param baseNode
 	 * @throws Exception
 	 */
-	public abstract void readItem(Object obj, Node baseNode) throws Exception;
+	public abstract void readItem(Object obj, Node baseNode,
+			Map<Integer, ReferenceObject> referenceObjects) throws Exception;
 
 	/**
 	 * 判断字段集合是否为空.
@@ -100,6 +103,24 @@ public abstract class XType{
 	 */
 	public ImplClasses getImplClass() {
 		return xmlImplClasses;
+	}
+
+	/**
+	 * 该字段是否为空.
+	 * 
+	 * @param field
+	 * @param obj
+	 * @return
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
+	public boolean isFieldEmpty(Field field, Object obj) throws IllegalArgumentException,
+			IllegalAccessException {
+		// 没有数据情况下不进行序列化处理
+		if (null == field.get(obj)) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -164,7 +185,8 @@ public abstract class XType{
 					innerType = ((ParameterizedType) type).getActualTypeArguments()[0];
 					if (innerType != null && Constants.GENERICS.equals(innerType.toString())) {
 						if (type.toString().startsWith(
-								Class.class.toString().replaceAll(Constants.CLASS_PREFIX, Constants.EMPTY_STRING))) {
+								Class.class.toString().replaceAll(Constants.CLASS_PREFIX,
+										Constants.EMPTY_STRING))) {
 							fieldInnerClass = Class.class;
 						} else {
 							// FIXME

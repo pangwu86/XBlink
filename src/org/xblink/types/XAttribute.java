@@ -1,11 +1,14 @@
 package org.xblink.types;
 
 import java.lang.reflect.Field;
+import java.util.Map;
 
 import org.w3c.dom.Node;
+import org.xblink.ReferenceObject;
 import org.xblink.XType;
 import org.xblink.annotations.XBlinkAsAttribute;
 import org.xblink.util.ClassUtil;
+import org.xblink.util.NodeUtil;
 import org.xblink.writer.XMLWriterUtil;
 
 /**
@@ -26,16 +29,21 @@ public class XAttribute extends XType {
 		return false;
 	}
 
-	public void writeItem(Object obj, XMLWriterUtil writer) throws Exception {
+	public void writeItem(Object obj, XMLWriterUtil writer,
+			Map<Integer, ReferenceObject> referenceObjects) throws Exception {
 		for (Field field : fieldTypes) {
+			if (isFieldEmpty(field, obj)) {
+				continue;
+			}
 			writer.writeAttribute(ClassUtil.getFieldName(field).toString(), field.get(obj)
 					.toString());
 		}
 	}
 
-	public void readItem(Object obj, Node baseNode) throws Exception {
+	public void readItem(Object obj, Node baseNode, Map<Integer, ReferenceObject> referenceObjects)
+			throws Exception {
 		for (Field field : fieldTypes) {
-			String xPathValue = getAttributeValue(baseNode, ClassUtil.getFieldName(field)
+			String xPathValue = NodeUtil.getAttributeValue(baseNode, ClassUtil.getFieldName(field)
 					.toString());
 			if (null == xPathValue || xPathValue.length() == 0) {
 				field.set(obj, null);
@@ -45,16 +53,4 @@ public class XAttribute extends XType {
 		}
 	}
 
-	/**
-	 * 
-	 * @param baseNode
-	 *            Document中的某个节点
-	 * @param xpath
-	 *            基本字段的位置信息
-	 * @return
-	 */
-	private String getAttributeValue(Node baseNode, String xpath) {
-		Node att = baseNode.getAttributes().getNamedItem(xpath);
-		return att == null ? null : att.getNodeValue();
-	}
 }

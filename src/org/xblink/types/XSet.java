@@ -3,11 +3,13 @@ package org.xblink.types;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xblink.Constants;
+import org.xblink.ReferenceObject;
 import org.xblink.XType;
 import org.xblink.annotations.XBlinkAlias;
 import org.xblink.annotations.XBlinkAsSet;
@@ -35,8 +37,12 @@ public class XSet extends XType {
 		return false;
 	}
 
-	public void writeItem(Object obj, XMLWriterUtil writer) throws Exception {
+	public void writeItem(Object obj, XMLWriterUtil writer,
+			Map<Integer, ReferenceObject> referenceObjects) throws Exception {
 		for (Field field : fieldTypes) {
+			if (isFieldEmpty(field, obj)) {
+				continue;
+			}
 			// 判断是Set集合吗
 			if (!Set.class.isAssignableFrom(field.getType())) {
 				throw new Exception("字段：" + field.getName() + " 不是一个列表.");
@@ -56,14 +62,15 @@ public class XSet extends XType {
 			writer.writeStartElement(fieldName.toString());
 			// Set集合内容
 			for (Object object : objSet) {
-				new XMLObjectWriter().write(object, writer, null);
+				new XMLObjectWriter().write(object, writer, null, referenceObjects);
 			}
 			// 后缀
 			writer.writeEndElement();
 		}
 	}
 
-	public void readItem(Object obj, Node baseNode) throws Exception {
+	public void readItem(Object obj, Node baseNode, Map<Integer, ReferenceObject> referenceObjects)
+			throws Exception {
 		for (Field field : fieldTypes) {
 			// 判断是列表吗
 			if (!Set.class.isAssignableFrom(field.getType())) {
@@ -83,7 +90,8 @@ public class XSet extends XType {
 			field.set(
 					obj,
 					traceXPathSet(tarNode, classType.getFieldClass(),
-							classType.getFieldInnerClass(), classType.getFieldInnerClassType()));
+							classType.getFieldInnerClass(), classType.getFieldInnerClassType(),
+							referenceObjects));
 		}
 	}
 
@@ -97,7 +105,8 @@ public class XSet extends XType {
 	 * @throws Exception
 	 */
 	private Set traceXPathSet(Node baseNode, Class fieldClass, Class fieldInnerClass,
-			Type fieldInnerClassType) throws Exception {
+			Type fieldInnerClassType, Map<Integer, ReferenceObject> referenceObjects)
+			throws Exception {
 		boolean isInterface = fieldClass.isInterface() ? true : false;
 		NodeList nodeList = baseNode.getChildNodes();
 		int nodeListLength = nodeList.getLength();
@@ -120,7 +129,8 @@ public class XSet extends XType {
 			} else {
 				result.add(new XMLObjectReader().read(
 						ClassUtil.getInstance(fieldInnerClass, getImplClass()),
-						nodeList.item(idx * 2 + 1), getImplClass(), getClassLoaderSwitcher()));
+						nodeList.item(idx * 2 + 1), getImplClass(), getClassLoaderSwitcher(),
+						referenceObjects));
 			}
 		}
 		return result;

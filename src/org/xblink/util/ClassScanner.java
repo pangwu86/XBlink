@@ -20,7 +20,7 @@ public class ClassScanner {
 		String basePath = Package.class.getResource("/").getPath().substring(1);// 去除开头的‘\’
 		StringBuffer path = new StringBuffer(basePath);
 		System.out.println("获得参考路径：" + watchTimer.getTimer());
-		watchTimer = new WatchTimer();
+		watchTimer.reset();
 		for (String _packageName : packageNames) {
 			path.delete(basePath.length(), path.length());
 			this.packageName = _packageName + ".";

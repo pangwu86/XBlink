@@ -17,6 +17,7 @@ import org.w3c.dom.Node;
 import org.xblink.ClassLoaderSwitcher;
 import org.xblink.Constants;
 import org.xblink.ImplClasses;
+import org.xblink.ReferenceObject;
 import org.xblink.XMLObject;
 import org.xblink.XRoot;
 
@@ -56,7 +57,7 @@ public class XMLReader {
 	public Object readXML(String filePath, Class<?> clz, Class<?>[] implClasses,
 			ClassLoader classLoader) throws FileNotFoundException {
 		try {
-			return reading(new BufferedInputStream(new FileInputStream(new File(filePath))), clz,
+			return readStart(new BufferedInputStream(new FileInputStream(new File(filePath))), clz,
 					implClasses, classLoader);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -90,7 +91,7 @@ public class XMLReader {
 	public Object readXML(InputStream inputStream, Class<?> clz, Class<?>[] implClasses,
 			ClassLoader classLoader) {
 		try {
-			return reading(inputStream, clz, implClasses, classLoader);
+			return readStart(inputStream, clz, implClasses, classLoader);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -108,8 +109,10 @@ public class XMLReader {
 	 * @throws Exception
 	 */
 
-	private Object reading(InputStream in, Class<?> clz, Class<?>[] implClasses,
+	private Object readStart(InputStream in, Class<?> clz, Class<?>[] implClasses,
 			ClassLoader classLoader) throws Exception {
+		// 解析过的对象，方便其他对象引用
+		Map<Integer, ReferenceObject> referenceObjects = new HashMap<Integer, ReferenceObject>();
 		// 接口实现类集合初始化
 		xmlImplClasses.setNewInstanceClass(clz);
 		xmlImplClasses.setImplClasses(implClasses);
@@ -131,24 +134,24 @@ public class XMLReader {
 				// 判断是否是集合类型，是的话放入root对象中再进行序列化
 				if (rootCollectionNodeName.endsWith(Constants.ARRAY)) {
 					Object[] result = ((XRoot) xmlObjectRead.read(xmlRoot, baseNode,
-							xmlImplClasses, classLoaderSwitcher)).getArray();
+							xmlImplClasses, classLoaderSwitcher, referenceObjects)).getArray();
 					return result;
 				} else if (rootCollectionNodeName.endsWith(Constants.LIST)) {
 					List<?> result = ((XRoot) xmlObjectRead.read(xmlRoot, baseNode, xmlImplClasses,
-							classLoaderSwitcher)).getList();
+							classLoaderSwitcher, referenceObjects)).getList();
 					return result;
 				} else if (rootCollectionNodeName.endsWith(Constants.SET)) {
 					Set<?> result = ((XRoot) xmlObjectRead.read(xmlRoot, baseNode, xmlImplClasses,
-							classLoaderSwitcher)).getSet();
+							classLoaderSwitcher, referenceObjects)).getSet();
 					return result;
 				} else if (rootCollectionNodeName.endsWith(Constants.MAP)) {
 					Map<?, ?> result = ((XRoot) xmlObjectRead.read(xmlRoot, baseNode,
-							xmlImplClasses, classLoaderSwitcher)).getMap();
+							xmlImplClasses, classLoaderSwitcher, referenceObjects)).getMap();
 					return result;
 				}
 			}
 			Object result = xmlObjectRead.read(getInstance(clz), baseNode, xmlImplClasses,
-					classLoaderSwitcher);
+					classLoaderSwitcher, referenceObjects);
 			// 去掉XRoot的信息
 			XMLObject.cleanXRoot();
 			return result;

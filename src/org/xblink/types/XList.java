@@ -4,10 +4,12 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xblink.Constants;
+import org.xblink.ReferenceObject;
 import org.xblink.XType;
 import org.xblink.annotations.XBlinkAlias;
 import org.xblink.annotations.XBlinkAsList;
@@ -35,8 +37,12 @@ public class XList extends XType {
 		return false;
 	}
 
-	public void writeItem(Object obj, XMLWriterUtil writer) throws Exception {
+	public void writeItem(Object obj, XMLWriterUtil writer,
+			Map<Integer, ReferenceObject> referenceObjects) throws Exception {
 		for (Field field : fieldTypes) {
+			if (isFieldEmpty(field, obj)) {
+				continue;
+			}
 			// 判断是列表吗
 			if (!List.class.isAssignableFrom(field.getType())) {
 				throw new Exception("字段：" + field.getName() + " 不是一个列表.");
@@ -56,14 +62,15 @@ public class XList extends XType {
 			writer.writeStartElement(fieldName.toString());
 			// 列表内容
 			for (Object object : objList) {
-				new XMLObjectWriter().write(object, writer, null);
+				new XMLObjectWriter().write(object, writer, null, referenceObjects);
 			}
 			// 后缀
 			writer.writeEndElement();
 		}
 	}
 
-	public void readItem(Object obj, Node baseNode) throws Exception {
+	public void readItem(Object obj, Node baseNode, Map<Integer, ReferenceObject> referenceObjects)
+			throws Exception {
 		for (Field field : fieldTypes) {
 			// 判断是列表吗
 			if (!List.class.isAssignableFrom(field.getType())) {
@@ -83,7 +90,8 @@ public class XList extends XType {
 			field.set(
 					obj,
 					traceXPathList(tarNode, classType.getFieldClass(),
-							classType.getFieldInnerClass(), classType.getFieldInnerClassType()));
+							classType.getFieldInnerClass(), classType.getFieldInnerClassType(),
+							referenceObjects));
 		}
 	}
 
@@ -97,7 +105,8 @@ public class XList extends XType {
 	 * @throws Exception
 	 */
 	private List traceXPathList(Node baseNode, Class<?> fieldClass, Class<?> fieldInnerClass,
-			Type fieldInnerClassType) throws Exception {
+			Type fieldInnerClassType, Map<Integer, ReferenceObject> referenceObjects)
+			throws Exception {
 		boolean isInterface = fieldClass.isInterface() ? true : false;
 		NodeList nodeList = baseNode.getChildNodes();
 		int nodeListLength = nodeList.getLength();
@@ -120,7 +129,8 @@ public class XList extends XType {
 			} else {
 				result.add(new XMLObjectReader().read(
 						ClassUtil.getInstance(fieldInnerClass, getImplClass()),
-						nodeList.item(idx * 2 + 1), getImplClass(), getClassLoaderSwitcher()));
+						nodeList.item(idx * 2 + 1), getImplClass(), getClassLoaderSwitcher(),
+						referenceObjects));
 			}
 		}
 		return result;

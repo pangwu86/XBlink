@@ -22,10 +22,10 @@ import org.xblink.types.XSet;
 public abstract class XMLObject {
 
 	/** 记录所有解析过的对象 **/
-	static protected HashMap<String, AnalysisedObject> xmlWriteObjects = new HashMap<String, AnalysisedObject>();
+	static protected HashMap<String, AnalysisedClass> xmlWriteClasses = new HashMap<String, AnalysisedClass>();
 
 	/** 记录所有解析过的对象 **/
-	static protected HashMap<String, AnalysisedObject> xmlReadObjects = new HashMap<String, AnalysisedObject>();
+	static protected HashMap<String, AnalysisedClass> xmlReadClasses = new HashMap<String, AnalysisedClass>();
 
 	/** 字段各种类型列表 */
 	protected List<XType> xTypes = new ArrayList<XType>();
@@ -57,7 +57,7 @@ public abstract class XMLObject {
 	}
 
 	public static void cleanXRoot() {
-		xmlWriteObjects.remove(XRoot.class.getName());
-		xmlReadObjects.remove(XRoot.class.getName());
+		xmlWriteClasses.remove(XRoot.class.getName());
+		xmlReadClasses.remove(XRoot.class.getName());
 	}
 }

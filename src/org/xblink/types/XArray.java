@@ -2,10 +2,12 @@ package org.xblink.types;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.util.Map;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xblink.Constants;
+import org.xblink.ReferenceObject;
 import org.xblink.XType;
 import org.xblink.annotations.XBlinkAlias;
 import org.xblink.annotations.XBlinkAsArray;
@@ -33,8 +35,12 @@ public class XArray extends XType {
 		return false;
 	}
 
-	public void writeItem(Object obj, XMLWriterUtil writer) throws Exception {
+	public void writeItem(Object obj, XMLWriterUtil writer,
+			Map<Integer, ReferenceObject> referenceObjects) throws Exception {
 		for (Field field : fieldTypes) {
+			if (isFieldEmpty(field, obj)) {
+				continue;
+			}
 			// 判断是数组吗
 			if (!field.getType().isArray()) {
 				throw new Exception("字段：" + field.getName() + " 不是一个数组.");
@@ -55,7 +61,7 @@ public class XArray extends XType {
 			writer.writeStartElement(fieldName.toString());
 			// 数组内容
 			for (Object object : objs) {
-				new XMLObjectWriter().write(object, writer, null);
+				new XMLObjectWriter().write(object, writer, null, referenceObjects);
 			}
 			// 后缀
 			writer.writeEndElement();
@@ -63,7 +69,8 @@ public class XArray extends XType {
 		}
 	}
 
-	public void readItem(Object obj, Node baseNode) throws Exception {
+	public void readItem(Object obj, Node baseNode, Map<Integer, ReferenceObject> referenceObjects)
+			throws Exception {
 		for (Field field : fieldTypes) {
 			// 判断是数组吗
 			if (!field.getType().isArray()) {
@@ -85,7 +92,7 @@ public class XArray extends XType {
 			} else {
 				fieldClass = field.getType().getComponentType();
 			}
-			field.set(obj, traceXPathArray(tarNode, fieldClass));
+			field.set(obj, traceXPathArray(tarNode, fieldClass, referenceObjects));
 		}
 	}
 
@@ -96,7 +103,8 @@ public class XArray extends XType {
 	 * @return
 	 * @throws Exception
 	 */
-	private Object[] traceXPathArray(Node baseNode, Class<?> fieldClass) throws Exception {
+	private Object[] traceXPathArray(Node baseNode, Class<?> fieldClass,
+			Map<Integer, ReferenceObject> referenceObjects) throws Exception {
 		NodeList nodeList = baseNode.getChildNodes();
 		int nodeListLength = nodeList.getLength();
 		if (nodeList == null || nodeListLength == 0) {
@@ -107,7 +115,7 @@ public class XArray extends XType {
 		for (int idx = 0; idx < nodeListLength; idx++) {
 			result[idx] = new XMLObjectReader().read(
 					ClassUtil.getInstance(fieldClass, getImplClass()), nodeList.item(idx * 2 + 1),
-					getImplClass(), getClassLoaderSwitcher());
+					getImplClass(), getClassLoaderSwitcher(), referenceObjects);
 		}
 		return result;
 	}

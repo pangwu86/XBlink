@@ -6,12 +6,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.xml.stream.XMLStreamException;
 
+import org.xblink.ReferenceObject;
 import org.xblink.XMLObject;
 import org.xblink.XRoot;
 
@@ -85,6 +87,8 @@ public class XMLWriter {
 	 */
 	private void writeStart(OutputStream out, Object obj, boolean formatXml, String encoding)
 			throws Exception {
+		// 解析过的对象，方便其他对象引用
+		Map<Integer, ReferenceObject> referenceObjects = new HashMap<Integer, ReferenceObject>();
 		XMLWriterUtil writer = null;
 		try {
 			writer = new XMLWriterUtil(out, formatXml ? 2 : 1, encoding);
@@ -106,8 +110,7 @@ public class XMLWriter {
 			}
 			// 开始序列化
 			writer.writeStartDocument();
-			XMLObjectWriter xmlObjectWriter = new XMLObjectWriter();
-			xmlObjectWriter.write(obj, writer, null);
+			new XMLObjectWriter().write(obj, writer, null, referenceObjects);
 			writer.writeEndDocument();
 			// 去掉XRoot的信息
 			XMLObject.cleanXRoot();

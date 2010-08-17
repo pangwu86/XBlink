@@ -55,8 +55,8 @@ public class NodeUtil {
 			obj = null;
 		} else {
 			if (xPathValue.startsWith(Constants.CLASS_PREFIX)) {
-				obj = classLoaderSwitcher.forName(new String(xPathValue.replaceAll(Constants.CLASS_PREFIX,
-				                                                                   Constants.EMPTY_STRING)));
+				obj = classLoaderSwitcher.forName(new String(xPathValue.replaceAll(
+						Constants.CLASS_PREFIX, Constants.EMPTY_STRING)));
 			} else {
 				Constructor<?> constructor = objClass.getDeclaredConstructor(String.class);
 				if (constructor != null) {
@@ -65,5 +65,18 @@ public class NodeUtil {
 			}
 		}
 		return obj;
+	}
+
+	/**
+	 * 
+	 * @param baseNode
+	 *            Document中的某个节点
+	 * @param xpath
+	 *            基本字段的位置信息
+	 * @return
+	 */
+	public static String getAttributeValue(Node baseNode, String xpath) {
+		Node att = baseNode.getAttributes().getNamedItem(xpath);
+		return att == null ? null : att.getNodeValue();
 	}
 }

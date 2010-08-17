@@ -1,8 +1,10 @@
 package org.xblink.types;
 
 import java.lang.reflect.Field;
+import java.util.Map;
 
 import org.w3c.dom.Node;
+import org.xblink.ReferenceObject;
 import org.xblink.XType;
 import org.xblink.annotations.XBlinkAsElement;
 import org.xblink.util.ClassUtil;
@@ -26,14 +28,19 @@ public class XElement extends XType {
 		return false;
 	}
 
-	public void writeItem(Object obj, XMLWriterUtil writer) throws Exception {
+	public void writeItem(Object obj, XMLWriterUtil writer,
+			Map<Integer, ReferenceObject> referenceObjects) throws Exception {
 		for (Field field : fieldTypes) {
+			if (isFieldEmpty(field, obj)) {
+				continue;
+			}
 			writer.writeTextElement(ClassUtil.getFieldName(field).toString(), field.get(obj)
 					.toString());
 		}
 	}
 
-	public void readItem(Object obj, Node baseNode) throws Exception {
+	public void readItem(Object obj, Node baseNode, Map<Integer, ReferenceObject> referenceObjects)
+			throws Exception {
 		for (Field field : fieldTypes) {
 			String xPathValue = getTextElementValue(baseNode, ClassUtil.getFieldName(field)
 					.toString());

@@ -7,7 +7,7 @@ package org.xblink;
  * @author geor.wupeiwen
  * 
  */
-public class AnalysisedObject {
+public class AnalysisedClass {
 
 	private XMLObject xmlObject;
 
