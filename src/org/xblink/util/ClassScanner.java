@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.xblink.XBlink;
 import org.xblink.types.XArray;
 
 
@@ -63,24 +64,6 @@ public class ClassScanner {
 
 				}
 			}
-		}
-	}
-
-	public static void main(String[] args) {
-		Runnable test = new Runnable() {
-			
-			@Override
-			public void run() {
-			// TODO Auto-generated method stub
-				List<Class<?>> set =null;
-				ClassScanner classScanner = new ClassScanner();
-				WatchTimer watchTimer = new WatchTimer();
-				set = classScanner.scan(XArray.class);
-				System.out.println(watchTimer.getTimer());
-			}
-		};
-		for(int i=0;i<100;i++){
-			test.run();
 		}
 	}
 }
