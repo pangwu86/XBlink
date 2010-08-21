@@ -3,71 +3,43 @@ package org.xblink.adapter;
 import org.xblink.adapter.impl.Dom4jXMLAdapter;
 import org.xblink.adapter.impl.SystemXMLAdapter;
 import org.xblink.adapter.impl.XppXMLAdapter;
+import org.xblink.domdrivers.DomDriver;
+import org.xblink.domdrivers.impl.Dom4jDomDriver;
+import org.xblink.domdrivers.impl.XppDomDriver;
+
 /**
  * XML适配器工厂类
  * @author E-Hunter(xjf1986518@gmail.com)
  *
  */
 public class XMLAdapterFactory {
-
-	/** Dom4j参考类名*/
-	public static final String DOM4J_CLASS_NAME = "org.dom4j.Document";
-	/** XPP参考类名*/
-	public static final String XPP_CLASS_NAME = "org.xmlpull.mxp1.MXParser";
-	/** XML适配器*/
-	public static XMLAdapter xmlAdapter = null;
-	//初始化，检查当前可用的适配器
-	//使用优先级为XPP3,DOM4J,系统自带的XML库
-	//如果参考类存在,则认为该库可用
-	static {
-		if(isXppCanWork()){
-			xmlAdapter = new XppXMLAdapter();
-		}
-		else{
-			if(isDom4jCanWork()){
-				xmlAdapter = new Dom4jXMLAdapter();
-			}
-			else{
-				xmlAdapter = new SystemXMLAdapter();
-			}
-		}
-	}
+	
 	/**
 	 * 获得当前可用的XML适配器
+	 * 使用优先级为XPP3,DOM4J,系统自带的XML库<br>
+	 * 如果参考类存在,则认为该库可用
 	 * @return
 	 */
-	public static XMLAdapter getInstance(){
-		return xmlAdapter;
-	}
-
-	/**
-	 * 检查Dom4j适配器是否可用
-	 * @return
-	 */
-	private static boolean isDom4jCanWork(){
-		try {
-			Class.forName(DOM4J_CLASS_NAME,true,Thread.currentThread().getContextClassLoader());
+	public static XMLAdapter getAdapter(){
+		DomDriver domDriver =null;
+		if((domDriver=new XppDomDriver()).canWork()){
+			return new XppXMLAdapter();
 		}
-		catch (ClassNotFoundException e) {
-			return false;
+		if((domDriver=new Dom4jDomDriver()).canWork()){
+			return new Dom4jXMLAdapter();
 		}
-		return true;
+		return new SystemXMLAdapter();
 	}
 	/**
-	 * 检查Xpp适配器是否可用
+	 * 根据指定驱动程序获得适配器<br>
+	 * 如果指定驱动器找不到合适的适配器，调用默认方式进行适配
 	 * @return
 	 */
-	private static boolean isXppCanWork() {
-		try {
-			Class.forName(XPP_CLASS_NAME,true,Thread.currentThread().getContextClassLoader());
+	public static XMLAdapter getAdapter(DomDriver domDriver){
+		if(domDriver.canWork()){
+			return domDriver.getAdapter();
 		}
-		catch (ClassNotFoundException e) {
-			return false;
-		}
-		return true;
-	}
-	
-	public static void main(String[] args) {
-		XMLAdapterFactory.getInstance();
+		System.out.println("指定的驱动加载失败，系统将采用默认方式获得适配器");
+		return getAdapter();
 	}
 }
