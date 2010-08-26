@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.xblink.transfer.AnalysisedClass;
 import org.xblink.types.XArray;
 import org.xblink.types.XAttribute;
 import org.xblink.types.XElement;
@@ -13,7 +14,7 @@ import org.xblink.types.XObject;
 import org.xblink.types.XSet;
 
 /**
- * XML类型对象集合對象.
+ * XML类型对象集合对象.
  * 
  * 
  * @author pangwu86(pangwu86@gmail.com)
