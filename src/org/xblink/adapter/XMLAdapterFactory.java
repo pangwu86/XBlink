@@ -38,12 +38,17 @@ public class XMLAdapterFactory {
 	/**
 	 * 根据指定驱动程序获得适配器<br>
 	 * 如果指定驱动器找不到合适的适配器，则抛出异常
-	 * @param domDrivers 指定的驱动程序
+	 * 
+	 * @param domDrivers
+	 *            指定的驱动程序
 	 * @return
 	 * @throws Exception
 	 */
 	public static XMLAdapter getAdapter(DomDriver domDriver) throws Exception {
-
+		// 没有传入DOM驱动，采用JDK自带的驱动
+		if (null == domDriver) {
+			return new SystemXMLAdapter();
+		}
 		if (domDriver.canWork()) {
 			return domDriver.getAdapter();
 		}
@@ -52,19 +57,26 @@ public class XMLAdapterFactory {
 
 	/**
 	 * 根据指定驱动程序获得适配器<br>
-	 * @param domDrivers 指定的驱动程序
-	 * @param canThrow 在指定的驱动不可用情况下，是否抛出异常<br>
-	 * 不抛出异常，则按照系统默认方式进行适配
+	 * 
+	 * @param domDrivers
+	 *            指定的驱动程序
+	 * @param canThrow
+	 *            在指定的驱动不可用情况下，是否抛出异常<br>
+	 *            不抛出异常，则按照系统默认方式进行适配
 	 * @return
 	 * @throws Exception
 	 */
-	public static XMLAdapter getAdapter(DomDriver domDriver,Boolean canThrow) throws Exception{
-
+	public static XMLAdapter getAdapter(DomDriver domDriver, Boolean canThrow) throws Exception {
+		// 没有传入DOM驱动，采用JDK自带的驱动
+		if (null == domDriver) {
+			return new SystemXMLAdapter();
+		}
 		if (domDriver.canWork()) {
 			return domDriver.getAdapter();
-		}if(canThrow){
-				throw new Exception("指定的驱动加载失败，系统将采用默认方式获得适配器");
-		}else{
+		}
+		if (canThrow) {
+			throw new Exception("指定的驱动加载失败，系统将采用默认方式获得适配器");
+		} else {
 			return getAdapter();
 		}
 	}
