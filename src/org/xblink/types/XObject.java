@@ -1,17 +1,16 @@
 package org.xblink.types;
 
 import java.lang.reflect.Field;
-import java.util.Map;
 
-import org.w3c.dom.Node;
-import org.xblink.ReferenceObject;
 import org.xblink.XType;
 import org.xblink.annotations.XBlinkAsObject;
 import org.xblink.reader.XMLObjectReader;
+import org.xblink.transfer.TransferInfo;
 import org.xblink.util.ClassUtil;
 import org.xblink.util.NodeUtil;
 import org.xblink.writer.XMLObjectWriter;
-import org.xblink.writer.XMLWriterUtil;
+import org.xblink.writer.XMLWriterHelper;
+import org.xblink.xml.XMLNode;
 
 /**
  * 对象类型.
@@ -31,26 +30,26 @@ public class XObject extends XType {
 		return false;
 	}
 
-	public void writeItem(Object obj, XMLWriterUtil writer,
-			Map<Integer, ReferenceObject> referenceObjects) throws Exception {
+	public void writeItem(Object obj, XMLWriterHelper writer, TransferInfo transferInfo)
+			throws Exception {
 		for (Field field : fieldTypes) {
 			if (isFieldEmpty(field, obj)) {
 				continue;
 			}
-			new XMLObjectWriter().write(field.get(obj), writer, field.getName(), referenceObjects);
+			new XMLObjectWriter().write(field.get(obj), writer, field.getName(), transferInfo);
 		}
 	}
 
-	public void readItem(Object obj, Node baseNode, Map<Integer, ReferenceObject> referenceObjects)
-			throws Exception {
+	public void readItem(Object obj, XMLNode baseNode, TransferInfo transferInfo) throws Exception {
 		for (Field field : fieldTypes) {
-			Node tarNode = NodeUtil.getTarNode(baseNode, field.getName());
+			XMLNode tarNode = NodeUtil.getTarNode(baseNode, field.getName(),
+					transferInfo.getXmlAdapter());
 			if (null == tarNode) {
 				continue;
 			}
 			Object value = new XMLObjectReader().read(
-					ClassUtil.getInstance(field.getType(), getImplClass()), tarNode,
-					getImplClass(), getClassLoaderSwitcher(), referenceObjects);
+					ClassUtil.getInstance(field.getType(), transferInfo.getXmlImplClasses()),
+					tarNode, transferInfo);
 			field.set(obj, value);
 		}
 	}

@@ -1,13 +1,11 @@
 package org.xblink.types;
 
 import java.lang.reflect.Field;
-import java.util.Map;
 
-import org.w3c.dom.Node;
-
-import org.xblink.ReferenceObject;
 import org.xblink.XType;
-import org.xblink.writer.XMLWriterUtil;
+import org.xblink.transfer.TransferInfo;
+import org.xblink.writer.XMLWriterHelper;
+import org.xblink.xml.XMLNode;
 
 /**
  * Map集合类型.
@@ -22,13 +20,12 @@ public class XMap extends XType {
 		return false;
 	}
 
-	public void writeItem(Object obj, XMLWriterUtil writer,
-			Map<Integer, ReferenceObject> referenceObjects) throws Exception {
+	public void writeItem(Object obj, XMLWriterHelper writer, TransferInfo transferInfo)
+			throws Exception {
 		throw new Exception("未实现的功能.");
 	}
 
-	public void readItem(Object obj, Node baseNode, Map<Integer, ReferenceObject> referenceObjects)
-			throws Exception {
+	public void readItem(Object obj, XMLNode baseNode, TransferInfo transferInfo) throws Exception {
 		throw new Exception("未实现的功能.");
 	}
 }

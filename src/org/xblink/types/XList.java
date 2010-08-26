@@ -4,20 +4,20 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xblink.Constants;
-import org.xblink.ReferenceObject;
 import org.xblink.XType;
 import org.xblink.annotations.XBlinkAlias;
 import org.xblink.annotations.XBlinkAsList;
 import org.xblink.reader.XMLObjectReader;
+import org.xblink.transfer.TransferInfo;
+import org.xblink.util.ClassType;
 import org.xblink.util.ClassUtil;
 import org.xblink.util.NodeUtil;
 import org.xblink.writer.XMLObjectWriter;
-import org.xblink.writer.XMLWriterUtil;
+import org.xblink.writer.XMLWriterHelper;
+import org.xblink.xml.XMLNode;
+import org.xblink.xml.XMLNodeList;
 
 /**
  * 列表类型.
@@ -37,8 +37,8 @@ public class XList extends XType {
 		return false;
 	}
 
-	public void writeItem(Object obj, XMLWriterUtil writer,
-			Map<Integer, ReferenceObject> referenceObjects) throws Exception {
+	public void writeItem(Object obj, XMLWriterHelper writer, TransferInfo transferInfo)
+			throws Exception {
 		for (Field field : fieldTypes) {
 			if (isFieldEmpty(field, obj)) {
 				continue;
@@ -62,15 +62,14 @@ public class XList extends XType {
 			writer.writeStartElement(fieldName.toString());
 			// 列表内容
 			for (Object object : objList) {
-				new XMLObjectWriter().write(object, writer, null, referenceObjects);
+				new XMLObjectWriter().write(object, writer, null, transferInfo);
 			}
 			// 后缀
 			writer.writeEndElement();
 		}
 	}
 
-	public void readItem(Object obj, Node baseNode, Map<Integer, ReferenceObject> referenceObjects)
-			throws Exception {
+	public void readItem(Object obj, XMLNode baseNode, TransferInfo transferInfo) throws Exception {
 		for (Field field : fieldTypes) {
 			// 判断是列表吗
 			if (!List.class.isAssignableFrom(field.getType())) {
@@ -81,17 +80,18 @@ public class XList extends XType {
 			if (addSuffix) {
 				fieldName.append(Constants.LIST);
 			}
-			Node tarNode = NodeUtil.getTarNode(baseNode, fieldName.toString());
+			XMLNode tarNode = NodeUtil.getTarNode(baseNode, fieldName.toString(),
+					transferInfo.getXmlAdapter());
 			if (null == tarNode) {
 				continue;
 			}
 			// 获得泛型参数
-			ClassType classType = getClassType(field);
+			ClassType classType = ClassUtil.getClassType(field, transferInfo.getXmlImplClasses());
 			field.set(
 					obj,
 					traceXPathList(tarNode, classType.getFieldClass(),
 							classType.getFieldInnerClass(), classType.getFieldInnerClassType(),
-							referenceObjects));
+							transferInfo));
 		}
 	}
 
@@ -104,12 +104,11 @@ public class XList extends XType {
 	 * @return
 	 * @throws Exception
 	 */
-	private List traceXPathList(Node baseNode, Class<?> fieldClass, Class<?> fieldInnerClass,
-			Type fieldInnerClassType, Map<Integer, ReferenceObject> referenceObjects)
-			throws Exception {
+	private List traceXPathList(XMLNode baseNode, Class<?> fieldClass, Class<?> fieldInnerClass,
+			Type fieldInnerClassType, TransferInfo transferInfo) throws Exception {
 		boolean isInterface = fieldClass.isInterface() ? true : false;
-		NodeList nodeList = baseNode.getChildNodes();
-		int nodeListLength = nodeList.getLength();
+		XMLNodeList nodeList = baseNode.getChildNodes(transferInfo.getXmlAdapter());
+		int nodeListLength = nodeList.getLength(transferInfo.getXmlAdapter());
 		if (nodeList == null || nodeListLength == 0) {
 			if (isInterface) {
 				return new ArrayList(0);
@@ -125,12 +124,13 @@ public class XList extends XType {
 		}
 		for (int idx = 0; idx < nodeListLength; idx++) {
 			if (fieldInnerClass == null || fieldInnerClassType == null) {
-				result.add(NodeUtil.getObject(nodeList.item(idx * 2 + 1), getClassLoaderSwitcher()));
+				result.add(NodeUtil.getObject(
+						nodeList.item(transferInfo.getXmlAdapter(), idx * 2 + 1),
+						transferInfo.getClassLoaderSwitcher(), transferInfo.getXmlAdapter()));
 			} else {
 				result.add(new XMLObjectReader().read(
-						ClassUtil.getInstance(fieldInnerClass, getImplClass()),
-						nodeList.item(idx * 2 + 1), getImplClass(), getClassLoaderSwitcher(),
-						referenceObjects));
+						ClassUtil.getInstance(fieldInnerClass, transferInfo.getXmlImplClasses()),
+						nodeList.item(transferInfo.getXmlAdapter(), idx * 2 + 1), transferInfo));
 			}
 		}
 		return result;

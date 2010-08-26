@@ -1,15 +1,14 @@
 package org.xblink.types;
 
 import java.lang.reflect.Field;
-import java.util.Map;
 
-import org.w3c.dom.Node;
-import org.xblink.ReferenceObject;
 import org.xblink.XType;
 import org.xblink.annotations.XBlinkAsAttribute;
+import org.xblink.transfer.TransferInfo;
 import org.xblink.util.ClassUtil;
 import org.xblink.util.NodeUtil;
-import org.xblink.writer.XMLWriterUtil;
+import org.xblink.writer.XMLWriterHelper;
+import org.xblink.xml.XMLNode;
 
 /**
  * 字段类型属性.
@@ -29,8 +28,8 @@ public class XAttribute extends XType {
 		return false;
 	}
 
-	public void writeItem(Object obj, XMLWriterUtil writer,
-			Map<Integer, ReferenceObject> referenceObjects) throws Exception {
+	public void writeItem(Object obj, XMLWriterHelper writer, TransferInfo transferInfo)
+			throws Exception {
 		for (Field field : fieldTypes) {
 			if (isFieldEmpty(field, obj)) {
 				continue;
@@ -40,15 +39,14 @@ public class XAttribute extends XType {
 		}
 	}
 
-	public void readItem(Object obj, Node baseNode, Map<Integer, ReferenceObject> referenceObjects)
-			throws Exception {
+	public void readItem(Object obj, XMLNode baseNode, TransferInfo transferInfo) throws Exception {
 		for (Field field : fieldTypes) {
 			String xPathValue = NodeUtil.getAttributeValue(baseNode, ClassUtil.getFieldName(field)
-					.toString());
+					.toString(), transferInfo.getXmlAdapter());
 			if (null == xPathValue || xPathValue.length() == 0) {
 				field.set(obj, null);
 			} else {
-				ClassUtil.fieldSet(field, obj, xPathValue, getClassLoaderSwitcher());
+				ClassUtil.fieldSet(field, obj, xPathValue, transferInfo.getClassLoaderSwitcher());
 			}
 		}
 	}

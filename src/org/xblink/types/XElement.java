@@ -1,14 +1,13 @@
 package org.xblink.types;
 
 import java.lang.reflect.Field;
-import java.util.Map;
 
-import org.w3c.dom.Node;
-import org.xblink.ReferenceObject;
 import org.xblink.XType;
 import org.xblink.annotations.XBlinkAsElement;
+import org.xblink.transfer.TransferInfo;
 import org.xblink.util.ClassUtil;
-import org.xblink.writer.XMLWriterUtil;
+import org.xblink.writer.XMLWriterHelper;
+import org.xblink.xml.XMLNode;
 
 /**
  * 字段类型元素.
@@ -28,8 +27,8 @@ public class XElement extends XType {
 		return false;
 	}
 
-	public void writeItem(Object obj, XMLWriterUtil writer,
-			Map<Integer, ReferenceObject> referenceObjects) throws Exception {
+	public void writeItem(Object obj, XMLWriterHelper writer, TransferInfo transferInfo)
+			throws Exception {
 		for (Field field : fieldTypes) {
 			if (isFieldEmpty(field, obj)) {
 				continue;
@@ -39,30 +38,31 @@ public class XElement extends XType {
 		}
 	}
 
-	public void readItem(Object obj, Node baseNode, Map<Integer, ReferenceObject> referenceObjects)
-			throws Exception {
+	public void readItem(Object obj, XMLNode baseNode, TransferInfo transferInfo) throws Exception {
 		for (Field field : fieldTypes) {
-			String xPathValue = getTextElementValue(baseNode, ClassUtil.getFieldName(field)
-					.toString());
+			String xPathValue = baseNode.getElementValue(transferInfo.getXmlAdapter(), ClassUtil
+					.getFieldName(field).toString());
 			if (null == xPathValue || xPathValue.length() == 0) {
 				field.set(obj, null);
 			} else {
-				ClassUtil.fieldSet(field, obj, xPathValue, getClassLoaderSwitcher());
+				ClassUtil.fieldSet(field, obj, xPathValue, transferInfo.getClassLoaderSwitcher());
 			}
 		}
 	}
 
-	/**
-	 * 
-	 * @param baseNode
-	 *            Document中的某个节点
-	 * @param xpath
-	 *            基本字段的位置信息
-	 * @return
-	 */
-	private String getTextElementValue(Node baseNode, String xpath) throws Exception {
-		Node att = com.sun.org.apache.xpath.internal.XPathAPI.selectSingleNode(baseNode, xpath);
-		return att == null ? null : att.getTextContent();
-	}
-
+	// /**
+	// *
+	// * @param baseNode
+	// * Document中的某个节点
+	// * @param xpath
+	// * 基本字段的位置信息
+	// * @return
+	// */
+	// private String getTextElementValue(Node baseNode, String xpath) throws
+	// Exception {
+	// Node att =
+	// com.sun.org.apache.xpath.internal.XPathAPI.selectSingleNode(baseNode,
+	// xpath);
+	// return att == null ? null : att.getTextContent();
+	// }
 }

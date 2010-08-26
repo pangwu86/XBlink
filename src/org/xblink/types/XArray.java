@@ -2,20 +2,19 @@ package org.xblink.types;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
-import java.util.Map;
 
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xblink.Constants;
-import org.xblink.ReferenceObject;
 import org.xblink.XType;
 import org.xblink.annotations.XBlinkAlias;
 import org.xblink.annotations.XBlinkAsArray;
 import org.xblink.reader.XMLObjectReader;
+import org.xblink.transfer.TransferInfo;
 import org.xblink.util.ClassUtil;
 import org.xblink.util.NodeUtil;
 import org.xblink.writer.XMLObjectWriter;
-import org.xblink.writer.XMLWriterUtil;
+import org.xblink.writer.XMLWriterHelper;
+import org.xblink.xml.XMLNode;
+import org.xblink.xml.XMLNodeList;
 
 /**
  * 数组类型.
@@ -35,8 +34,8 @@ public class XArray extends XType {
 		return false;
 	}
 
-	public void writeItem(Object obj, XMLWriterUtil writer,
-			Map<Integer, ReferenceObject> referenceObjects) throws Exception {
+	public void writeItem(Object obj, XMLWriterHelper writer, TransferInfo transferInfo)
+			throws Exception {
 		for (Field field : fieldTypes) {
 			if (isFieldEmpty(field, obj)) {
 				continue;
@@ -61,7 +60,7 @@ public class XArray extends XType {
 			writer.writeStartElement(fieldName.toString());
 			// 数组内容
 			for (Object object : objs) {
-				new XMLObjectWriter().write(object, writer, null, referenceObjects);
+				new XMLObjectWriter().write(object, writer, null, transferInfo);
 			}
 			// 后缀
 			writer.writeEndElement();
@@ -69,8 +68,7 @@ public class XArray extends XType {
 		}
 	}
 
-	public void readItem(Object obj, Node baseNode, Map<Integer, ReferenceObject> referenceObjects)
-			throws Exception {
+	public void readItem(Object obj, XMLNode baseNode, TransferInfo transferInfo) throws Exception {
 		for (Field field : fieldTypes) {
 			// 判断是数组吗
 			if (!field.getType().isArray()) {
@@ -81,18 +79,20 @@ public class XArray extends XType {
 			if (addSuffix) {
 				fieldName.append(Constants.ARRAY);
 			}
-			Node tarNode = NodeUtil.getTarNode(baseNode, fieldName.toString());
+			XMLNode tarNode = NodeUtil.getTarNode(baseNode, fieldName.toString(),
+					transferInfo.getXmlAdapter());
 			if (null == tarNode) {
 				continue;
 			}
 			Class<?> fieldClass;
 			// 特殊情况root的array
-			if (tarNode.getNodeName().equals(Constants.ROOT + Constants.ARRAY)) {
-				fieldClass = getImplClass().getNewInstanceClass();
+			if (tarNode.getNodeName(transferInfo.getXmlAdapter()).equals(
+					Constants.ROOT + Constants.ARRAY)) {
+				fieldClass = transferInfo.getXmlImplClasses().getNewInstanceClass();
 			} else {
 				fieldClass = field.getType().getComponentType();
 			}
-			field.set(obj, traceXPathArray(tarNode, fieldClass, referenceObjects));
+			field.set(obj, traceXPathArray(tarNode, fieldClass, transferInfo));
 		}
 	}
 
@@ -100,13 +100,14 @@ public class XArray extends XType {
 	 * 
 	 * @param baseNode
 	 * @param fieldClass
+	 * @param transferInfo
 	 * @return
 	 * @throws Exception
 	 */
-	private Object[] traceXPathArray(Node baseNode, Class<?> fieldClass,
-			Map<Integer, ReferenceObject> referenceObjects) throws Exception {
-		NodeList nodeList = baseNode.getChildNodes();
-		int nodeListLength = nodeList.getLength();
+	private Object[] traceXPathArray(XMLNode baseNode, Class<?> fieldClass,
+			TransferInfo transferInfo) throws Exception {
+		XMLNodeList nodeList = baseNode.getChildNodes(transferInfo.getXmlAdapter());
+		int nodeListLength = nodeList.getLength(transferInfo.getXmlAdapter());
 		if (nodeList == null || nodeListLength == 0) {
 			return (Object[]) Array.newInstance(fieldClass, 0);
 		}
@@ -114,8 +115,8 @@ public class XArray extends XType {
 		Object[] result = (Object[]) Array.newInstance(fieldClass, nodeListLength);
 		for (int idx = 0; idx < nodeListLength; idx++) {
 			result[idx] = new XMLObjectReader().read(
-					ClassUtil.getInstance(fieldClass, getImplClass()), nodeList.item(idx * 2 + 1),
-					getImplClass(), getClassLoaderSwitcher(), referenceObjects);
+					ClassUtil.getInstance(fieldClass, transferInfo.getXmlImplClasses()),
+					nodeList.item(transferInfo.getXmlAdapter(), idx * 2 + 1), transferInfo);
 		}
 		return result;
 	}
