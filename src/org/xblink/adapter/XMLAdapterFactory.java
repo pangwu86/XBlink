@@ -40,15 +40,13 @@ public class XMLAdapterFactory {
 	 * 如果指定驱动器找不到合适的适配器，调用默认方式进行适配
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public static XMLAdapter getAdapter(DomDriver domDriver) {
-		if (null == domDriver) {
-			return new SystemXMLAdapter();
-		}
+	public static XMLAdapter getAdapter(DomDriver domDriver) throws Exception{
+
 		if (domDriver.canWork()) {
 			return domDriver.getAdapter();
 		}
-		System.out.println("指定的驱动加载失败，系统将采用默认方式获得适配器");
-		return getAdapter();
+		throw new Exception("指定的驱动加载失败，系统将采用默认方式获得适配器");
 	}
 }
