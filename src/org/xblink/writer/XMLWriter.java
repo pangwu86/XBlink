@@ -13,9 +13,11 @@ import java.util.Set;
 
 import javax.xml.stream.XMLStreamException;
 
-import org.xblink.ReferenceObject;
 import org.xblink.XMLObject;
 import org.xblink.XRoot;
+import org.xblink.domdrivers.DomDriver;
+import org.xblink.transfer.ReferenceObject;
+import org.xblink.transfer.TransferInfo;
 
 /**
  * XML序列化工具类.
@@ -29,10 +31,12 @@ public class XMLWriter {
 	 * 
 	 * @param filePath
 	 * @param obj
+	 * @param domDriver
 	 * @throws FileNotFoundException
 	 */
-	public void writeXML(String filePath, Object obj) throws FileNotFoundException {
-		writeXML(filePath, obj, true, "UTF-8");
+	public void writeXML(String filePath, Object obj, DomDriver domDriver)
+			throws FileNotFoundException {
+		writeXML(filePath, obj, true, "UTF-8", domDriver);
 	}
 
 	/**
@@ -41,13 +45,14 @@ public class XMLWriter {
 	 * @param obj
 	 * @param formatXml
 	 * @param encoding
+	 * @param domDriver
 	 * @throws FileNotFoundException
 	 */
-	public void writeXML(String filePath, Object obj, boolean formatXml, String encoding)
-			throws FileNotFoundException {
+	public void writeXML(String filePath, Object obj, boolean formatXml, String encoding,
+			DomDriver domDriver) throws FileNotFoundException {
 		try {
 			writeStart(new BufferedOutputStream(new FileOutputStream(getFile(filePath))), obj,
-					formatXml, encoding);
+					formatXml, encoding, domDriver);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -57,9 +62,10 @@ public class XMLWriter {
 	 * 
 	 * @param outputStream
 	 * @param obj
+	 * @param domDriver
 	 */
-	public void writeXML(OutputStream outputStream, Object obj) {
-		writeXML(outputStream, obj, true, "UTF-8");
+	public void writeXML(OutputStream outputStream, Object obj, DomDriver domDriver) {
+		writeXML(outputStream, obj, true, "UTF-8", domDriver);
 	}
 
 	/**
@@ -68,10 +74,12 @@ public class XMLWriter {
 	 * @param obj
 	 * @param formatXml
 	 * @param encoding
+	 * @param domDriver
 	 */
-	public void writeXML(OutputStream outputStream, Object obj, boolean formatXml, String encoding) {
+	public void writeXML(OutputStream outputStream, Object obj, boolean formatXml, String encoding,
+			DomDriver domDriver) {
 		try {
-			writeStart(outputStream, obj, formatXml, encoding);
+			writeStart(outputStream, obj, formatXml, encoding, domDriver);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -83,15 +91,20 @@ public class XMLWriter {
 	 * @param obj
 	 * @param formatXml
 	 * @param encoding
+	 * @param domDriver
 	 * @throws Exception
 	 */
-	private void writeStart(OutputStream out, Object obj, boolean formatXml, String encoding)
-			throws Exception {
+	private void writeStart(OutputStream out, Object obj, boolean formatXml, String encoding,
+			DomDriver domDriver) throws Exception {
 		// 解析过的对象，方便其他对象引用
 		Map<Integer, ReferenceObject> referenceObjects = new HashMap<Integer, ReferenceObject>();
-		XMLWriterUtil writer = null;
+		// 传递信息对象
+		TransferInfo transferInfo = new TransferInfo();
+		transferInfo.setReferenceObjects(referenceObjects);
+		// TODO domDriver的使用 替代这里的XMLWriterUtil 这里是重点
+		XMLWriterHelper writer = null;
 		try {
-			writer = new XMLWriterUtil(out, formatXml ? 2 : 1, encoding);
+			writer = new XMLWriterHelper(out, formatXml ? 2 : 1, encoding);
 			Class<?> objClass = obj.getClass();
 			XRoot root = new XRoot();
 			// 判断是否是集合类型，是的话放入root对象中再进行序列化
@@ -110,11 +123,14 @@ public class XMLWriter {
 			}
 			// 开始序列化
 			writer.writeStartDocument();
-			new XMLObjectWriter().write(obj, writer, null, referenceObjects);
+			new XMLObjectWriter().write(obj, writer, null, transferInfo);
 			writer.writeEndDocument();
 			// 去掉XRoot的信息
 			XMLObject.cleanXRoot();
 		} finally {
+			// 手动释放对象引用
+			transferInfo = null;
+			// 关闭相关流
 			if (out != null) {
 				out.close();
 			}

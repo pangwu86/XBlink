@@ -3,12 +3,13 @@ package org.xblink.writer;
 import java.lang.reflect.Field;
 import java.util.Map;
 
-import org.xblink.AnalysisedClass;
 import org.xblink.Constants;
-import org.xblink.ReferenceObject;
 import org.xblink.XMLObject;
 import org.xblink.XType;
 import org.xblink.annotations.XBlinkNotSerialize;
+import org.xblink.transfer.AnalysisedClass;
+import org.xblink.transfer.ReferenceObject;
+import org.xblink.transfer.TransferInfo;
 import org.xblink.util.ClassUtil;
 
 /**
@@ -26,10 +27,12 @@ public class XMLObjectWriter extends XMLObject {
 	 * @param obj
 	 * @param writer
 	 * @param objectName
+	 * @param transferInfo
 	 * @throws Exception
 	 */
-	public void write(Object obj, XMLWriterUtil writer, String objectName,
-			Map<Integer, ReferenceObject> referenceObjects) throws Exception {
+	public void write(Object obj, XMLWriterHelper writer, String objectName,
+			TransferInfo transferInfo) throws Exception {
+		Map<Integer, ReferenceObject> referenceObjects = transferInfo.getReferenceObjects();
 		// 记录解析过的Object
 		ReferenceObject ref = referenceObjects.get(obj.hashCode());
 		// 引用对象，特殊处理
@@ -94,7 +97,7 @@ public class XMLObjectWriter extends XMLObject {
 				if (xtype.isFieldsEmpty()) {
 					continue;
 				}
-				xtype.writeItem(obj, writer, referenceObjects);
+				xtype.writeItem(obj, writer, transferInfo);
 			}
 		} else {
 			writer.writeStartElement(obj.getClass().toString()

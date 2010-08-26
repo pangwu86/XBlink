@@ -13,7 +13,7 @@ import javax.xml.stream.XMLStreamWriter;
  * @author pangwu86(pangwu86@gmail.com)
  * 
  */
-public class XMLWriterUtil {
+public class XMLWriterHelper {
 
 	XMLStreamWriter writer;
 	int indentIndex;
@@ -35,7 +35,7 @@ public class XMLWriterUtil {
 	 * @param formatXml
 	 * @param encoding
 	 */
-	public XMLWriterUtil(OutputStream out, int formatXml, String encoding) {
+	public XMLWriterHelper(OutputStream out, int formatXml, String encoding) {
 
 		this.formatXml = formatXml;
 		this.encoding = encoding;

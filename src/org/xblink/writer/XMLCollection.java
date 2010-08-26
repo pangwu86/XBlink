@@ -13,7 +13,7 @@ import java.util.Set;
  */
 public enum XMLCollection {
 
-	List(List.class), Map(Map.class), Set(Set.class), NotCollection(Object.class);
+	List(List.class), Map(Map.class), Set(Set.class), NotCollection(null);
 
 	private Class<?> clz;
 
