@@ -19,7 +19,7 @@ public class ClassScannerUtil {
 	 * 
 	 * @param clazzs
 	 *            参考类
-	 * @return
+	 * @return 类列表
 	 * @throws Exception
 	 */
 	public static List<Class<?>> scan(Class<?>... clazzs) throws Exception {

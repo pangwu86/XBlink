@@ -68,7 +68,7 @@ public abstract class XType {
 	 * 
 	 * @param field
 	 * @param obj
-	 * @return
+	 * @return 是否为空
 	 * @throws IllegalArgumentException
 	 * @throws IllegalAccessException
 	 */

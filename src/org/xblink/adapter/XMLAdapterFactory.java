@@ -39,7 +39,7 @@ public class XMLAdapterFactory {
 	 * 根据指定驱动程序获得适配器<br>
 	 * 如果指定驱动器找不到合适的适配器，调用默认方式进行适配
 	 * 
-	 * @return
+	 * @return XML适配器
 	 * @throws Exception 
 	 */
 	public static XMLAdapter getAdapter(DomDriver domDriver) throws Exception{

@@ -26,7 +26,8 @@ public class XMLDocument {
 	 * 获得第一个孩子节点
 	 * 
 	 * @param xmlAdapter
-	 * @return
+	 *            XML适配器
+	 * @return XMLNode对象
 	 */
 	public XMLNode getFirstChild(XMLAdapter xmlAdapter) {
 		return xmlAdapter.getFirstChild(document);

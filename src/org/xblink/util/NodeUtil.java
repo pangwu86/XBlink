@@ -70,12 +70,13 @@ public class NodeUtil {
 	}
 
 	/**
+	 * 获得属性的值.
 	 * 
 	 * @param baseNode
 	 *            Document中的某个节点
 	 * @param xpath
 	 *            基本字段的位置信息
-	 * @return
+	 * @return 值
 	 */
 	public static String getAttributeValue(XMLNode baseNode, String xpath, XMLAdapter xmlAdapter) {
 		XMLNode att = baseNode.getAttributes(xmlAdapter).getNamedItem(xmlAdapter, xpath);
