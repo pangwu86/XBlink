@@ -2,10 +2,11 @@ package org.xblink.util;
 
 import java.lang.reflect.Constructor;
 
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xblink.ClassLoaderSwitcher;
 import org.xblink.Constants;
+import org.xblink.adapter.XMLAdapter;
+import org.xblink.transfer.ClassLoaderSwitcher;
+import org.xblink.xml.XMLNode;
+import org.xblink.xml.XMLNodeList;
 
 /**
  * 节点相关操作工具类.
@@ -23,14 +24,14 @@ public class NodeUtil {
 	 * @param nodeName
 	 * @return 节点
 	 */
-	public static Node getTarNode(Node rootNode, String nodeName) {
-		NodeList nodeList = rootNode.getChildNodes();
-		for (int j = 0; j < nodeList.getLength(); j++) {
-			if (2 * j + 1 >= nodeList.getLength()) {
+	public static XMLNode getTarNode(XMLNode rootNode, String nodeName, XMLAdapter xmlAdapter) {
+		XMLNodeList nodeList = rootNode.getChildNodes(xmlAdapter);
+		for (int j = 0; j < nodeList.getLength(xmlAdapter); j++) {
+			if (2 * j + 1 >= nodeList.getLength(xmlAdapter)) {
 				break;
 			}
-			Node baseNode = nodeList.item(2 * j + 1);
-			if (baseNode.getNodeName().equals(nodeName)) {
+			XMLNode baseNode = nodeList.item(xmlAdapter, 2 * j + 1);
+			if (baseNode.getNodeName(xmlAdapter).equals(nodeName)) {
 				return baseNode;
 			}
 		}
@@ -44,13 +45,14 @@ public class NodeUtil {
 	 * @return 对象
 	 * @throws Exception
 	 */
-	public static Object getObject(Node baseNode, ClassLoaderSwitcher classLoaderSwitcher)
-			throws Exception {
+	public static Object getObject(XMLNode baseNode, ClassLoaderSwitcher classLoaderSwitcher,
+			XMLAdapter xmlAdapter) throws Exception {
 		Object obj = null;
-		Class<?> objClass = classLoaderSwitcher.forName(new String(baseNode.getNodeName()
+		Class<?> objClass = classLoaderSwitcher.forName(new String(baseNode.getNodeName(xmlAdapter)
 				.replaceAll(Constants.CLASS_AND_PREFIX, Constants.EMPTY_STRING)));
-		Node att = baseNode.getAttributes().getNamedItem(Constants.OBJ_VALUE);
-		String xPathValue = att == null ? null : att.getNodeValue();
+		XMLNode att = baseNode.getAttributes(xmlAdapter).getNamedItem(xmlAdapter,
+				Constants.OBJ_VALUE);
+		String xPathValue = att == null ? null : att.getNodeValue(xmlAdapter);
 		if (null == xPathValue || xPathValue.length() == 0) {
 			obj = null;
 		} else {
@@ -75,8 +77,8 @@ public class NodeUtil {
 	 *            基本字段的位置信息
 	 * @return
 	 */
-	public static String getAttributeValue(Node baseNode, String xpath) {
-		Node att = baseNode.getAttributes().getNamedItem(xpath);
-		return att == null ? null : att.getNodeValue();
+	public static String getAttributeValue(XMLNode baseNode, String xpath, XMLAdapter xmlAdapter) {
+		XMLNode att = baseNode.getAttributes(xmlAdapter).getNamedItem(xmlAdapter, xpath);
+		return att.getNode() == null ? null : att.getNodeValue(xmlAdapter);
 	}
 }

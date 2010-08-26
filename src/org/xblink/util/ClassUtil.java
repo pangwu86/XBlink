@@ -2,12 +2,14 @@ package org.xblink.util;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 
-import org.xblink.ClassLoaderSwitcher;
 import org.xblink.Constants;
-import org.xblink.ImplClasses;
 import org.xblink.annotations.XBlinkAlias;
+import org.xblink.transfer.ClassLoaderSwitcher;
+import org.xblink.transfer.ImplClasses;
 
 /**
  * 类相关操作工具类.
@@ -193,7 +195,7 @@ public class ClassUtil {
 		}
 		Class<?> clzImpl = xmlImplClasses.getImplClassesMap().get(clz);
 		if (null == clzImpl) {
-			for (int i = 0; i < xmlImplClasses.getImplClassesLength(); i++) {
+			for (int i = 0; i < xmlImplClasses.getImplClassesNumber(); i++) {
 				Class<?>[] implClasses = xmlImplClasses.getImplClasses();
 				if (clz.isAssignableFrom(implClasses[i])) {
 					xmlImplClasses.getImplClassesMap().put(clz, implClasses[i]);
@@ -241,4 +243,51 @@ public class ClassUtil {
 			throw new Exception(clz.getName() + " 没有不带参数的构造函数，无法进行实例化.");
 		}
 	}
+
+	/**
+	 * 获得类类型.
+	 * 
+	 * @param field
+	 * @param implClasses
+	 * 
+	 * @return 类类型
+	 */
+	public static ClassType getClassType(Field field, ImplClasses implClasses) {
+		Type type = null;
+		Class<?> fieldInnerClass = null;
+		Class<?> fieldClass = field.getType();
+		Type gtype = field.getGenericType();
+		if (gtype instanceof ParameterizedType) {
+			type = ((ParameterizedType) gtype).getActualTypeArguments()[0];
+		}
+		if (type != null) {
+			if (Constants.GENERICS.equals(type.toString())) {
+				// TODO 为了最外层的实现类 root层使用
+				fieldInnerClass = implClasses.getNewInstanceClass();
+			} else {
+				if (type instanceof ParameterizedType) {
+					Type innerType = null;
+					innerType = ((ParameterizedType) type).getActualTypeArguments()[0];
+					if (innerType != null && Constants.GENERICS.equals(innerType.toString())) {
+						if (type.toString().startsWith(
+								Class.class.toString().replaceAll(Constants.CLASS_PREFIX,
+										Constants.EMPTY_STRING))) {
+							fieldInnerClass = Class.class;
+						} else {
+							// FIXME
+							fieldInnerClass = implClasses.getNewInstanceClass();
+						}
+					}
+				} else {
+					fieldInnerClass = (Class<?>) type;
+				}
+			}
+		}
+		ClassType classType = new ClassType();
+		classType.setFieldInnerClassType(type);
+		classType.setFieldClass(fieldClass);
+		classType.setFieldInnerClass(fieldInnerClass);
+		return classType;
+	}
+
 }
