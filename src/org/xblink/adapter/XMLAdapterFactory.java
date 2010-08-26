@@ -8,35 +8,44 @@ import org.xblink.domdrivers.impl.Dom4jDomDriver;
 import org.xblink.domdrivers.impl.XppDomDriver;
 
 /**
- * XML适配器工厂类
+ * 
+ * XML适配器工厂类.
+ * 
+ * 
+ * 
  * @author E-Hunter(xjf1986518@gmail.com)
- *
+ * @author pangwu86(pangwu86@gmail.com)
+ * 
  */
 public class XMLAdapterFactory {
-	
+
 	/**
-	 * 获得当前可用的XML适配器
-	 * 使用优先级为XPP3,DOM4J,系统自带的XML库<br>
-	 * 如果参考类存在,则认为该库可用
-	 * @return
+	 * 获得当前可用的XML适配器 使用优先级为XPP3,DOM4J,系统自带的XML库.<br>
+	 * 如果参考类存在,则认为该库可用.
+	 * 
+	 * @return XML适配器
 	 */
-	public static XMLAdapter getAdapter(){
-		DomDriver domDriver =null;
-		if((domDriver=new XppDomDriver()).canWork()){
+	public static XMLAdapter getAdapter() {
+		if (new XppDomDriver().canWork()) {
 			return new XppXMLAdapter();
 		}
-		if((domDriver=new Dom4jDomDriver()).canWork()){
+		if (new Dom4jDomDriver().canWork()) {
 			return new Dom4jXMLAdapter();
 		}
 		return new SystemXMLAdapter();
 	}
+
 	/**
 	 * 根据指定驱动程序获得适配器<br>
 	 * 如果指定驱动器找不到合适的适配器，调用默认方式进行适配
+	 * 
 	 * @return
 	 */
-	public static XMLAdapter getAdapter(DomDriver domDriver){
-		if(domDriver.canWork()){
+	public static XMLAdapter getAdapter(DomDriver domDriver) {
+		if (null == domDriver) {
+			return new SystemXMLAdapter();
+		}
+		if (domDriver.canWork()) {
 			return domDriver.getAdapter();
 		}
 		System.out.println("指定的驱动加载失败，系统将采用默认方式获得适配器");
