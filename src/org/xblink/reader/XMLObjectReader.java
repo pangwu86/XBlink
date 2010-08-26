@@ -4,17 +4,16 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.Map;
 
-import org.w3c.dom.Node;
-
-import org.xblink.AnalysisedClass;
-import org.xblink.ClassLoaderSwitcher;
 import org.xblink.Constants;
-import org.xblink.ReferenceObject;
-import org.xblink.XType;
-import org.xblink.ImplClasses;
 import org.xblink.XMLObject;
+import org.xblink.XType;
 import org.xblink.annotations.XBlinkNotSerialize;
+import org.xblink.transfer.AnalysisedClass;
+import org.xblink.transfer.ClassLoaderSwitcher;
+import org.xblink.transfer.ReferenceObject;
+import org.xblink.transfer.TransferInfo;
 import org.xblink.util.NodeUtil;
+import org.xblink.xml.XMLNode;
 
 /**
  * XML类对象反序列化操作类.
@@ -33,13 +32,14 @@ public class XMLObjectReader extends XMLObject {
 	 * 
 	 * @param obj
 	 * @param baseNode
+	 * @param transferInfo
 	 * @throws Exception
 	 */
-	public Object read(Object obj, Node baseNode, ImplClasses xmlImplClasses,
-			ClassLoaderSwitcher clzLoaderSwitcher, Map<Integer, ReferenceObject> referenceObjects)
-			throws Exception {
+	public Object read(Object obj, XMLNode baseNode, TransferInfo transferInfo) throws Exception {
+		Map<Integer, ReferenceObject> referenceObjects = transferInfo.getReferenceObjects();
 		// 是否是引用对象
-		String refNo = NodeUtil.getAttributeValue(baseNode, Constants.OBJ_REFERENCE);
+		String refNo = NodeUtil.getAttributeValue(baseNode, Constants.OBJ_REFERENCE,
+				transferInfo.getXmlAdapter());
 		if (null != refNo) {
 			ReferenceObject refObject = referenceObjects.get(Integer.valueOf(refNo));
 			obj = refObject.getRef();
@@ -53,7 +53,6 @@ public class XMLObjectReader extends XMLObject {
 			analysisedObject = new AnalysisedClass();
 			analysisedObject.setXmlObject(this);
 			xmlReadClasses.put(className, analysisedObject);
-			this.classLoaderSwitcher = clzLoaderSwitcher;
 			Field[] fields = obj.getClass().getDeclaredFields();
 			// 将所有变量进行分类
 			boolean isXBlinkClass = false;
@@ -67,7 +66,6 @@ public class XMLObjectReader extends XMLObject {
 				init();
 				for (XType xtype : xTypes) {
 					if (xtype.getAnnotation(field)) {
-						xtype.setClassLoaderSwitcher(classLoaderSwitcher);
 						isXBlinkClass = true;
 						break;
 					}
@@ -86,12 +84,12 @@ public class XMLObjectReader extends XMLObject {
 				if (xtype.isFieldsEmpty()) {
 					continue;
 				}
-				xtype.setImplClass(xmlImplClasses);
-				xtype.readItem(obj, baseNode, referenceObjects);
+				xtype.readItem(obj, baseNode, transferInfo);
 			}
 		} else {
-			Node att = baseNode.getAttributes().getNamedItem(Constants.OBJ_VALUE);
-			String xPathValue = att == null ? null : att.getNodeValue();
+			XMLNode att = baseNode.getAttributes(transferInfo.getXmlAdapter()).getNamedItem(
+					transferInfo.getXmlAdapter(), Constants.OBJ_VALUE);
+			String xPathValue = att == null ? null : att.getNodeValue(transferInfo.getXmlAdapter());
 			if (null == xPathValue || xPathValue.length() == 0) {
 				obj = null;
 			} else {
