@@ -1,4 +1,4 @@
-package org.xblink.loop3;
+package org.xblink.model.loop3;
 
 import org.xblink.annotations.XBlinkAlias;
 import org.xblink.annotations.XBlinkAsObject;

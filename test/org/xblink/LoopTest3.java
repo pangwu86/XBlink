@@ -8,10 +8,10 @@ import java.io.FileOutputStream;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.xblink.loop3.ObjectA;
-import org.xblink.loop3.ObjectB;
-import org.xblink.loop3.ObjectC;
-import org.xblink.loop3.Root;
+import org.xblink.model.loop3.ObjectA;
+import org.xblink.model.loop3.ObjectB;
+import org.xblink.model.loop3.ObjectC;
+import org.xblink.model.loop3.Root;
 import org.xblink.util.WatchTimer;
 
 import com.thoughtworks.xstream.XStream;
@@ -23,6 +23,7 @@ public class LoopTest3 {
 	private ObjectA objectA;
 	private ObjectB objectB;
 	private ObjectC objectC;
+
 	@Before
 	public void setUp() {
 		objectA = new ObjectA();
@@ -35,6 +36,7 @@ public class LoopTest3 {
 		root.setObjectA(objectA);
 		root.setObjectB(objectB);
 	}
+
 	@Test
 	public void testLoop() throws Exception {
 		System.out.println("***testLoop***");
@@ -50,8 +52,8 @@ public class LoopTest3 {
 		timer.reset();
 		XStream xStream2 = new XStream(new XppDriver());
 		xStream2.processAnnotations(new Class[] { ObjectA.class, ObjectB.class });
-		Root root = (Root) xStream2.fromXML(new BufferedInputStream(new FileInputStream(
-				new File("C:/objectA_XStream.xml"))));
+		Root root = (Root) xStream2.fromXML(new BufferedInputStream(new FileInputStream(new File(
+				"C:/objectA_XStream.xml"))));
 		System.out.println("反序列化：" + timer.getTimer());
 
 		// XBlink
