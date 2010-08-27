@@ -4,12 +4,14 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.xblink.Constants;
 import org.xblink.XType;
 import org.xblink.annotations.XBlinkAlias;
 import org.xblink.annotations.XBlinkAsList;
 import org.xblink.reader.XMLObjectReader;
+import org.xblink.transfer.ReferenceObject;
 import org.xblink.transfer.TransferInfo;
 import org.xblink.util.ClassType;
 import org.xblink.util.ClassUtil;
@@ -27,6 +29,10 @@ import org.xblink.xml.XMLNodeList;
  * 
  */
 public class XList extends XType {
+
+	private int nodeListLength;
+
+	private XMLNodeList nodeList;
 
 	public boolean getAnnotation(Field field) {
 		XBlinkAsList xList = field.getAnnotation(XBlinkAsList.class);
@@ -59,6 +65,26 @@ public class XList extends XType {
 			if (addSuffix) {
 				fieldName.append(Constants.LIST);
 			}
+
+			// 集合对象的判断
+			Map<Integer, ReferenceObject> referenceObjects = transferInfo.getReferenceObjects();
+			// 记录解析过的Object
+			ReferenceObject ref = referenceObjects.get(objList.hashCode());
+			// 引用对象，特殊处理
+			if (null != ref) {
+				String startElement = fieldName.toString();
+				writer.writeStartElement(startElement);
+				// 调用toString
+				writer.writeAttribute(Constants.OBJ_REFERENCE, String.valueOf(ref.getNo()));
+				writer.writeEndElement();
+				return;
+			}
+			// 记录该对象，保持对其引用
+			ReferenceObject refObject = new ReferenceObject();
+			refObject.setNo(referenceObjects.size() + 1);
+			refObject.setRef(objList);
+			referenceObjects.put(objList.hashCode(), refObject);
+
 			writer.writeStartElement(fieldName.toString());
 			// 列表内容
 			for (Object object : objList) {
@@ -85,13 +111,35 @@ public class XList extends XType {
 			if (null == tarNode) {
 				continue;
 			}
+
+			Map<Integer, ReferenceObject> referenceObjects = transferInfo.getReferenceObjects();
+			// 是否是引用对象
+			String refNo = NodeUtil.getAttributeValue(tarNode, Constants.OBJ_REFERENCE,
+					transferInfo.getXmlAdapter());
+			if (null != refNo) {
+				ReferenceObject refObject = referenceObjects.get(Integer.valueOf(refNo));
+				Object ref = refObject.getRef();
+				field.set(obj, ref);
+				return;
+			}
+
 			// 获得泛型参数
 			ClassType classType = ClassUtil.getClassType(field, transferInfo.getXmlImplClasses());
-			field.set(
-					obj,
-					traceXPathList(tarNode, classType.getFieldClass(),
-							classType.getFieldInnerClass(), classType.getFieldInnerClassType(),
-							transferInfo));
+			// 获得List对象
+			List result = traceXPathList(tarNode, classType.getFieldClass(),
+					classType.getFieldInnerClass(), classType.getFieldInnerClassType(),
+					transferInfo);
+			field.set(obj, result);
+
+			// 记录该对象，保持对其引用
+			ReferenceObject refObject = new ReferenceObject();
+			refObject.setNo(referenceObjects.size() + 1);
+			refObject.setRef(result);
+			referenceObjects.put(refObject.getNo(), refObject);
+
+			// List对象塞入对应的值
+			setValue(result, classType.getFieldClass(), classType.getFieldInnerClass(),
+					classType.getFieldInnerClassType(), transferInfo, nodeListLength, nodeList);
 		}
 	}
 
@@ -122,6 +170,17 @@ public class XList extends XType {
 		} else {
 			result = (List) fieldClass.newInstance();
 		}
+		// 记录两个参数
+		this.nodeList = nodeList;
+		this.nodeListLength = nodeListLength;
+
+		return result;
+	}
+
+	private void setValue(List result, Class<?> fieldClass, Class<?> fieldInnerClass,
+			Type fieldInnerClassType, TransferInfo transferInfo, int nodeListLength,
+			XMLNodeList nodeList) throws Exception {
+		// 塞入值
 		for (int idx = 0; idx < nodeListLength; idx++) {
 			if (fieldInnerClass == null || fieldInnerClassType == null) {
 				result.add(NodeUtil.getObject(
@@ -133,6 +192,5 @@ public class XList extends XType {
 						nodeList.item(transferInfo.getXmlAdapter(), idx * 2 + 1), transferInfo));
 			}
 		}
-		return result;
 	}
 }

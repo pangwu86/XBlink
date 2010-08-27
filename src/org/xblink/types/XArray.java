@@ -2,12 +2,14 @@ package org.xblink.types;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.util.Map;
 
 import org.xblink.Constants;
 import org.xblink.XType;
 import org.xblink.annotations.XBlinkAlias;
 import org.xblink.annotations.XBlinkAsArray;
 import org.xblink.reader.XMLObjectReader;
+import org.xblink.transfer.ReferenceObject;
 import org.xblink.transfer.TransferInfo;
 import org.xblink.util.ClassUtil;
 import org.xblink.util.NodeUtil;
@@ -24,6 +26,10 @@ import org.xblink.xml.XMLNodeList;
  * 
  */
 public class XArray extends XType {
+
+	private XMLNodeList nodeList;
+
+	private int nodeListLength;
 
 	public boolean getAnnotation(Field field) {
 		XBlinkAsArray xArray = field.getAnnotation(XBlinkAsArray.class);
@@ -57,6 +63,26 @@ public class XArray extends XType {
 			if (addSuffix) {
 				fieldName.append(Constants.ARRAY);
 			}
+
+			// 集合对象的判断
+			Map<Integer, ReferenceObject> referenceObjects = transferInfo.getReferenceObjects();
+			// 记录解析过的Object
+			ReferenceObject ref = referenceObjects.get(objs.hashCode());
+			// 引用对象，特殊处理
+			if (null != ref) {
+				String startElement = fieldName.toString();
+				writer.writeStartElement(startElement);
+				// 调用toString
+				writer.writeAttribute(Constants.OBJ_REFERENCE, String.valueOf(ref.getNo()));
+				writer.writeEndElement();
+				return;
+			}
+			// 记录该对象，保持对其引用
+			ReferenceObject refObject = new ReferenceObject();
+			refObject.setNo(referenceObjects.size() + 1);
+			refObject.setRef(objs);
+			referenceObjects.put(objs.hashCode(), refObject);
+
 			writer.writeStartElement(fieldName.toString());
 			// 数组内容
 			for (Object object : objs) {
@@ -84,6 +110,18 @@ public class XArray extends XType {
 			if (null == tarNode) {
 				continue;
 			}
+
+			Map<Integer, ReferenceObject> referenceObjects = transferInfo.getReferenceObjects();
+			// 是否是引用对象
+			String refNo = NodeUtil.getAttributeValue(tarNode, Constants.OBJ_REFERENCE,
+					transferInfo.getXmlAdapter());
+			if (null != refNo) {
+				ReferenceObject refObject = referenceObjects.get(Integer.valueOf(refNo));
+				Object ref = refObject.getRef();
+				field.set(obj, ref);
+				return;
+			}
+
 			Class<?> fieldClass;
 			// 特殊情况root的array
 			if (tarNode.getNodeName(transferInfo.getXmlAdapter()).equals(
@@ -92,7 +130,18 @@ public class XArray extends XType {
 			} else {
 				fieldClass = field.getType().getComponentType();
 			}
-			field.set(obj, traceXPathArray(tarNode, fieldClass, transferInfo));
+			// 获得数组对象
+			Object[] result = traceXPathArray(tarNode, fieldClass, transferInfo);
+			field.set(obj, result);
+
+			// 记录该对象，保持对其引用
+			ReferenceObject refObject = new ReferenceObject();
+			refObject.setNo(referenceObjects.size() + 1);
+			refObject.setRef(result);
+			referenceObjects.put(refObject.getNo(), refObject);
+
+			// List对象塞入对应的值
+			setValue(result, fieldClass, transferInfo, nodeListLength, nodeList);
 		}
 	}
 
@@ -113,11 +162,20 @@ public class XArray extends XType {
 		}
 		nodeListLength = (nodeListLength - 1) / 2;
 		Object[] result = (Object[]) Array.newInstance(fieldClass, nodeListLength);
+		
+		// 记录两个参数
+		this.nodeList = nodeList;
+		this.nodeListLength = nodeListLength;
+		
+		return result;
+	}
+
+	private void setValue(Object[] result, Class<?> fieldClass, TransferInfo transferInfo,
+			int nodeListLength, XMLNodeList nodeList) throws Exception {
 		for (int idx = 0; idx < nodeListLength; idx++) {
 			result[idx] = new XMLObjectReader().read(
 					ClassUtil.getInstance(fieldClass, transferInfo.getXmlImplClasses()),
 					nodeList.item(transferInfo.getXmlAdapter(), idx * 2 + 1), transferInfo);
 		}
-		return result;
 	}
 }
