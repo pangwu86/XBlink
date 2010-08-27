@@ -23,10 +23,37 @@ import org.xblink.types.XSet;
 public abstract class XMLObject {
 
 	/** 记录所有解析过的对象 **/
-	static protected HashMap<String, AnalysisedClass> xmlWriteClasses = new HashMap<String, AnalysisedClass>();
+	static protected HashMap<String, AnalysisedClass> xmlWriteClasses;
 
 	/** 记录所有解析过的对象 **/
-	static protected HashMap<String, AnalysisedClass> xmlReadClasses = new HashMap<String, AnalysisedClass>();
+	static protected HashMap<String, AnalysisedClass> xmlReadClasses;
+
+	static {
+		initCache();
+	}
+
+	/**
+	 * 缓存初始化.
+	 */
+	private static void initCache() {
+		xmlWriteClasses = new HashMap<String, AnalysisedClass>();
+		xmlReadClasses = new HashMap<String, AnalysisedClass>();
+	}
+
+	/**
+	 * 缓存中去掉XRoot的信息.
+	 */
+	public static void cleanXRoot() {
+		xmlWriteClasses.remove(XRoot.class.getName());
+		xmlReadClasses.remove(XRoot.class.getName());
+	}
+
+	/**
+	 * 缓存清空.
+	 */
+	public static void cleanCache() {
+		initCache();
+	}
 
 	/** 字段各种类型列表 */
 	protected List<XType> xTypes = new ArrayList<XType>();
@@ -53,12 +80,13 @@ public abstract class XMLObject {
 		isInitialized = true;
 	}
 
+	/**
+	 * 获得所有Type类型.
+	 * 
+	 * @return xTypes
+	 */
 	public List<XType> getXTypes() {
 		return xTypes;
 	}
 
-	public static void cleanXRoot() {
-		xmlWriteClasses.remove(XRoot.class.getName());
-		xmlReadClasses.remove(XRoot.class.getName());
-	}
 }

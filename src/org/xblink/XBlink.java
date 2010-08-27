@@ -26,7 +26,7 @@ public class XBlink {
 	 *            实例对象
 	 * @throws FileNotFoundException
 	 */
-	static public void toXml(String filePath, Object obj) throws FileNotFoundException {
+	public static void toXml(String filePath, Object obj) throws FileNotFoundException {
 		new XMLWriter().writeXML(filePath, obj, null);
 	}
 
@@ -41,7 +41,7 @@ public class XBlink {
 	 *            DOM驱动
 	 * @throws FileNotFoundException
 	 */
-	static public void toXml(String filePath, Object obj, DomDriver domDriver)
+	public static void toXml(String filePath, Object obj, DomDriver domDriver)
 			throws FileNotFoundException {
 		new XMLWriter().writeXML(filePath, obj, domDriver);
 	}
@@ -59,7 +59,7 @@ public class XBlink {
 	 *            文件编码
 	 * @throws FileNotFoundException
 	 */
-	static public void toXml(String filePath, Object obj, boolean formatXml, String encoding)
+	public static void toXml(String filePath, Object obj, boolean formatXml, String encoding)
 			throws FileNotFoundException {
 		new XMLWriter().writeXML(filePath, obj, formatXml, encoding, null);
 	}
@@ -79,7 +79,7 @@ public class XBlink {
 	 *            DOM驱动
 	 * @throws FileNotFoundException
 	 */
-	static public void toXml(String filePath, Object obj, boolean formatXml, String encoding,
+	public static void toXml(String filePath, Object obj, boolean formatXml, String encoding,
 			DomDriver domDriver) throws FileNotFoundException {
 		new XMLWriter().writeXML(filePath, obj, formatXml, encoding, domDriver);
 	}
@@ -93,7 +93,7 @@ public class XBlink {
 	 *            实例对象
 	 * @throws FileNotFoundException
 	 */
-	static public void toXml(OutputStream outputStream, Object obj) throws FileNotFoundException {
+	public static void toXml(OutputStream outputStream, Object obj) throws FileNotFoundException {
 		new XMLWriter().writeXML(outputStream, obj, null);
 	}
 
@@ -108,7 +108,7 @@ public class XBlink {
 	 *            DOM驱动
 	 * @throws FileNotFoundException
 	 */
-	static public void toXml(OutputStream outputStream, Object obj, DomDriver domDriver)
+	public static void toXml(OutputStream outputStream, Object obj, DomDriver domDriver)
 			throws FileNotFoundException {
 		new XMLWriter().writeXML(outputStream, obj, domDriver);
 	}
@@ -126,7 +126,7 @@ public class XBlink {
 	 *            文件编码
 	 * @throws FileNotFoundException
 	 */
-	static public void toXml(OutputStream outputStream, Object obj, boolean formatXml,
+	public static void toXml(OutputStream outputStream, Object obj, boolean formatXml,
 			String encoding) throws FileNotFoundException {
 		new XMLWriter().writeXML(outputStream, obj, formatXml, encoding, null);
 	}
@@ -146,7 +146,7 @@ public class XBlink {
 	 *            文件编码
 	 * @throws FileNotFoundException
 	 */
-	static public void toXml(OutputStream outputStream, Object obj, boolean formatXml,
+	public static void toXml(OutputStream outputStream, Object obj, boolean formatXml,
 			String encoding, DomDriver domDriver) throws FileNotFoundException {
 		new XMLWriter().writeXML(outputStream, obj, formatXml, encoding, domDriver);
 	}
@@ -161,7 +161,7 @@ public class XBlink {
 	 * @return 对象
 	 * @throws FileNotFoundException
 	 */
-	static public Object fromXml(String filePath, Class<?> clz) throws FileNotFoundException {
+	public static Object fromXml(String filePath, Class<?> clz) throws FileNotFoundException {
 		return new XMLReader().readXML(filePath, clz, null, null);
 	}
 
@@ -175,7 +175,7 @@ public class XBlink {
 	 * @return 对象
 	 * @throws FileNotFoundException
 	 */
-	static public Object fromXml(String filePath, Class<?> clz, DomDriver domDriver)
+	public static Object fromXml(String filePath, Class<?> clz, DomDriver domDriver)
 			throws FileNotFoundException {
 		return new XMLReader().readXML(filePath, clz, null, domDriver);
 	}
@@ -192,7 +192,7 @@ public class XBlink {
 	 * @return 对象
 	 * @throws FileNotFoundException
 	 */
-	static public Object fromXml(String filePath, Class<?> clz, Class<?>[] implClasses)
+	public static Object fromXml(String filePath, Class<?> clz, Class<?>[] implClasses)
 			throws FileNotFoundException {
 		return new XMLReader().readXML(filePath, clz, implClasses, null, null);
 	}
@@ -211,7 +211,7 @@ public class XBlink {
 	 * @return 对象
 	 * @throws FileNotFoundException
 	 */
-	static public Object fromXml(String filePath, Class<?> clz, Class<?>[] implClasses,
+	public static Object fromXml(String filePath, Class<?> clz, Class<?>[] implClasses,
 			DomDriver domDriver) throws FileNotFoundException {
 		return new XMLReader().readXML(filePath, clz, implClasses, null, domDriver);
 	}
@@ -226,7 +226,7 @@ public class XBlink {
 	 * @return 对象
 	 * @throws FileNotFoundException
 	 */
-	static public Object fromXml(InputStream inputStream, Class<?> clz)
+	public static Object fromXml(InputStream inputStream, Class<?> clz)
 			throws FileNotFoundException {
 		return new XMLReader().readXML(inputStream, clz, null, null);
 	}
@@ -243,7 +243,7 @@ public class XBlink {
 	 * @return 对象
 	 * @throws FileNotFoundException
 	 */
-	static public Object fromXml(InputStream inputStream, Class<?> clz, DomDriver domDriver)
+	public static Object fromXml(InputStream inputStream, Class<?> clz, DomDriver domDriver)
 			throws FileNotFoundException {
 		return new XMLReader().readXML(inputStream, clz, null, domDriver);
 	}
@@ -260,7 +260,7 @@ public class XBlink {
 	 * @return 对象
 	 * @throws FileNotFoundException
 	 */
-	static public Object fromXml(InputStream inputStream, Class<?> clz, Class<?>[] implClasses)
+	public static Object fromXml(InputStream inputStream, Class<?> clz, Class<?>[] implClasses)
 			throws FileNotFoundException {
 		return new XMLReader().readXML(inputStream, clz, implClasses, null, null);
 	}
@@ -279,7 +279,7 @@ public class XBlink {
 	 * @return 对象
 	 * @throws FileNotFoundException
 	 */
-	static public Object fromXml(InputStream inputStream, Class<?> clz, Class<?>[] implClasses,
+	public static Object fromXml(InputStream inputStream, Class<?> clz, Class<?>[] implClasses,
 			DomDriver domDriver) throws FileNotFoundException {
 		return new XMLReader().readXML(inputStream, clz, implClasses, null, domDriver);
 	}
@@ -296,7 +296,7 @@ public class XBlink {
 	 * @return 对象
 	 * @throws FileNotFoundException
 	 */
-	static public Object fromXml(String filePath, Class<?> clz, ClassLoader classLoader)
+	public static Object fromXml(String filePath, Class<?> clz, ClassLoader classLoader)
 			throws FileNotFoundException {
 		return new XMLReader().readXML(filePath, clz, classLoader, null);
 	}
@@ -315,7 +315,7 @@ public class XBlink {
 	 * @return 对象
 	 * @throws FileNotFoundException
 	 */
-	static public Object fromXml(String filePath, Class<?> clz, ClassLoader classLoader,
+	public static Object fromXml(String filePath, Class<?> clz, ClassLoader classLoader,
 			DomDriver domDriver) throws FileNotFoundException {
 		return new XMLReader().readXML(filePath, clz, classLoader, domDriver);
 	}
@@ -334,7 +334,7 @@ public class XBlink {
 	 * @return 对象
 	 * @throws FileNotFoundException
 	 */
-	static public Object fromXml(String filePath, Class<?> clz, Class<?>[] implClasses,
+	public static Object fromXml(String filePath, Class<?> clz, Class<?>[] implClasses,
 			ClassLoader classLoader) throws FileNotFoundException {
 		return new XMLReader().readXML(filePath, clz, implClasses, classLoader, null);
 	}
@@ -355,7 +355,7 @@ public class XBlink {
 	 * @return 对象
 	 * @throws FileNotFoundException
 	 */
-	static public Object fromXml(String filePath, Class<?> clz, Class<?>[] implClasses,
+	public static Object fromXml(String filePath, Class<?> clz, Class<?>[] implClasses,
 			ClassLoader classLoader, DomDriver domDriver) throws FileNotFoundException {
 		return new XMLReader().readXML(filePath, clz, implClasses, classLoader, domDriver);
 	}
@@ -372,7 +372,7 @@ public class XBlink {
 	 * @return 对象
 	 * @throws FileNotFoundException
 	 */
-	static public Object fromXml(InputStream inputStream, Class<?> clz, ClassLoader classLoader)
+	public static Object fromXml(InputStream inputStream, Class<?> clz, ClassLoader classLoader)
 			throws FileNotFoundException {
 		return new XMLReader().readXML(inputStream, clz, classLoader, null);
 	}
@@ -391,7 +391,7 @@ public class XBlink {
 	 * @return 对象
 	 * @throws FileNotFoundException
 	 */
-	static public Object fromXml(InputStream inputStream, Class<?> clz, ClassLoader classLoader,
+	public static Object fromXml(InputStream inputStream, Class<?> clz, ClassLoader classLoader,
 			DomDriver domDriver) throws FileNotFoundException {
 		return new XMLReader().readXML(inputStream, clz, classLoader, domDriver);
 	}
@@ -410,7 +410,7 @@ public class XBlink {
 	 * @return 对象
 	 * @throws FileNotFoundException
 	 */
-	static public Object fromXml(InputStream inputStream, Class<?> clz, Class<?>[] implClasses,
+	public static Object fromXml(InputStream inputStream, Class<?> clz, Class<?>[] implClasses,
 			ClassLoader classLoader) throws FileNotFoundException {
 		return new XMLReader().readXML(inputStream, clz, implClasses, classLoader, null);
 	}
@@ -431,8 +431,15 @@ public class XBlink {
 	 * @return 对象
 	 * @throws FileNotFoundException
 	 */
-	static public Object fromXml(InputStream inputStream, Class<?> clz, Class<?>[] implClasses,
+	public static Object fromXml(InputStream inputStream, Class<?> clz, Class<?>[] implClasses,
 			ClassLoader classLoader, DomDriver domDriver) throws FileNotFoundException {
 		return new XMLReader().readXML(inputStream, clz, implClasses, classLoader, domDriver);
+	}
+
+	/**
+	 * 清空当前环境中的缓存.
+	 */
+	public static void cleanCache() {
+		XMLObject.cleanCache();
 	}
 }
