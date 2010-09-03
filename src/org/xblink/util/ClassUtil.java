@@ -219,23 +219,23 @@ public class ClassUtil {
 	 */
 	public static Object getSimpleInstance(Class<?> clz) throws Exception {
 		try {
-			if (clz.equals(Constants.IntClass)) {
+			if (Constants.IntClass == clz) {
 				return new Integer(0);
-			} else if (clz.equals(Constants.FloatClass)) {
+			} else if (Constants.FloatClass == clz) {
 				return new Float(0);
-			} else if (clz.equals(Constants.DoubleClass)) {
+			} else if (Constants.DoubleClass == clz) {
 				return new Double(0);
-			} else if (clz.equals(Constants.ByteClass)) {
+			} else if (Constants.ByteClass == clz) {
 				return new Byte((byte) 0);
-			} else if (clz.equals(Constants.BooleanClass)) {
+			} else if (Constants.BooleanClass == clz) {
 				return new Boolean(true);
-			} else if (clz.equals(Constants.ShortClass)) {
+			} else if (Constants.ShortClass == clz) {
 				return new Short((short) 0);
-			} else if (clz.equals(Constants.LongClass)) {
+			} else if (Constants.LongClass == clz) {
 				return new Long(0);
-			} else if (clz.equals(Constants.CharClass)) {
+			} else if (Constants.CharClass == clz) {
 				return new Character((char) 0);
-			} else if (clz.equals(Class.class)) {
+			} else if (Class.class == clz) {
 				return clz;
 			}
 			return clz.newInstance();
