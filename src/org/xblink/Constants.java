@@ -17,7 +17,6 @@ public final class Constants {
 	public final static String MAP = "-map";
 
 	/** 其他常量 */
-	public final static String LIST_SUFFIX = "List";
 	public final static String ATTRIBUTE_IDENTIFIER = "@";
 	public final static String CLASS_PREFIX = "class ";
 	public final static String CLASS_AND_PREFIX = "class_";
@@ -29,6 +28,8 @@ public final class Constants {
 	public final static String OBJ_REFERENCE = "obj-reference";
 	public final static String SPACE = " ";
 	public final static String UNDERLINE = "_";
+	public final static String SERIALIZE_FAIL = "序列化失败";
+	public final static String DESERIALIZE_FAIL = "反序列化失败";
 
 	/** 八种基本类型及其包装类 */
 	public final static Class<?> intClass = int.class;
