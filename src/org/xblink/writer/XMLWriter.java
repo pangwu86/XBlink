@@ -2,7 +2,6 @@ package org.xblink.writer;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -13,6 +12,7 @@ import java.util.Set;
 
 import javax.xml.stream.XMLStreamException;
 
+import org.xblink.Constants;
 import org.xblink.XMLObject;
 import org.xblink.XRoot;
 import org.xblink.domdrivers.DomDriver;
@@ -32,10 +32,8 @@ public class XMLWriter {
 	 * @param filePath
 	 * @param obj
 	 * @param domDriver
-	 * @throws FileNotFoundException
 	 */
-	public void writeXML(String filePath, Object obj, DomDriver domDriver)
-			throws FileNotFoundException {
+	public void writeXML(String filePath, Object obj, DomDriver domDriver) {
 		writeXML(filePath, obj, true, "UTF-8", domDriver);
 	}
 
@@ -46,15 +44,14 @@ public class XMLWriter {
 	 * @param formatXml
 	 * @param encoding
 	 * @param domDriver
-	 * @throws FileNotFoundException
 	 */
 	public void writeXML(String filePath, Object obj, boolean formatXml, String encoding,
-			DomDriver domDriver) throws FileNotFoundException {
+			DomDriver domDriver) {
 		try {
 			writeStart(new BufferedOutputStream(new FileOutputStream(getFile(filePath))), obj,
 					formatXml, encoding, domDriver);
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new RuntimeException(Constants.SERIALIZE_FAIL, e);
 		}
 	}
 
@@ -81,7 +78,7 @@ public class XMLWriter {
 		try {
 			writeStart(outputStream, obj, formatXml, encoding, domDriver);
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new RuntimeException(Constants.SERIALIZE_FAIL, e);
 		}
 	}
 
