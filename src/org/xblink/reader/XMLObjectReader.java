@@ -9,7 +9,6 @@ import org.xblink.XMLObject;
 import org.xblink.XType;
 import org.xblink.annotations.XBlinkNotSerialize;
 import org.xblink.transfer.AnalysisedClass;
-import org.xblink.transfer.ClassLoaderSwitcher;
 import org.xblink.transfer.ReferenceObject;
 import org.xblink.transfer.TransferInfo;
 import org.xblink.util.NodeUtil;
@@ -23,9 +22,6 @@ import org.xblink.xml.XMLNode;
  * 
  */
 public class XMLObjectReader extends XMLObject {
-
-	/** 类加载器切换器 */
-	private ClassLoaderSwitcher classLoaderSwitcher;
 
 	/**
 	 * 对象为单位读取.
@@ -94,8 +90,9 @@ public class XMLObjectReader extends XMLObject {
 				obj = null;
 			} else {
 				if (xPathValue.startsWith(Constants.CLASS_PREFIX)) {
-					obj = classLoaderSwitcher.forName(new String(xPathValue.replaceAll(
-							Constants.CLASS_PREFIX, Constants.EMPTY_STRING)));
+					obj = transferInfo.getClassLoaderSwitcher().forName(
+							new String(xPathValue.replaceAll(Constants.CLASS_PREFIX,
+									Constants.EMPTY_STRING)));
 				} else {
 					Constructor<?> constructor = obj.getClass()
 							.getDeclaredConstructor(String.class);
