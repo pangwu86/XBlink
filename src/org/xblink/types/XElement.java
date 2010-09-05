@@ -49,20 +49,4 @@ public class XElement extends XType {
 			}
 		}
 	}
-
-	// /**
-	// *
-	// * @param baseNode
-	// * Document中的某个节点
-	// * @param xpath
-	// * 基本字段的位置信息
-	// * @return
-	// */
-	// private String getTextElementValue(Node baseNode, String xpath) throws
-	// Exception {
-	// Node att =
-	// com.sun.org.apache.xpath.internal.XPathAPI.selectSingleNode(baseNode,
-	// xpath);
-	// return att == null ? null : att.getTextContent();
-	// }
 }
