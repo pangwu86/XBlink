@@ -36,14 +36,16 @@ public class XObject extends XType {
 			if (isFieldEmpty(field, obj)) {
 				continue;
 			}
-			new XMLObjectWriter().write(field.get(obj), writer, field.getName(), transferInfo);
+			new XMLObjectWriter().write(field.get(obj), writer, ClassUtil.getFieldName(field)
+					.toString(), transferInfo);
 		}
 	}
 
 	public void readItem(Object obj, XMLNode baseNode, TransferInfo transferInfo) throws Exception {
 		for (Field field : fieldTypes) {
-			XMLNode tarNode = NodeUtil.getTarNode(baseNode, field.getName(),
-					transferInfo.getXmlAdapter());
+
+			XMLNode tarNode = NodeUtil.getTarNode(baseNode, ClassUtil.getFieldName(field)
+					.toString(), transferInfo.getXmlAdapter());
 			if (null == tarNode) {
 				continue;
 			}
