@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 该对象作为子属性进行序列化.
+ * 该字段作为子节点进行序列化.
  * 
  * @author pangwu86(pangwu86@gmail.com)
  */
