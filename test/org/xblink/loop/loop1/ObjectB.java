@@ -1,4 +1,4 @@
-package org.xblink.model.loop2;
+package org.xblink.loop.loop1;
 
 import org.xblink.annotations.XBlinkAlias;
 import org.xblink.annotations.XBlinkAsAttribute;

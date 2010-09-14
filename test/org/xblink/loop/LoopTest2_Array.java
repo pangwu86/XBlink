@@ -1,4 +1,6 @@
-package org.xblink;
+package org.xblink.loop;
+
+import static org.junit.Assert.*;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -10,14 +12,15 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.xblink.model.loop2.ObjectA;
-import org.xblink.model.loop2.ObjectB;
+import org.xblink.XBlink;
+import org.xblink.loop.loop2.ObjectA;
+import org.xblink.loop.loop2.ObjectB;
 import org.xblink.util.WatchTimer;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.XppDriver;
 
-public class LoopTest2_List {
+public class LoopTest2_Array {
 
 	private ObjectA objectA;
 
@@ -37,12 +40,12 @@ public class LoopTest2_List {
 		objectB2 = new ObjectB();
 		objectB3 = new ObjectB();
 
-		List<ObjectB> objectBs = new ArrayList<ObjectB>();
-		objectA.setObjectBs_List(objectBs);
+		ObjectB[] objectBs = new ObjectB[3];
+		objectA.setObjectBs_Array(objectBs);
 
-		objectBs.add(objectB1);
-		objectBs.add(objectB2);
-		objectBs.add(objectB3);
+		objectBs[0] = objectB1;
+		objectBs[1] = objectB2;
+		objectBs[2] = objectB3;
 
 		objectB1.setObjectA(objectC);
 		objectB2.setObjectA(objectC);
@@ -52,11 +55,11 @@ public class LoopTest2_List {
 		objectB2.setStrB("b2");
 		objectB3.setStrB("b3");
 
-		objectC.setObjectBs_List(objectBs);
+		objectC.setObjectBs_Array(objectBs);
 	}
 
 	@Test
-	public void testLoop2() throws Exception {
+	public void testLoop2_XStream() throws Exception {
 		System.out.println("***testLoop2***");
 		WatchTimer timer = new WatchTimer();
 		// XStream
@@ -65,26 +68,29 @@ public class LoopTest2_List {
 		XStream xStream1 = new XStream(new XppDriver());
 		xStream1.processAnnotations(new Class[] { ObjectA.class, ObjectB.class });
 		xStream1.toXML(objectA, new BufferedOutputStream(new FileOutputStream(new File(
-				"C:/objectA_XStream_Loop2_List.xml"))));
+				"C:/objectA_XStream_Loop2_Array.xml"))));
 		System.out.println("序列化：" + timer.getTimer());
 		timer.reset();
 		XStream xStream2 = new XStream(new XppDriver());
 		xStream2.processAnnotations(new Class[] { ObjectA.class, ObjectB.class });
 		ObjectA objA_XS = (ObjectA) xStream2.fromXML(new BufferedInputStream(new FileInputStream(
-				new File("C:/objectA_XStream_Loop2_List.xml"))));
+				new File("C:/objectA_XStream_Loop2_Array.xml"))));
 		System.out.println("反序列化：" + timer.getTimer());
-
+	
+	}
+	
+	@Test
+	public void testLoop2() throws Exception {
 		// XBlink
 		System.out.println("XBlink:");
-		timer.reset();
-		XBlink.toXml("C:/objectA_XBlink_Loop2_List.xml", objectA);
+		WatchTimer timer = new WatchTimer();
+		XBlink.toXml("C:/objectA_XBlink_Loop2_Array.xml", objectA);
 		System.out.println("序列化：" + timer.getTimer());
 		timer.reset();
-		ObjectA objA_XB = (ObjectA) XBlink.fromXml("C:/objectA_XBlink_Loop2_List.xml", ObjectA.class);
+		ObjectA objA_XB = (ObjectA) XBlink.fromXml("C:/objectA_XBlink_Loop2_Array.xml", ObjectA.class);
 		System.out.println("反序列化：" + timer.getTimer());
 
 		System.out.println();
-
 	}
 
 }

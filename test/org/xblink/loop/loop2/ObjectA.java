@@ -1,4 +1,4 @@
-package org.xblink.model.loop2;
+package org.xblink.loop.loop2;
 
 import java.util.List;
 import java.util.Set;

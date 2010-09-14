@@ -1,4 +1,4 @@
-package org.xblink;
+package org.xblink.loop;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -8,10 +8,11 @@ import java.io.FileOutputStream;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.xblink.model.loop3.ObjectA;
-import org.xblink.model.loop3.ObjectB;
-import org.xblink.model.loop3.ObjectC;
-import org.xblink.model.loop3.Root;
+import org.xblink.XBlink;
+import org.xblink.loop.loop3.ObjectA;
+import org.xblink.loop.loop3.ObjectB;
+import org.xblink.loop.loop3.ObjectC;
+import org.xblink.loop.loop3.Root;
 import org.xblink.util.WatchTimer;
 
 import com.thoughtworks.xstream.XStream;

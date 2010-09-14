@@ -1,4 +1,4 @@
-package org.xblink.model.loop;
+package org.xblink.loop.loop3;
 
 import org.xblink.annotations.XBlinkAlias;
 import org.xblink.annotations.XBlinkAsAttribute;
@@ -10,28 +10,15 @@ import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 @XBlinkAlias("objectA")
 @XStreamAlias("objectA")
 public class ObjectA {
-
-	@XBlinkAsObject
-	private ObjectB objectB;
-
 	@XBlinkAsAttribute
 	@XStreamAsAttribute
-	private String strA;
+	private String text;
 
-	public String getStrA() {
-		return strA;
+	public String getText() {
+		return text;
 	}
 
-	public void setStrA(String strA) {
-		this.strA = strA;
+	public void setText(String text) {
+		this.text = text;
 	}
-
-	public ObjectB getObjectB() {
-		return objectB;
-	}
-
-	public void setObjectB(ObjectB objectB) {
-		this.objectB = objectB;
-	}
-
 }

@@ -1,12 +1,13 @@
-package org.xblink;
+package org.xblink.demo;
 
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
 import org.junit.Test;
-import org.xblink.model.person.Person;
-import org.xblink.model.person.PhoneNumber;
+import org.xblink.XBlink;
+import org.xblink.demo.person.Person;
+import org.xblink.demo.person.PhoneNumber;
 
 public class PersonTest {
 

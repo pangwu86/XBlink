@@ -1,4 +1,4 @@
-package org.xblink.model.person;
+package org.xblink.demo.person;
 
 import org.xblink.annotations.XBlinkAsAttribute;
 import org.xblink.annotations.XBlinkAsObject;
