@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.xblink.domdrivers.impl.Dom4jDomDriver;
 import org.xblink.domdrivers.impl.XppDomDriver;
 
-public class ApadterFactoryTest extends TestCase {
+public class AdapterFactoryTest extends TestCase {
 
 	@Test
 	public void testXMLAdapterFactory() throws Exception{
