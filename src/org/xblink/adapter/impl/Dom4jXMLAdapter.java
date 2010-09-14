@@ -83,4 +83,10 @@ public class Dom4jXMLAdapter implements XMLAdapter {
 		return null;
 	}
 
+	@Override
+	public String getTextContent(Object node) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

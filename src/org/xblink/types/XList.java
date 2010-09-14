@@ -126,9 +126,7 @@ public class XList extends XType {
 			// 获得泛型参数
 			ClassType classType = ClassUtil.getClassType(field, transferInfo.getXmlImplClasses());
 			// 获得List对象
-			List result = traceXPathList(tarNode, classType.getFieldClass(),
-					classType.getFieldInnerClass(), classType.getFieldInnerClassType(),
-					transferInfo);
+			List result = traceXPathList(tarNode, classType.getFieldClass(), transferInfo);
 			field.set(obj, result);
 
 			// 记录该对象，保持对其引用
@@ -138,8 +136,8 @@ public class XList extends XType {
 			referenceObjects.put(refObject.getNo(), refObject);
 
 			// List对象塞入对应的值
-			setValue(result, classType.getFieldClass(), classType.getFieldInnerClass(),
-					classType.getFieldInnerClassType(), transferInfo, nodeListLength, nodeList);
+			setValue(result, classType.getFieldClass(), classType.getFieldInnerClass1(),
+					classType.getFieldInnerClassType1(), transferInfo, nodeListLength, nodeList);
 		}
 	}
 
@@ -147,13 +145,11 @@ public class XList extends XType {
 	 * 
 	 * @param baseNode
 	 * @param fieldClass
-	 * @param fieldInnerClass
-	 * @param fieldInnerClassType
 	 * @return
 	 * @throws Exception
 	 */
-	private List traceXPathList(XMLNode baseNode, Class<?> fieldClass, Class<?> fieldInnerClass,
-			Type fieldInnerClassType, TransferInfo transferInfo) throws Exception {
+	private List traceXPathList(XMLNode baseNode, Class<?> fieldClass, TransferInfo transferInfo)
+			throws Exception {
 		boolean isInterface = fieldClass.isInterface() ? true : false;
 		XMLNodeList nodeList = baseNode.getChildNodes(transferInfo.getXmlAdapter());
 		int nodeListLength = nodeList.getLength(transferInfo.getXmlAdapter());

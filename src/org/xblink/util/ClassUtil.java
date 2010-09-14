@@ -252,6 +252,42 @@ public class ClassUtil {
 	 * 
 	 * @return 类类型
 	 */
+	public static ClassType getClassTypes(Field field, ImplClasses implClasses) {
+		Type type1 = null;
+		Type type2 = null;
+		Class<?> fieldInnerClass1 = null;
+		Class<?> fieldInnerClass2 = null;
+		Class<?> fieldClass = field.getType();
+		Type gtype = field.getGenericType();
+		if (gtype instanceof ParameterizedType) {
+			type1 = ((ParameterizedType) gtype).getActualTypeArguments()[0];
+			type2 = ((ParameterizedType) gtype).getActualTypeArguments()[1];
+		}
+		TypeAndFieldInnerClass tf1 = new TypeAndFieldInnerClass();
+		tf1.setType(type1);
+		tf1.setFieldInnerClass(fieldInnerClass1);
+		TypeAndFieldInnerClass tf2 = new TypeAndFieldInnerClass();
+		tf2.setType(type2);
+		tf2.setFieldInnerClass(fieldInnerClass2);
+		getTypeAndInnerClass(tf1,implClasses);
+		getTypeAndInnerClass(tf2,implClasses);
+		ClassType classType = new ClassType();
+		classType.setFieldClass(fieldClass);
+		classType.setFieldInnerClassType1(tf1.getType());
+		classType.setFieldInnerClass1(tf1.getFieldInnerClass());
+		classType.setFieldInnerClassType2(tf2.getType());
+		classType.setFieldInnerClass2(tf2.getFieldInnerClass());
+		return classType;
+	}
+
+	/**
+	 * 获得类类型.
+	 * 
+	 * @param field
+	 * @param implClasses
+	 * 
+	 * @return 类类型
+	 */
 	public static ClassType getClassType(Field field, ImplClasses implClasses) {
 		Type type = null;
 		Class<?> fieldInnerClass = null;
@@ -260,10 +296,25 @@ public class ClassUtil {
 		if (gtype instanceof ParameterizedType) {
 			type = ((ParameterizedType) gtype).getActualTypeArguments()[0];
 		}
+		TypeAndFieldInnerClass tf = new TypeAndFieldInnerClass();
+		tf.setType(type);
+		tf.setFieldInnerClass(fieldInnerClass);
+		getTypeAndInnerClass(tf,implClasses);
+		ClassType classType = new ClassType();
+		classType.setFieldClass(fieldClass);
+		classType.setFieldInnerClassType1(tf.getType());
+		classType.setFieldInnerClass1(tf.getFieldInnerClass());
+		return classType;
+	}
+
+	private static void getTypeAndInnerClass(TypeAndFieldInnerClass tf, ImplClasses implClasses) {
+		Type type = tf.getType();
+		Class<?> fieldInnerClass = null;
 		if (type != null) {
 			if (Constants.GENERICS.equals(type.toString())) {
 				// TODO 为了最外层的实现类 root层使用
 				fieldInnerClass = implClasses.getNewInstanceClass();
+				// fieldInnerClass = Object.class;
 			} else {
 				if (type instanceof ParameterizedType) {
 					Type innerType = null;
@@ -276,6 +327,7 @@ public class ClassUtil {
 						} else {
 							// FIXME
 							fieldInnerClass = implClasses.getNewInstanceClass();
+							// fieldInnerClass = Object.class;
 						}
 					}
 				} else {
@@ -283,11 +335,30 @@ public class ClassUtil {
 				}
 			}
 		}
-		ClassType classType = new ClassType();
-		classType.setFieldInnerClassType(type);
-		classType.setFieldClass(fieldClass);
-		classType.setFieldInnerClass(fieldInnerClass);
-		return classType;
+		tf.setFieldInnerClass(fieldInnerClass);
 	}
 
+	public static class TypeAndFieldInnerClass {
+
+		private Type type;
+
+		private Class<?> fieldInnerClass;
+
+		public Type getType() {
+			return type;
+		}
+
+		public void setType(Type type) {
+			this.type = type;
+		}
+
+		public Class<?> getFieldInnerClass() {
+			return fieldInnerClass;
+		}
+
+		public void setFieldInnerClass(Class<?> fieldInnerClass) {
+			this.fieldInnerClass = fieldInnerClass;
+		}
+
+	}
 }

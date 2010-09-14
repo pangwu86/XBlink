@@ -124,9 +124,7 @@ public class XSet extends XType {
 
 			// 获得泛型参数
 			ClassType classType = ClassUtil.getClassType(field, transferInfo.getXmlImplClasses());
-			Set result = traceXPathSet(tarNode, classType.getFieldClass(),
-					classType.getFieldInnerClass(), classType.getFieldInnerClassType(),
-					transferInfo);
+			Set result = traceXPathSet(tarNode, classType.getFieldClass(), transferInfo);
 			field.set(obj, result);
 
 			// 记录该对象，保持对其引用
@@ -136,8 +134,8 @@ public class XSet extends XType {
 			referenceObjects.put(refObject.getNo(), refObject);
 
 			// List对象塞入对应的值
-			setValue(result, classType.getFieldClass(), classType.getFieldInnerClass(),
-					classType.getFieldInnerClassType(), transferInfo, nodeListLength, nodeList);
+			setValue(result, classType.getFieldClass(), classType.getFieldInnerClass1(),
+					classType.getFieldInnerClassType1(), transferInfo, nodeListLength, nodeList);
 		}
 	}
 
@@ -150,8 +148,8 @@ public class XSet extends XType {
 	 * @return
 	 * @throws Exception
 	 */
-	private Set traceXPathSet(XMLNode baseNode, Class fieldClass, Class fieldInnerClass,
-			Type fieldInnerClassType, TransferInfo transferInfo) throws Exception {
+	private Set traceXPathSet(XMLNode baseNode, Class fieldClass, TransferInfo transferInfo)
+			throws Exception {
 		boolean isInterface = fieldClass.isInterface() ? true : false;
 		XMLNodeList nodeList = baseNode.getChildNodes(transferInfo.getXmlAdapter());
 		int nodeListLength = nodeList.getLength(transferInfo.getXmlAdapter());

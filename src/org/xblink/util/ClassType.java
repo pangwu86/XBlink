@@ -11,26 +11,46 @@ import java.lang.reflect.Type;
  */
 public class ClassType {
 
-	Type fieldInnerClassType;
+	Type fieldInnerClassType1;
 
-	Class<?> fieldInnerClass;
+	Type fieldInnerClassType2;
+
+	Class<?> fieldInnerClass1;
+
+	Class<?> fieldInnerClass2;
 
 	Class<?> fieldClass;
 
-	public Type getFieldInnerClassType() {
-		return fieldInnerClassType;
+	public Type getFieldInnerClassType1() {
+		return fieldInnerClassType1;
 	}
 
-	public void setFieldInnerClassType(Type fieldInnerClassType) {
-		this.fieldInnerClassType = fieldInnerClassType;
+	public void setFieldInnerClassType1(Type fieldInnerClassType) {
+		this.fieldInnerClassType1 = fieldInnerClassType;
 	}
 
-	public Class<?> getFieldInnerClass() {
-		return fieldInnerClass;
+	public Class<?> getFieldInnerClass1() {
+		return fieldInnerClass1;
 	}
 
-	public void setFieldInnerClass(Class<?> fieldInnerClass) {
-		this.fieldInnerClass = fieldInnerClass;
+	public void setFieldInnerClass1(Class<?> fieldInnerClass) {
+		this.fieldInnerClass1 = fieldInnerClass;
+	}
+
+	public Type getFieldInnerClassType2() {
+		return fieldInnerClassType2;
+	}
+
+	public void setFieldInnerClassType2(Type fieldInnerClassType2) {
+		this.fieldInnerClassType2 = fieldInnerClassType2;
+	}
+
+	public Class<?> getFieldInnerClass2() {
+		return fieldInnerClass2;
+	}
+
+	public void setFieldInnerClass2(Class<?> fieldInnerClass2) {
+		this.fieldInnerClass2 = fieldInnerClass2;
 	}
 
 	public Class<?> getFieldClass() {

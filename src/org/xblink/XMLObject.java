@@ -75,8 +75,8 @@ public abstract class XMLObject {
 		xTypes.add(new XObject());
 		xTypes.add(new XList());
 		xTypes.add(new XSet());
-		xTypes.add(new XMap());
 		xTypes.add(new XArray());
+		xTypes.add(new XMap());
 		isInitialized = true;
 	}
 

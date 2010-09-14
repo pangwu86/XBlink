@@ -84,4 +84,10 @@ public class XppXMLAdapter implements XMLAdapter {
 		return null;
 	}
 
+	@Override
+	public String getTextContent(Object node) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -50,4 +50,8 @@ public class XMLNode {
 		return xmlAdapter.getNextSibling(node);
 	}
 
+	public String getTextContent(XMLAdapter xmlAdapter) {
+		return xmlAdapter.getTextContent(node);
+	}
+
 }

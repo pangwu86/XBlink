@@ -114,4 +114,10 @@ public class SystemXMLAdapter implements XMLAdapter {
 		return xmlNode;
 	}
 
+	@Override
+	public String getTextContent(Object node) {
+		Node item = (Node)node;
+		return item.getTextContent();
+	}
+
 }

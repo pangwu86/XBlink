@@ -15,6 +15,11 @@ public final class Constants {
 	public final static String LIST = "-list";
 	public final static String SET = "-set";
 	public final static String MAP = "-map";
+	
+	/** MAP */
+	public final static String MAP_ENTRY = "entry";
+	public final static String MAP_KEY = "key";
+	public final static String MAP_VAlUE = "value";
 
 	/** 其他常量 */
 	public final static String ATTRIBUTE_IDENTIFIER = "@";

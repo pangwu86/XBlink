@@ -39,4 +39,6 @@ public interface XMLAdapter {
 
 	public XMLNode getNamedItem(Object attributeMap, String objValue);
 
+	public String getTextContent(Object node);
+
 }

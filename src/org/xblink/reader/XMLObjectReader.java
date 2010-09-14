@@ -83,9 +83,13 @@ public class XMLObjectReader extends XMLObject {
 				xtype.readItem(obj, baseNode, transferInfo);
 			}
 		} else {
-			XMLNode att = baseNode.getAttributes(transferInfo.getXmlAdapter()).getNamedItem(
-					transferInfo.getXmlAdapter(), Constants.OBJ_VALUE);
-			String xPathValue = att == null ? null : att.getNodeValue(transferInfo.getXmlAdapter());
+			// Attribute 版本
+//			XMLNode att = baseNode.getAttributes(transferInfo.getXmlAdapter()).getNamedItem(
+//					transferInfo.getXmlAdapter(), Constants.OBJ_VALUE);
+//			String xPathValue = att == null ? null : att.getNodeValue(transferInfo.getXmlAdapter());
+			
+			// Element 版本
+			String xPathValue = baseNode == null ? null : baseNode.getTextContent(transferInfo.getXmlAdapter());
 			if (null == xPathValue || xPathValue.length() == 0) {
 				obj = null;
 			} else {
@@ -101,6 +105,8 @@ public class XMLObjectReader extends XMLObject {
 					}
 				}
 			}
+			
+			
 		}
 		return obj;
 	}

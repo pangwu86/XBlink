@@ -100,10 +100,15 @@ public class XMLObjectWriter extends XMLObject {
 				xtype.writeItem(obj, writer, transferInfo);
 			}
 		} else {
-			writer.writeStartElement(obj.getClass().toString()
-					.replaceAll(Constants.SPACE, Constants.UNDERLINE));
-			// 调用toString
-			writer.writeAttribute(Constants.OBJ_VALUE, obj.toString());
+			// Attribute 版本
+//			writer.writeStartElement(obj.getClass().toString()
+//					.replaceAll(Constants.SPACE, Constants.UNDERLINE));
+//			writer.writeAttribute(Constants.OBJ_VALUE, obj.toString());
+		
+			// Element 版本
+			writer.writeTextElement(obj.getClass().toString()
+					.replaceAll(Constants.SPACE, Constants.UNDERLINE), obj.toString());
+			return;
 		}
 		writer.writeEndElement();
 	}
