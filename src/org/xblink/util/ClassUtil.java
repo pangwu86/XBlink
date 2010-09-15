@@ -337,6 +337,11 @@ public class ClassUtil {
 		tf.setFieldInnerClass(fieldInnerClass);
 	}
 
+	/**
+	 * 
+	 * 内部类.
+	 *
+	 */
 	public static class TypeAndFieldInnerClass {
 
 		private Type type;
@@ -365,7 +370,7 @@ public class ClassUtil {
 	 * 获得数组中的类型.
 	 * 
 	 * @param object
-	 * @return
+	 * @return 类型
 	 */
 	public static Class<?> getArrayElementType(Object object) {
 		Class<?> type = object.getClass();
@@ -380,7 +385,7 @@ public class ClassUtil {
 	 * 获得类型
 	 * 
 	 * @param clz
-	 * @return
+	 * @return 8中基本类型
 	 */
 	public static EightBasicTypes getEightType(Class<?> clz) {
 		if (Constants.intClass == clz) {

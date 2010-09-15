@@ -6,11 +6,11 @@ import org.xblink.adapter.AdapterFactoryTest;
 import org.xblink.collection.CollectionTestAll;
 import org.xblink.demo.DemoTestAll;
 import org.xblink.loop.LoopTestAll;
+import org.xblink.performance.PerformanceTestAll;
 import org.xblink.util.ClassScannerTest;
-import org.xblinkvsxstream.SchoolTest;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ AdapterFactoryTest.class, ClassScannerTest.class, CollectionTestAll.class,
-		LoopTestAll.class, DemoTestAll.class, SchoolTest.class })
+@Suite.SuiteClasses({ PerformanceTestAll.class, AdapterFactoryTest.class, ClassScannerTest.class,
+		CollectionTestAll.class, LoopTestAll.class, DemoTestAll.class })
 public class TestAll {
 }

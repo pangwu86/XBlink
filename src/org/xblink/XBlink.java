@@ -65,7 +65,7 @@ public class XBlink {
 	 * @param filePath
 	 *            文件路径
 	 * @param clzs
-	 *            生成对象的Class()
+	 *            生成对象的Class(Map集合使用，第一个参数是Key的类型，第二个参数是Value的类型)
 	 * @return 对象
 	 */
 	public static Object fromXml(String filePath, Class<?>[] clzs) {
@@ -92,8 +92,8 @@ public class XBlink {
 	 * 
 	 * @param filePath
 	 *            文件路径
-	 * @param clzs
-	 *            生成对象的Class
+	* @param clzs
+	 *            生成对象的Class(Map集合使用，第一个参数是Key的类型，第二个参数是Value的类型)
 	 * @param implClasses
 	 *            生成对象中包含的所有接口实现类
 	 * @return 对象
@@ -120,8 +120,8 @@ public class XBlink {
 	 * 
 	 * @param inputStream
 	 *            包含文件信息的输 入流
-	 * @param clz
-	 *            生成对象的Class
+	 * @param clzs
+	 *            生成对象的Class(Map集合使用，第一个参数是Key的类型，第二个参数是Value的类型)
 	 * @return 对象
 	 */
 	public static Object fromXml(InputStream inputStream, Class<?>[] clzs) {
@@ -148,8 +148,8 @@ public class XBlink {
 	 * 
 	 * @param inputStream
 	 *            包含文件信息的输 入流
-	 * @param clz
-	 *            生成对象的Class
+	 * @param clzs
+	 *            生成对象的Class(Map集合使用，第一个参数是Key的类型，第二个参数是Value的类型)
 	 * @param implClasses
 	 *            生成对象中包含的所有接口实现类
 	 * @return 对象
@@ -179,8 +179,8 @@ public class XBlink {
 	 * 
 	 * @param filePath
 	 *            文件路径
-	 * @param clz
-	 *            生成对象的Class
+	 * @param clzs
+	 *            生成对象的Class(Map集合使用，第一个参数是Key的类型，第二个参数是Value的类型)
 	 * @param classLoader
 	 *            用户的类加载器
 	 * @return 对象
@@ -212,8 +212,8 @@ public class XBlink {
 	 * 
 	 * @param filePath
 	 *            文件路径
-	 * @param clz
-	 *            生成对象的Class
+	 * @param clzs
+	 *            生成对象的Class(Map集合使用，第一个参数是Key的类型，第二个参数是Value的类型)
 	 * @param implClasses
 	 *            生成对象中包含的所有接口实现类
 	 * @param classLoader
@@ -245,8 +245,8 @@ public class XBlink {
 	 * 
 	 * @param inputStream
 	 *            包含文件信息的输 入流
-	 * @param clz
-	 *            生成对象的Class
+	* @param clzs
+	 *            生成对象的Class(Map集合使用，第一个参数是Key的类型，第二个参数是Value的类型)
 	 * @param classLoader
 	 *            用户的类加载器
 	 * @return 对象
@@ -278,8 +278,8 @@ public class XBlink {
 	 * 
 	 * @param inputStream
 	 *            包含文件信息的输 入流
-	 * @param clz
-	 *            生成对象的Class
+	 * @param clzs
+	 *            生成对象的Class(Map集合使用，第一个参数是Key的类型，第二个参数是Value的类型)
 	 * @param implClasses
 	 *            生成对象中包含的所有接口实现类
 	 * @param classLoader

@@ -37,7 +37,7 @@ public class XMLReader {
 	 * @param clz
 	 *            Java类对象
 	 * @param classLoader
-	 *            类加载器
+	 *            类加载器 return 对象
 	 */
 	public Object readXML(InputStream inputStream, Class<?> clz, ClassLoader classLoader) {
 		return readXML(inputStream, clz, new Class<?>[] {}, classLoader);
@@ -54,7 +54,7 @@ public class XMLReader {
 	 * @param classLoader
 	 *            类加载器
 	 * 
-	 * @return
+	 * @return 对象
 	 */
 	public Object readXML(InputStream inputStream, Class<?> clz, Class<?>[] implClasses,
 			ClassLoader classLoader) {
@@ -75,7 +75,7 @@ public class XMLReader {
 	 *            接口实现类
 	 * @param classLoader
 	 *            类加载器
-	 * @return
+	 * @return 对象
 	 */
 	public Object readXML(InputStream inputStream, Class<?>[] clzs, ClassLoader classLoader) {
 		return readXML(inputStream, clzs, new Class<?>[] {}, classLoader);
@@ -91,7 +91,7 @@ public class XMLReader {
 	 *            接口实现类
 	 * @param classLoader
 	 *            类加载器
-	 * @return
+	 * @return 对象
 	 */
 	public Object readXML(InputStream inputStream, Class<?>[] clzs, Class<?>[] implClasses,
 			ClassLoader classLoader) {
@@ -107,11 +107,13 @@ public class XMLReader {
 	 * 
 	 * @param in
 	 *            输入流 包含输出文件位置信息
-	 * @param clz
-	 *            Java类对象
+	 * @param clzs
+	 *            Java类对象(两个对象)
 	 * @param implClasses
 	 *            接口实现类
 	 * @throws Exception
+	 * 
+	 * @return 对象
 	 */
 	private Object readStart(InputStream in, Class<?>[] clzs, Class<?>[] implClasses,
 			ClassLoader classLoader) throws Exception {

@@ -26,7 +26,6 @@ public class XMLWriter {
 	 * 
 	 * @param outputStream
 	 * @param obj
-	 * @param domDriver
 	 * @throws Exception
 	 */
 	public void writeXML(OutputStream outputStream, Object obj) {
