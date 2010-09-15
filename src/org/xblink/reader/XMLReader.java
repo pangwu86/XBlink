@@ -1,8 +1,5 @@
 package org.xblink.reader;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +11,7 @@ import org.xblink.XMLObject;
 import org.xblink.XRoot;
 import org.xblink.adapter.XMLAdapter;
 import org.xblink.adapter.XMLAdapterFactory;
-import org.xblink.domdrivers.DomDriver;
+import org.xblink.domdrivers.impl.SystemDomDriver;
 import org.xblink.transfer.ClassLoaderSwitcher;
 import org.xblink.transfer.ImplClasses;
 import org.xblink.transfer.ReferenceObject;
@@ -35,38 +32,34 @@ public class XMLReader {
 
 	/**
 	 * 
-	 * @param filePath
-	 *            输出文件位置信息
+	 * @param inputStream
+	 *            输入流
 	 * @param clz
 	 *            Java类对象
 	 * @param classLoader
 	 *            类加载器
-	 * @param domDriver
-	 *            DOM驱动
 	 */
-	public Object readXML(String filePath, Class<?> clz, ClassLoader classLoader,
-			DomDriver domDriver) {
-		return readXML(filePath, clz, new Class<?>[] {}, classLoader, domDriver);
+	public Object readXML(InputStream inputStream, Class<?> clz, ClassLoader classLoader) {
+		return readXML(inputStream, clz, new Class<?>[] {}, classLoader);
 	}
 
 	/**
 	 * 
-	 * @param filePath
-	 *            输出文件位置信息
+	 * @param inputStream
+	 *            输入流
 	 * @param clz
 	 *            Java类对象
 	 * @param implClasses
 	 *            接口实现类
 	 * @param classLoader
 	 *            类加载器
-	 * @param domDriver
-	 *            DOM驱动
+	 * 
+	 * @return
 	 */
-	public Object readXML(String filePath, Class<?> clz, Class<?>[] implClasses,
-			ClassLoader classLoader, DomDriver domDriver) {
+	public Object readXML(InputStream inputStream, Class<?> clz, Class<?>[] implClasses,
+			ClassLoader classLoader) {
 		try {
-			return readStart(new BufferedInputStream(new FileInputStream(new File(filePath))), clz,
-					implClasses, classLoader, domDriver);
+			return readStart(inputStream, new Class<?>[] { clz, null }, implClasses, classLoader);
 		} catch (Exception e) {
 			throw new RuntimeException(Constants.DESERIALIZE_FAIL, e);
 		}
@@ -75,34 +68,42 @@ public class XMLReader {
 	/**
 	 * 
 	 * @param inputStream
-	 *            包含文件信息的输 入流
-	 * @param clz
-	 *            Java类对象
+	 *            输入流
+	 * @param clzs
+	 *            Java类对象(两个)
+	 * @param implClasses
+	 *            接口实现类
+	 * @param classLoader
+	 *            类加载器
+	 * @return
 	 */
-	public Object readXML(InputStream inputStream, Class<?> clz, ClassLoader classLoader,
-			DomDriver domDriver) {
-		return readXML(inputStream, clz, new Class<?>[] {}, classLoader, domDriver);
+	public Object readXML(InputStream inputStream, Class<?>[] clzs, ClassLoader classLoader) {
+		return readXML(inputStream, clzs, new Class<?>[] {}, classLoader);
 	}
 
 	/**
 	 * 
-	 @param inputStream
-	 *            包含文件信息的输入流
-	 * @param clz
-	 *            Java类对象
+	 * @param inputStream
+	 *            输入流
+	 * @param clzs
+	 *            Java类对象(两个)
 	 * @param implClasses
 	 *            接口实现类
+	 * @param classLoader
+	 *            类加载器
+	 * @return
 	 */
-	public Object readXML(InputStream inputStream, Class<?> clz, Class<?>[] implClasses,
-			ClassLoader classLoader, DomDriver domDriver) {
+	public Object readXML(InputStream inputStream, Class<?>[] clzs, Class<?>[] implClasses,
+			ClassLoader classLoader) {
 		try {
-			return readStart(inputStream, clz, implClasses, classLoader, domDriver);
+			return readStart(inputStream, clzs, implClasses, classLoader);
 		} catch (Exception e) {
 			throw new RuntimeException(Constants.DESERIALIZE_FAIL, e);
 		}
 	}
 
 	/**
+	 * 开始解析.
 	 * 
 	 * @param in
 	 *            输入流 包含输出文件位置信息
@@ -110,16 +111,16 @@ public class XMLReader {
 	 *            Java类对象
 	 * @param implClasses
 	 *            接口实现类
-	 * @param domDriver
 	 * @throws Exception
 	 */
-	private Object readStart(InputStream in, Class<?> clz, Class<?>[] implClasses,
-			ClassLoader classLoader, DomDriver domDriver) throws Exception {
+	private Object readStart(InputStream in, Class<?>[] clzs, Class<?>[] implClasses,
+			ClassLoader classLoader) throws Exception {
 		// 解析过的对象，方便其他对象引用
 		Map<Integer, ReferenceObject> referenceObjects = new HashMap<Integer, ReferenceObject>();
 		// 接口实现类集合初始化
 		ImplClasses xmlImplClasses = new ImplClasses();
-		xmlImplClasses.setNewInstanceClass(clz);
+		xmlImplClasses.setRootInstanceClass1(clzs[0]);
+		xmlImplClasses.setRootInstanceClass2(clzs[1]);
 		xmlImplClasses.setImplClasses(implClasses);
 		xmlImplClasses.setImplClassesNumber(implClasses.length);
 		xmlImplClasses.setImplClassesMap(new HashMap<Class<?>, Class<?>>());
@@ -127,7 +128,7 @@ public class XMLReader {
 		ClassLoaderSwitcher classLoaderSwitcher = new ClassLoaderSwitcher();
 		classLoaderSwitcher.setUserClassLoader(classLoader);
 		// 根据DOM驱动，获得对应的适配器
-		XMLAdapter xmlAdapter = XMLAdapterFactory.getAdapter(domDriver);
+		XMLAdapter xmlAdapter = XMLAdapterFactory.getAdapter(new SystemDomDriver());
 		// 传递信息对象
 		TransferInfo transferInfo = new TransferInfo();
 		transferInfo.setReferenceObjects(referenceObjects);
@@ -164,13 +165,12 @@ public class XMLReader {
 					return result;
 				}
 			}
-			Object result = xmlObjectRead.read(
-					ClassUtil.getInstance(clz, transferInfo.getXmlImplClasses()), baseNode,
+			return xmlObjectRead.read(
+					ClassUtil.getInstance(clzs[0], transferInfo.getXmlImplClasses()), baseNode,
 					transferInfo);
+		} finally {
 			// 去掉XRoot的信息
 			XMLObject.cleanXRoot();
-			return result;
-		} finally {
 			// 手动释放对象引用
 			transferInfo = null;
 			// 关闭相关流

@@ -12,8 +12,14 @@ import java.util.Map;
  */
 public class ImplClasses {
 
-	/** 最外层实例化对象的类型 */
-	private Class<?> newInstanceClass;
+	/** 是否是最外层实例化对象的类型1 */
+	private boolean isRootInstanceClass1 = true;
+
+	/** 最外层实例化对象的类型1 */
+	private Class<?> rootInstanceClass1;
+
+	/** 最外层实例化对象的类型2 (Map使用) */
+	private Class<?> rootInstanceClass2;
 
 	/** 接口实现类集合 */
 	private Class<?>[] implClasses;
@@ -24,12 +30,20 @@ public class ImplClasses {
 	/** 记录已经匹配的接口和实现类 */
 	private Map<Class<?>, Class<?>> implClassesMap = new HashMap<Class<?>, Class<?>>();
 
-	public Class<?> getNewInstanceClass() {
-		return newInstanceClass;
+	public Class<?> getRootInstanceClass1() {
+		return rootInstanceClass1;
 	}
 
-	public void setNewInstanceClass(Class<?> newInstanceClass) {
-		this.newInstanceClass = newInstanceClass;
+	public void setRootInstanceClass1(Class<?> newInstanceClass) {
+		this.rootInstanceClass1 = newInstanceClass;
+	}
+
+	public Class<?> getRootInstanceClass2() {
+		return rootInstanceClass2;
+	}
+
+	public void setRootInstanceClass2(Class<?> newInstanceClass) {
+		this.rootInstanceClass2 = newInstanceClass;
 	}
 
 	public Class<?>[] getImplClasses() {
@@ -54,6 +68,19 @@ public class ImplClasses {
 
 	public void setImplClassesMap(Map<Class<?>, Class<?>> implClassesMap) {
 		this.implClassesMap = implClassesMap;
+	}
+
+	/**
+	 * 
+	 */
+	public Class<?> getRootInstanceClass() {
+		if (isRootInstanceClass1) {
+			isRootInstanceClass1 = false;
+			return rootInstanceClass1;
+		} else {
+			isRootInstanceClass1 = true;
+			return rootInstanceClass2;
+		}
 	}
 
 }

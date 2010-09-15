@@ -4,9 +4,10 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.xblink.Constants;
+import org.xblink.EightBasicTypes;
 import org.xblink.annotations.XBlinkAlias;
 import org.xblink.transfer.ClassLoaderSwitcher;
 import org.xblink.transfer.ImplClasses;
@@ -21,10 +22,10 @@ import org.xblink.transfer.ImplClasses;
 public class ClassUtil {
 
 	/** 记录所有解析过的ClassName,FiledName **/
-	static private HashMap<String, StringBuffer> names = new HashMap<String, StringBuffer>();
+	static private ConcurrentHashMap<String, StringBuffer> names = new ConcurrentHashMap<String, StringBuffer>();
 
 	/** 八种基本类型 */
-	static private HashMap<Class<?>, Integer> classMap = new HashMap<Class<?>, Integer>();
+	static private ConcurrentHashMap<Class<?>, Integer> classMap = new ConcurrentHashMap<Class<?>, Integer>();
 
 	static {
 		classMap.put(Constants.byteClass, 1);
@@ -219,21 +220,21 @@ public class ClassUtil {
 	 */
 	public static Object getSimpleInstance(Class<?> clz) throws Exception {
 		try {
-			if (Constants.IntClass == clz) {
+			if (Constants.IntClass == clz || Constants.intClass == clz) {
 				return new Integer(0);
-			} else if (Constants.FloatClass == clz) {
+			} else if (Constants.FloatClass == clz || Constants.floatClass == clz) {
 				return new Float(0);
-			} else if (Constants.DoubleClass == clz) {
+			} else if (Constants.DoubleClass == clz || Constants.doubleClass == clz) {
 				return new Double(0);
-			} else if (Constants.ByteClass == clz) {
+			} else if (Constants.ByteClass == clz || Constants.byteClass == clz) {
 				return new Byte((byte) 0);
-			} else if (Constants.BooleanClass == clz) {
+			} else if (Constants.BooleanClass == clz || Constants.booleanClass == clz) {
 				return new Boolean(true);
-			} else if (Constants.ShortClass == clz) {
+			} else if (Constants.ShortClass == clz || Constants.shortClass == clz) {
 				return new Short((short) 0);
-			} else if (Constants.LongClass == clz) {
+			} else if (Constants.LongClass == clz || Constants.longClass == clz) {
 				return new Long(0);
-			} else if (Constants.CharClass == clz) {
+			} else if (Constants.CharClass == clz || Constants.charClass == clz) {
 				return new Character((char) 0);
 			} else if (Class.class == clz) {
 				return clz;
@@ -269,8 +270,8 @@ public class ClassUtil {
 		TypeAndFieldInnerClass tf2 = new TypeAndFieldInnerClass();
 		tf2.setType(type2);
 		tf2.setFieldInnerClass(fieldInnerClass2);
-		getTypeAndInnerClass(tf1,implClasses);
-		getTypeAndInnerClass(tf2,implClasses);
+		getTypeAndInnerClass(tf1, implClasses);
+		getTypeAndInnerClass(tf2, implClasses);
 		ClassType classType = new ClassType();
 		classType.setFieldClass(fieldClass);
 		classType.setFieldInnerClassType1(tf1.getType());
@@ -299,7 +300,7 @@ public class ClassUtil {
 		TypeAndFieldInnerClass tf = new TypeAndFieldInnerClass();
 		tf.setType(type);
 		tf.setFieldInnerClass(fieldInnerClass);
-		getTypeAndInnerClass(tf,implClasses);
+		getTypeAndInnerClass(tf, implClasses);
 		ClassType classType = new ClassType();
 		classType.setFieldClass(fieldClass);
 		classType.setFieldInnerClassType1(tf.getType());
@@ -313,8 +314,7 @@ public class ClassUtil {
 		if (type != null) {
 			if (Constants.GENERICS.equals(type.toString())) {
 				// TODO 为了最外层的实现类 root层使用
-				fieldInnerClass = implClasses.getNewInstanceClass();
-				// fieldInnerClass = Object.class;
+				fieldInnerClass = implClasses.getRootInstanceClass();
 			} else {
 				if (type instanceof ParameterizedType) {
 					Type innerType = null;
@@ -325,9 +325,8 @@ public class ClassUtil {
 										Constants.EMPTY_STRING))) {
 							fieldInnerClass = Class.class;
 						} else {
-							// FIXME
-							fieldInnerClass = implClasses.getNewInstanceClass();
-							// fieldInnerClass = Object.class;
+							// TODO 为了最外层的实现类 root层使用
+							fieldInnerClass = implClasses.getRootInstanceClass();
 						}
 					}
 				} else {
@@ -360,5 +359,48 @@ public class ClassUtil {
 			this.fieldInnerClass = fieldInnerClass;
 		}
 
+	}
+
+	/**
+	 * 获得数组中的类型.
+	 * 
+	 * @param object
+	 * @return
+	 */
+	public static Class<?> getArrayElementType(Object object) {
+		Class<?> type = object.getClass();
+		if (type.isArray()) {
+			Class<?> elementType = type.getComponentType();
+			return elementType;
+		}
+		return null;
+	}
+
+	/**
+	 * 获得类型
+	 * 
+	 * @param clz
+	 * @return
+	 */
+	public static EightBasicTypes getEightType(Class<?> clz) {
+		if (Constants.intClass == clz) {
+			return EightBasicTypes.Int;
+		} else if (Constants.doubleClass == clz) {
+			return EightBasicTypes.Double;
+		} else if (Constants.floatClass == clz) {
+			return EightBasicTypes.Float;
+		} else if (Constants.booleanClass == clz) {
+			return EightBasicTypes.Boolean;
+		} else if (Constants.byteClass == clz) {
+			return EightBasicTypes.Byte;
+		} else if (Constants.charClass == clz) {
+			return EightBasicTypes.Char;
+		} else if (Constants.shortClass == clz) {
+			return EightBasicTypes.Short;
+		} else if (Constants.longClass == clz) {
+			return EightBasicTypes.Long;
+		} else {
+			return EightBasicTypes.Null;
+		}
 	}
 }

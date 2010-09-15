@@ -6,8 +6,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.junit.BeforeClass;
@@ -32,6 +34,8 @@ public class SchoolTest {
 
 	private static Set<School> schoolSet = new HashSet<School>();
 
+	private static Map<Integer, School> schoolMap = new HashMap<Integer, School>();
+
 	private static int schoolNumber = 10;
 
 	private static int gradeNumber = 10;
@@ -55,6 +59,7 @@ public class SchoolTest {
 			schoolArray[i] = sch;
 			schoolList.add(sch);
 			schoolSet.add(sch);
+			schoolMap.put(i, sch);
 		}
 	}
 
@@ -187,6 +192,38 @@ public class SchoolTest {
 		System.out.println("序列化：" + timer.getTimer());
 		timer.reset();
 		XBlink.fromXml("C:/schoolSet_XBlink.xml", School.class);
+		System.out.println("反序列化：" + timer.getTimer());
+
+		System.out.println();
+	}
+
+	@Test
+	public void testMap() throws Exception {
+		System.out.println("***testMap***");
+		WatchTimer timer = new WatchTimer();
+		// XStream
+		System.out.println("XStream:");
+		timer.reset();
+		XStream xStream1 = new XStream(new XppDriver());
+		xStream1.processAnnotations(clzs);
+		xStream1.toXML(schoolMap, new BufferedOutputStream(new FileOutputStream(new File(
+				"C:/schoolMap_XStream.xml"))));
+		System.out.println("序列化：" + timer.getTimer());
+		timer.reset();
+		XStream xStream2 = new XStream(new XppDriver());
+		xStream2.processAnnotations(clzs);
+		xStream2.fromXML(new BufferedInputStream(new FileInputStream(new File(
+				"C:/schoolMap_XStream.xml"))));
+		System.out.println("反序列化：" + timer.getTimer());
+
+		// XBlink
+		System.out.println("XBlink:");
+		timer.reset();
+		XBlink.toXml("C:/schoolMap_XBlink.xml", schoolMap);
+		System.out.println("序列化：" + timer.getTimer());
+		timer.reset();
+		Map<Integer, School> result = (Map) XBlink.fromXml("C:/schoolMap_XBlink.xml", new Class[] {
+				Integer.class, School.class });
 		System.out.println("反序列化：" + timer.getTimer());
 
 		System.out.println();

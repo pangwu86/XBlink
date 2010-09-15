@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 import java.util.Map;
 
 import org.xblink.Constants;
+import org.xblink.EightBasicTypes;
 import org.xblink.XType;
 import org.xblink.annotations.XBlinkAlias;
 import org.xblink.annotations.XBlinkAsArray;
@@ -50,8 +51,18 @@ public class XArray extends XType {
 			if (!field.getType().isArray()) {
 				throw new Exception("字段：" + field.getName() + " 不是一个数组.");
 			}
-			// TODO 8中基本类型
-			Object[] objs = (Object[]) field.get(obj);
+			Object[] objs = null;
+			Object array = field.get(obj);
+			// 8中基本类型的判断
+			Class<?> elememtType = ClassUtil.getArrayElementType(array);
+			EightBasicTypes et = ClassUtil.getEightType(elememtType);
+			if (null == et.getType()) {
+				objs = (Object[]) array;
+			} else {
+				// TODO 优化这里的实现方式
+				// 8中基本类型之一
+				objs = getEightBasicArray(et, array);
+			}
 			// 列表为空的话
 			if (objs.length == 0) {
 				continue;
@@ -63,7 +74,6 @@ public class XArray extends XType {
 			if (addSuffix) {
 				fieldName.append(Constants.ARRAY);
 			}
-
 			// 集合对象的判断
 			Map<Integer, ReferenceObject> referenceObjects = transferInfo.getReferenceObjects();
 			// 记录解析过的Object
@@ -126,22 +136,228 @@ public class XArray extends XType {
 			// 特殊情况root的array
 			if (tarNode.getNodeName(transferInfo.getXmlAdapter()).equals(
 					Constants.ROOT + Constants.ARRAY)) {
-				fieldClass = transferInfo.getXmlImplClasses().getNewInstanceClass();
+				fieldClass = transferInfo.getXmlImplClasses().getRootInstanceClass1();
 			} else {
 				fieldClass = field.getType().getComponentType();
 			}
 			// 获得数组对象
-			Object[] result = traceXPathArray(tarNode, fieldClass, transferInfo);
-			field.set(obj, result);
+			// 判断8中基本类型的数组
+			EightBasicTypes et = ClassUtil.getEightType(fieldClass);
+			if (null == et.getType()) {
+				Object[] result = traceXPathArray(tarNode, fieldClass, transferInfo);
+				field.set(obj, result);
 
-			// 记录该对象，保持对其引用
-			ReferenceObject refObject = new ReferenceObject();
-			refObject.setNo(referenceObjects.size() + 1);
-			refObject.setRef(result);
-			referenceObjects.put(refObject.getNo(), refObject);
+				// 记录该对象，保持对其引用
+				ReferenceObject refObject = new ReferenceObject();
+				refObject.setNo(referenceObjects.size() + 1);
+				refObject.setRef(result);
+				referenceObjects.put(refObject.getNo(), refObject);
 
-			// List对象塞入对应的值
-			setValue(result, fieldClass, transferInfo, nodeListLength, nodeList);
+				// Array对象塞入对应的值
+				setValue(result, fieldClass, transferInfo, nodeListLength, nodeList);
+			} else if (int.class == et.getType()) {
+				// FIXME 优化代码
+				int[] result = (int[]) traceXPathArrayBasic(tarNode, fieldClass, transferInfo);
+				field.set(obj, result);
+
+				// 记录该对象，保持对其引用
+				ReferenceObject refObject = new ReferenceObject();
+				refObject.setNo(referenceObjects.size() + 1);
+				refObject.setRef(result);
+				referenceObjects.put(refObject.getNo(), refObject);
+
+				// Array对象塞入对应的值
+				setIntValue(result, fieldClass, transferInfo, nodeListLength, nodeList);
+			} else if (byte.class == et.getType()) {
+				// FIXME 优化代码
+				byte[] result = (byte[]) traceXPathArrayBasic(tarNode, fieldClass, transferInfo);
+				field.set(obj, result);
+
+				// 记录该对象，保持对其引用
+				ReferenceObject refObject = new ReferenceObject();
+				refObject.setNo(referenceObjects.size() + 1);
+				refObject.setRef(result);
+				referenceObjects.put(refObject.getNo(), refObject);
+
+				// Array对象塞入对应的值
+				setByteValue(result, fieldClass, transferInfo, nodeListLength, nodeList);
+			} else if (short.class == et.getType()) {
+				// FIXME 优化代码
+				short[] result = (short[]) traceXPathArrayBasic(tarNode, fieldClass, transferInfo);
+				field.set(obj, result);
+
+				// 记录该对象，保持对其引用
+				ReferenceObject refObject = new ReferenceObject();
+				refObject.setNo(referenceObjects.size() + 1);
+				refObject.setRef(result);
+				referenceObjects.put(refObject.getNo(), refObject);
+
+				// Array对象塞入对应的值
+				setShortValue(result, fieldClass, transferInfo, nodeListLength, nodeList);
+			} else if (long.class == et.getType()) {
+				// FIXME 优化代码
+				long[] result = (long[]) traceXPathArrayBasic(tarNode, fieldClass, transferInfo);
+				field.set(obj, result);
+
+				// 记录该对象，保持对其引用
+				ReferenceObject refObject = new ReferenceObject();
+				refObject.setNo(referenceObjects.size() + 1);
+				refObject.setRef(result);
+				referenceObjects.put(refObject.getNo(), refObject);
+
+				// Array对象塞入对应的值
+				setLongValue(result, fieldClass, transferInfo, nodeListLength, nodeList);
+			} else if (float.class == et.getType()) {
+				// FIXME 优化代码
+				float[] result = (float[]) traceXPathArrayBasic(tarNode, fieldClass, transferInfo);
+				field.set(obj, result);
+
+				// 记录该对象，保持对其引用
+				ReferenceObject refObject = new ReferenceObject();
+				refObject.setNo(referenceObjects.size() + 1);
+				refObject.setRef(result);
+				referenceObjects.put(refObject.getNo(), refObject);
+
+				// Array对象塞入对应的值
+				setFloatValue(result, fieldClass, transferInfo, nodeListLength, nodeList);
+			} else if (double.class == et.getType()) {
+				// FIXME 优化代码
+				double[] result = (double[]) traceXPathArrayBasic(tarNode, fieldClass, transferInfo);
+				field.set(obj, result);
+
+				// 记录该对象，保持对其引用
+				ReferenceObject refObject = new ReferenceObject();
+				refObject.setNo(referenceObjects.size() + 1);
+				refObject.setRef(result);
+				referenceObjects.put(refObject.getNo(), refObject);
+
+				// Array对象塞入对应的值
+				setDoubleValue(result, fieldClass, transferInfo, nodeListLength, nodeList);
+			} else if (boolean.class == et.getType()) {
+				// FIXME 优化代码
+				boolean[] result = (boolean[]) traceXPathArrayBasic(tarNode, fieldClass,
+						transferInfo);
+				field.set(obj, result);
+
+				// 记录该对象，保持对其引用
+				ReferenceObject refObject = new ReferenceObject();
+				refObject.setNo(referenceObjects.size() + 1);
+				refObject.setRef(result);
+				referenceObjects.put(refObject.getNo(), refObject);
+
+				// Array对象塞入对应的值
+				setBooleanValue(result, fieldClass, transferInfo, nodeListLength, nodeList);
+			} else if (char.class == et.getType()) {
+				// FIXME 优化代码
+				char[] result = (char[]) traceXPathArrayBasic(tarNode, fieldClass, transferInfo);
+				field.set(obj, result);
+
+				// 记录该对象，保持对其引用
+				ReferenceObject refObject = new ReferenceObject();
+				refObject.setNo(referenceObjects.size() + 1);
+				refObject.setRef(result);
+				referenceObjects.put(refObject.getNo(), refObject);
+
+				// Array对象塞入对应的值
+				setCharValue(result, fieldClass, transferInfo, nodeListLength, nodeList);
+			}
+		}
+	}
+
+	/**
+	 * 
+	 * @param baseNode
+	 * @param fieldClass
+	 * @param transferInfo
+	 * @return
+	 * @throws Exception
+	 */
+	private Object traceXPathArrayBasic(XMLNode baseNode, Class<?> fieldClass,
+			TransferInfo transferInfo) throws Exception {
+		XMLNodeList nodeList = baseNode.getChildNodes(transferInfo.getXmlAdapter());
+		int nodeListLength = nodeList.getLength(transferInfo.getXmlAdapter());
+		if (nodeList == null || nodeListLength == 0) {
+			return Array.newInstance(fieldClass, 0);
+		}
+		nodeListLength = (nodeListLength - 1) / 2;
+		Object result = Array.newInstance(fieldClass, nodeListLength);
+		// 记录两个参数
+		this.nodeList = nodeList;
+		this.nodeListLength = nodeListLength;
+		return result;
+	}
+
+	// 8种基本类型
+
+	private void setIntValue(Object result, Class<?> fieldClass, TransferInfo transferInfo,
+			int nodeListLength2, XMLNodeList nodeList2) throws Exception {
+		for (int idx = 0; idx < nodeListLength; idx++) {
+			Array.setInt(result, idx, (Integer) new XMLObjectReader().read(
+					ClassUtil.getInstance(fieldClass, transferInfo.getXmlImplClasses()),
+					nodeList.item(transferInfo.getXmlAdapter(), idx * 2 + 1), transferInfo));
+		}
+	}
+
+	private void setShortValue(Object result, Class<?> fieldClass, TransferInfo transferInfo,
+			int nodeListLength2, XMLNodeList nodeList2) throws Exception {
+		for (int idx = 0; idx < nodeListLength; idx++) {
+			Array.setShort(result, idx, (Short) new XMLObjectReader().read(
+					ClassUtil.getInstance(fieldClass, transferInfo.getXmlImplClasses()),
+					nodeList.item(transferInfo.getXmlAdapter(), idx * 2 + 1), transferInfo));
+		}
+	}
+
+	private void setLongValue(Object result, Class<?> fieldClass, TransferInfo transferInfo,
+			int nodeListLength2, XMLNodeList nodeList2) throws Exception {
+		for (int idx = 0; idx < nodeListLength; idx++) {
+			Array.setLong(result, idx, (Long) new XMLObjectReader().read(
+					ClassUtil.getInstance(fieldClass, transferInfo.getXmlImplClasses()),
+					nodeList.item(transferInfo.getXmlAdapter(), idx * 2 + 1), transferInfo));
+		}
+	}
+
+	private void setFloatValue(Object result, Class<?> fieldClass, TransferInfo transferInfo,
+			int nodeListLength2, XMLNodeList nodeList2) throws Exception {
+		for (int idx = 0; idx < nodeListLength; idx++) {
+			Array.setFloat(result, idx, (Float) new XMLObjectReader().read(
+					ClassUtil.getInstance(fieldClass, transferInfo.getXmlImplClasses()),
+					nodeList.item(transferInfo.getXmlAdapter(), idx * 2 + 1), transferInfo));
+		}
+	}
+
+	private void setDoubleValue(Object result, Class<?> fieldClass, TransferInfo transferInfo,
+			int nodeListLength2, XMLNodeList nodeList2) throws Exception {
+		for (int idx = 0; idx < nodeListLength; idx++) {
+			Array.setDouble(result, idx, (Double) new XMLObjectReader().read(
+					ClassUtil.getInstance(fieldClass, transferInfo.getXmlImplClasses()),
+					nodeList.item(transferInfo.getXmlAdapter(), idx * 2 + 1), transferInfo));
+		}
+	}
+
+	private void setByteValue(Object result, Class<?> fieldClass, TransferInfo transferInfo,
+			int nodeListLength2, XMLNodeList nodeList2) throws Exception {
+		for (int idx = 0; idx < nodeListLength; idx++) {
+			Array.setByte(result, idx, (Byte) new XMLObjectReader().read(
+					ClassUtil.getInstance(fieldClass, transferInfo.getXmlImplClasses()),
+					nodeList.item(transferInfo.getXmlAdapter(), idx * 2 + 1), transferInfo));
+		}
+	}
+
+	private void setCharValue(Object result, Class<?> fieldClass, TransferInfo transferInfo,
+			int nodeListLength2, XMLNodeList nodeList2) throws Exception {
+		for (int idx = 0; idx < nodeListLength; idx++) {
+			Array.setChar(result, idx, (Character) new XMLObjectReader().read(
+					ClassUtil.getInstance(fieldClass, transferInfo.getXmlImplClasses()),
+					nodeList.item(transferInfo.getXmlAdapter(), idx * 2 + 1), transferInfo));
+		}
+	}
+
+	private void setBooleanValue(Object result, Class<?> fieldClass, TransferInfo transferInfo,
+			int nodeListLength2, XMLNodeList nodeList2) throws Exception {
+		for (int idx = 0; idx < nodeListLength; idx++) {
+			Array.setBoolean(result, idx, (Boolean) new XMLObjectReader().read(
+					ClassUtil.getInstance(fieldClass, transferInfo.getXmlImplClasses()),
+					nodeList.item(transferInfo.getXmlAdapter(), idx * 2 + 1), transferInfo));
 		}
 	}
 
@@ -162,11 +378,11 @@ public class XArray extends XType {
 		}
 		nodeListLength = (nodeListLength - 1) / 2;
 		Object[] result = (Object[]) Array.newInstance(fieldClass, nodeListLength);
-		
+
 		// 记录两个参数
 		this.nodeList = nodeList;
 		this.nodeListLength = nodeListLength;
-		
+
 		return result;
 	}
 
@@ -178,4 +394,77 @@ public class XArray extends XType {
 					nodeList.item(transferInfo.getXmlAdapter(), idx * 2 + 1), transferInfo);
 		}
 	}
+
+	private Object[] getEightBasicArray(EightBasicTypes et, Object array) {
+		if (int.class == et.getType()) {
+			int[] basicArray = (int[]) array;
+			Integer[] objectArray = new Integer[basicArray.length];
+			for (int i = 0; i < basicArray.length; i++) {
+				objectArray[i] = basicArray[i];
+			}
+			return objectArray;
+		} else if (double.class == et.getType()) {
+			double[] basicArray = (double[]) array;
+			Double[] objectArray = new Double[basicArray.length];
+			for (int i = 0; i < basicArray.length; i++) {
+				objectArray[i] = basicArray[i];
+			}
+			return objectArray;
+		} else if (float.class == et.getType()) {
+			float[] basicArray = (float[]) array;
+			Float[] objectArray = new Float[basicArray.length];
+			for (int i = 0; i < basicArray.length; i++) {
+				objectArray[i] = basicArray[i];
+			}
+			return objectArray;
+		} else if (short.class == et.getType()) {
+			short[] basicArray = (short[]) array;
+			Short[] objectArray = new Short[basicArray.length];
+			for (int i = 0; i < basicArray.length; i++) {
+				objectArray[i] = basicArray[i];
+			}
+			return objectArray;
+		} else if (long.class == et.getType()) {
+			long[] basicArray = (long[]) array;
+			Long[] objectArray = new Long[basicArray.length];
+			for (int i = 0; i < basicArray.length; i++) {
+				objectArray[i] = basicArray[i];
+			}
+			return objectArray;
+		} else if (byte.class == et.getType()) {
+			byte[] basicArray = (byte[]) array;
+			Byte[] objectArray = new Byte[basicArray.length];
+			for (int i = 0; i < basicArray.length; i++) {
+				objectArray[i] = basicArray[i];
+			}
+			return objectArray;
+		} else if (char.class == et.getType()) {
+			char[] basicArray = (char[]) array;
+			Character[] objectArray = new Character[basicArray.length];
+			for (int i = 0; i < basicArray.length; i++) {
+				objectArray[i] = basicArray[i];
+			}
+			return objectArray;
+		} else if (boolean.class == et.getType()) {
+			boolean[] basicArray = (boolean[]) array;
+			Boolean[] objectArray = new Boolean[basicArray.length];
+			for (int i = 0; i < basicArray.length; i++) {
+				objectArray[i] = basicArray[i];
+			}
+			return objectArray;
+		} else {
+			return null;
+		}
+	}
+
+	// private <T1, T2> Object[] getArrays(T1 type1, T2 type2, Class<?>
+	// type2Class, Object array) {
+	// T1[] basicArray = (T1[]) array;
+	// T2[] objectArray = (T2[]) Array.newInstance(type2Class,
+	// basicArray.length);
+	// for (int i = 0; i < basicArray.length; i++) {
+	// objectArray[i] = (T2) basicArray[i];
+	// }
+	// return objectArray;
+	// }
 }

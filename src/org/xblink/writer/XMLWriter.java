@@ -1,9 +1,5 @@
 package org.xblink.writer;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +11,6 @@ import javax.xml.stream.XMLStreamException;
 import org.xblink.Constants;
 import org.xblink.XMLObject;
 import org.xblink.XRoot;
-import org.xblink.domdrivers.DomDriver;
 import org.xblink.transfer.ReferenceObject;
 import org.xblink.transfer.TransferInfo;
 
@@ -29,54 +24,14 @@ public class XMLWriter {
 
 	/**
 	 * 
-	 * @param filePath
-	 * @param obj
-	 * @param domDriver
-	 */
-	public void writeXML(String filePath, Object obj, DomDriver domDriver) {
-		writeXML(filePath, obj, true, "UTF-8", domDriver);
-	}
-
-	/**
-	 * 
-	 * @param filePath
-	 * @param obj
-	 * @param formatXml
-	 * @param encoding
-	 * @param domDriver
-	 */
-	public void writeXML(String filePath, Object obj, boolean formatXml, String encoding,
-			DomDriver domDriver) {
-		try {
-			writeStart(new BufferedOutputStream(new FileOutputStream(getFile(filePath))), obj,
-					formatXml, encoding, domDriver);
-		} catch (Exception e) {
-			throw new RuntimeException(Constants.SERIALIZE_FAIL, e);
-		}
-	}
-
-	/**
-	 * 
 	 * @param outputStream
 	 * @param obj
 	 * @param domDriver
+	 * @throws Exception
 	 */
-	public void writeXML(OutputStream outputStream, Object obj, DomDriver domDriver) {
-		writeXML(outputStream, obj, true, "UTF-8", domDriver);
-	}
-
-	/**
-	 * 
-	 * @param outputStream
-	 * @param obj
-	 * @param formatXml
-	 * @param encoding
-	 * @param domDriver
-	 */
-	public void writeXML(OutputStream outputStream, Object obj, boolean formatXml, String encoding,
-			DomDriver domDriver) {
+	public void writeXML(OutputStream outputStream, Object obj) {
 		try {
-			writeStart(outputStream, obj, formatXml, encoding, domDriver);
+			writeStart(outputStream, obj, true, "UTF-8");
 		} catch (Exception e) {
 			throw new RuntimeException(Constants.SERIALIZE_FAIL, e);
 		}
@@ -88,17 +43,15 @@ public class XMLWriter {
 	 * @param obj
 	 * @param formatXml
 	 * @param encoding
-	 * @param domDriver
 	 * @throws Exception
 	 */
-	private void writeStart(OutputStream out, Object obj, boolean formatXml, String encoding,
-			DomDriver domDriver) throws Exception {
+	private void writeStart(OutputStream out, Object obj, boolean formatXml, String encoding)
+			throws Exception {
 		// 解析过的对象，方便其他对象引用
 		Map<Integer, ReferenceObject> referenceObjects = new HashMap<Integer, ReferenceObject>();
 		// 传递信息对象
 		TransferInfo transferInfo = new TransferInfo();
 		transferInfo.setReferenceObjects(referenceObjects);
-		// TODO domDriver的使用 替代这里的XMLWriterUtil 这里是重点
 		XMLWriterHelper writer = null;
 		try {
 			writer = new XMLWriterHelper(out, formatXml ? 2 : 1, encoding);
@@ -122,9 +75,9 @@ public class XMLWriter {
 			writer.writeStartDocument();
 			new XMLObjectWriter().write(obj, writer, null, transferInfo);
 			writer.writeEndDocument();
+		} finally {
 			// 去掉XRoot的信息
 			XMLObject.cleanXRoot();
-		} finally {
 			// 手动释放对象引用
 			transferInfo = null;
 			// 关闭相关流
@@ -161,18 +114,4 @@ public class XMLWriter {
 		return XMLCollection.NotCollection;
 	}
 
-	/**
-	 * 获得文件对象.
-	 * 
-	 * @param filePath
-	 * @return
-	 * @throws IOException
-	 */
-	private File getFile(String filePath) throws IOException {
-		File file = new File(filePath);
-		if (!file.exists()) {
-			file.createNewFile();
-		}
-		return file;
-	}
 }
