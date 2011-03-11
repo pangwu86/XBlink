@@ -1,5 +1,7 @@
 package org.xblink.performance;
 
+import static org.junit.Assert.*;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -13,6 +15,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.xblink.XBlink;
 import org.xblink.performance.school.Grade;
@@ -36,11 +39,11 @@ public class SchoolTest {
 
 	private static Map<Integer, School> schoolMap = new HashMap<Integer, School>();
 
-	private static int schoolNumber = 10;
+	private static int schoolNumber = 100;
 
 	private static int gradeNumber = 10;
 
-	private static int studentNumber = 10;
+	private static int studentNumber = 100;
 
 	private static Class[] clzs = new Class[] { School.class, Grade.class, Student.class };
 
@@ -56,19 +59,21 @@ public class SchoolTest {
 		schoolArray = new School[schoolNumber];
 		for (int i = 0; i < schoolNumber; i++) {
 			School sch = schools.get(i);
-			schoolArray[i] = sch;
+			// schoolArray[i] = sch;
 			schoolList.add(sch);
-			schoolSet.add(sch);
-			schoolMap.put(i, sch);
+			// schoolSet.add(sch);
+			// schoolMap.put(i, sch);
 		}
 	}
 
+	@Ignore
 	@Test
 	public void testFirst() throws Exception {
 		System.out.println("***第一次运行测试，主要是为了静态块加载，不算在测试结果内。***");
 		testSingle_inner();
 	}
 
+	@Ignore
 	@Test
 	public void testSingle() throws Exception {
 		System.out.println("***testSingle***");
@@ -104,6 +109,7 @@ public class SchoolTest {
 		System.out.println();
 	}
 
+	@Ignore
 	@Test
 	public void testArray() throws Exception {
 		System.out.println("***testArray***");
@@ -135,6 +141,7 @@ public class SchoolTest {
 		System.out.println();
 	}
 
+	@Ignore
 	@Test
 	public void testList() throws Exception {
 		System.out.println("***testList***");
@@ -166,6 +173,7 @@ public class SchoolTest {
 		System.out.println();
 	}
 
+	@Ignore
 	@Test
 	public void testSet() throws Exception {
 		System.out.println("***testSet***");
@@ -197,6 +205,7 @@ public class SchoolTest {
 		System.out.println();
 	}
 
+	@Ignore
 	@Test
 	public void testMap() throws Exception {
 		System.out.println("***testMap***");
@@ -227,6 +236,17 @@ public class SchoolTest {
 		System.out.println("反序列化：" + timer.getTimer());
 
 		System.out.println();
+	}
+
+	@Test
+	public void testBigXML() throws Exception {
+		System.out.println("XBlink:");
+		WatchTimer timer = new WatchTimer();
+		XBlink.toXml("C:/BigXML_XBlink.xml", schoolList);
+		System.out.println("序列化：" + timer.getTimer());
+//		timer.reset();
+//		XBlink.fromXml("C:/BigXML_XBlink.xml", School.class);
+//		System.out.println("反序列化：" + timer.getTimer());
 	}
 
 }

@@ -5,7 +5,9 @@ import static org.junit.Assert.assertTrue;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,6 +30,7 @@ public class MapTest {
 	private String mc5 = "C:/Map5.xml";
 	private String mc6 = "C:/Map6.xml";
 	private String mc7 = "C:/Map7.xml";
+	private String mc8 = "C:/Map8.xml";
 
 	static private MapContainer getMapContainer() {
 		return new MapContainer();
@@ -176,6 +179,39 @@ public class MapTest {
 		Map remap7 = re.getMap7();
 		assertTrue(remap7.get(keyObject1).equals("key1"));
 		assertTrue(remap7.get(keyObject2).equals("key2"));
+	}
+
+	@Test
+	public void testMap8() throws Exception {
+
+		MapContainer mc = getMapContainer();
+
+		Map<String, List<ValueObject>> map8 = new HashMap<String, List<ValueObject>>();
+
+		List<ValueObject> voList = new ArrayList<ValueObject>();
+		ValueObject vo1 = getValueObject("value1");
+		ValueObject vo2 = getValueObject("value2");
+		voList.add(vo1);
+		voList.add(vo2);
+
+		map8.put("1", voList);
+
+		mc.setMap8(map8);
+
+		XBlink.toXml(mc8, mc);
+
+		// XStream
+		XStream xStream1 = new XStream(new XppDriver());
+		xStream1.toXML(mc, new BufferedOutputStream(new FileOutputStream(new File(
+				"C:/Map8_XStream.xml"))));
+
+		MapContainer re = (MapContainer) XBlink.fromXml(mc8, MapContainer.class);
+
+		assertTrue(re.getMap8() != null);
+		Map<String, List<ValueObject>> remap8 = re.getMap8();
+		assertTrue(remap8.get("1").get(0).getValueValue().equals("value1"));
+		assertTrue(remap8.get("1").get(1).getValueValue().equals("value2"));
+
 	}
 
 }

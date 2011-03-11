@@ -29,6 +29,19 @@ public class MapContainer {
 	@XBlinkAsMap
 	private Map<?,?> map7;
 
+	@XBlinkAsMap
+	private Map<String ,List<ValueObject>> map8;
+	
+	
+
+	public Map<String, List<ValueObject>> getMap8() {
+		return map8;
+	}
+
+	public void setMap8(Map<String, List<ValueObject>> map8) {
+		this.map8 = map8;
+	}
+
 	public Map<Integer, String> getMap1() {
 		return map1;
 	}
