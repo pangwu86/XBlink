@@ -9,6 +9,20 @@ package org.xblink;
  */
 public class XBConfig {
 
+	/**
+	 * 默认配置信息。
+	 */
+	private final static XBConfig DEFAULT_XBCONFIG = new XBConfig();
+
+	/**
+	 * 获得默认配置信息。
+	 * 
+	 * @return
+	 */
+	public static XBConfig getDefaultXBConfig() {
+		return DEFAULT_XBCONFIG;
+	}
+
 	public XBConfig() {
 		// 默认参数设置
 	}

@@ -76,7 +76,8 @@ public abstract class XBlinkUtil {
 	 */
 	private static String serialize(Builder builder, XBConfig xbConfig, OutputStream outputStream) {
 		// 生成字符串
-		String str = Director.serialize(builder, null == xbConfig ? new XBConfig() : xbConfig);
+		String str = Director.serialize(builder, null == xbConfig ? XBConfig.getDefaultXBConfig()
+				: xbConfig);
 		// 写入文件
 		if (null != outputStream) {
 			try {
