@@ -1,30 +1,33 @@
-package org.xblink.core;
+package org.xblink;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 
-import org.xblink.XBConfig;
+import org.xblink.core.Builder;
+import org.xblink.core.Director;
 import org.xblink.core.impl.JSONBuilder;
 import org.xblink.core.impl.XMLBuilder;
 import org.xblink.core.impl.YAMLBuilder;
 import org.xblink.util.Lang;
 
 /**
- * XBlink辅助类。
+ * XBlink实现类。
  * 
  * @author pangwu86@gmail.com
  * 
  */
-public abstract class XBlinkUtil {
+public abstract class XBlinkImpl {
 
+	/**
+	 * builder的名称模板
+	 */
 	private final static String BUILDER_TEMPLATE = "org.xblink.core.impl.%SBuilder";
 
 	// 序列化通用方法
 
 	@SuppressWarnings("unchecked")
-	public static String toAny(Object obj, XBConfig xbConfig, OutputStream outputStream,
-			String wanted) {
+	static String toAny(Object obj, XBConfig xbConfig, OutputStream outputStream, String wanted) {
 		// 格式名称
 		if (Lang.isBlankStr(wanted)) {
 			throw new RuntimeException("没有输入需要转换的格式名称,无法执行后续操作。");
@@ -44,20 +47,22 @@ public abstract class XBlinkUtil {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+
+		// 序列化
 		return serialize(builder, xbConfig, outputStream);
 	}
 
 	// 序列化默认方法
 
-	public static String toJSON(Object obj, XBConfig xbConfig, OutputStream outputStream) {
+	static String toJSON(Object obj, XBConfig xbConfig, OutputStream outputStream) {
 		return serialize(new JSONBuilder(obj), xbConfig, outputStream);
 	}
 
-	public static String toXML(Object obj, XBConfig xbConfig, OutputStream outputStream) {
+	static String toXML(Object obj, XBConfig xbConfig, OutputStream outputStream) {
 		return serialize(new XMLBuilder(obj), xbConfig, outputStream);
 	}
 
-	public static String toYAML(Object obj, XBConfig xbConfig, OutputStream outputStream) {
+	static String toYAML(Object obj, XBConfig xbConfig, OutputStream outputStream) {
 		return serialize(new YAMLBuilder(obj), xbConfig, outputStream);
 	}
 
@@ -76,8 +81,7 @@ public abstract class XBlinkUtil {
 	 */
 	private static String serialize(Builder builder, XBConfig xbConfig, OutputStream outputStream) {
 		// 生成字符串
-		String str = Director.serialize(builder, null == xbConfig ? XBConfig.getDefaultXBConfig()
-				: xbConfig);
+		String str = Director.serialize(builder, null == xbConfig ? XBConfig.getDefaultXBConfig() : xbConfig);
 		// 写入文件
 		if (null != outputStream) {
 			try {

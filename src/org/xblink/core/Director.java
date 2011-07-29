@@ -14,7 +14,7 @@ import org.xblink.XBConfig;
  * @author pangwu86@gmail.com
  * 
  */
-abstract class Director {
+public abstract class Director {
 
 	/**
 	 * 序列化。

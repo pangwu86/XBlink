@@ -22,6 +22,9 @@ public abstract class IOUtil {
 	 * @return 输出流
 	 */
 	public static OutputStream getOutputStream(String filePath) {
+		if (Lang.isBlankStr(filePath)) {
+			return null;
+		}
 		try {
 			// 两层装饰
 			return new BufferedOutputStream(new FileOutputStream(getFile(filePath)));
@@ -38,6 +41,9 @@ public abstract class IOUtil {
 	 * @return 输出流
 	 */
 	public static OutputStream getOutputStream(OutputStream outputStream) {
+		if (null == outputStream) {
+			return null;
+		}
 		// 增加缓冲
 		return new BufferedOutputStream(outputStream);
 	}
