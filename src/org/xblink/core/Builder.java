@@ -36,7 +36,7 @@ public abstract class Builder {
 	 * @param clz
 	 */
 	public void analysis() {
-		// XXX 分析Class对象
+		// TODO 分析Class对象
 	}
 
 	/**

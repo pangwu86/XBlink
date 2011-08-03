@@ -17,7 +17,10 @@ import org.xblink.util.Lang;
  * @author pangwu86@gmail.com
  * 
  */
-public abstract class XBlinkImpl {
+public class XBlinkImpl {
+
+	private XBlinkImpl() {
+	}
 
 	/**
 	 * builder的类名模板
@@ -26,47 +29,38 @@ public abstract class XBlinkImpl {
 
 	// 序列化通用方法
 
-	static String toAny(Object obj, XBConfig xbConfig, OutputStream outputStream, String docTypeName) {
-		return serialize(findBuilder(obj, docTypeName), xbConfig, outputStream);
+	protected static String toAny(Object obj, XBConfig xbConfig, OutputStream outputStream, String docTypeName) {
+		return serialize(findBuilderByDocTypeName(obj, docTypeName), xbConfig, outputStream);
 	}
 
 	// 序列化默认方法
 
-	static String toJSON(Object obj, XBConfig xbConfig, OutputStream outputStream) {
+	protected static String toJSON(Object obj, XBConfig xbConfig, OutputStream outputStream) {
 		return serialize(new JSONBuilder(obj), xbConfig, outputStream);
 	}
 
-	static String toXML(Object obj, XBConfig xbConfig, OutputStream outputStream) {
+	protected static String toXML(Object obj, XBConfig xbConfig, OutputStream outputStream) {
 		return serialize(new XMLBuilder(obj), xbConfig, outputStream);
 	}
 
-	static String toYAML(Object obj, XBConfig xbConfig, OutputStream outputStream) {
+	protected static String toYAML(Object obj, XBConfig xbConfig, OutputStream outputStream) {
 		return serialize(new YAMLBuilder(obj), xbConfig, outputStream);
 	}
 
-	// 内部方法
+	// 私有方法
 
-	/**
-	 * 根据类型名称查找对应的Builder实现类。
-	 * 
-	 * @param obj
-	 *            待处理对象
-	 * @param docTypeName
-	 *            文档类型名称
-	 * @return
-	 */
 	@SuppressWarnings("unchecked")
-	private static Builder findBuilder(Object obj, String docTypeName) {
+	private static Builder findBuilderByDocTypeName(Object obj, String docTypeName) {
 		// 格式名称
 		if (Lang.isBlankStr(docTypeName)) {
 			throw new RuntimeException("没有输入需要转换的格式名称,无法执行后续操作。");
 		}
 		// 找到对应的Builder
 		String builderClzName = String.format(BUILDER_TEMPLATE, docTypeName.toUpperCase());
-		Class<? extends Builder> builderClz;
-		Constructor<? extends Builder> builderCons;
 		Builder builder;
 		try {
+			Class<? extends Builder> builderClz;
+			Constructor<? extends Builder> builderCons;
 			builderClz = (Class<? extends Builder>) Class.forName(builderClzName);
 			// 实例化Builder
 			builderCons = builderClz.getDeclaredConstructor(Object.class);
@@ -74,22 +68,11 @@ public abstract class XBlinkImpl {
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(String.format("没有找到%s格式的实现类,无法执行后续操作。", docTypeName), e);
 		} catch (Exception e) {
-			throw new RuntimeException("Builder实例化失败。", e);
+			throw new RuntimeException(String.format("%s实例化失败。", builderClzName), e);
 		}
 		return builder;
 	}
 
-	/**
-	 * 序列化。
-	 * 
-	 * @param builder
-	 *            构造器
-	 * @param xbConfig
-	 *            XBlink配置信息
-	 * @param outputStream
-	 *            输入流
-	 * @return 序列化字符串
-	 */
 	private static String serialize(Builder builder, XBConfig xbConfig, OutputStream outputStream) {
 		// 生成字符串
 		String str = Director.serialize(builder, null == xbConfig ? XBConfig.getDefaultXBConfig() : xbConfig);

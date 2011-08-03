@@ -15,7 +15,10 @@ import org.xblink.util.IOUtil;
  * @author pangwu86@gmail.com
  * 
  */
-public abstract class XBlink {
+public class XBlink {
+
+	private XBlink() {
+	}
 
 	// ****** 通用序列化方法 ******
 

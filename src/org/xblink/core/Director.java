@@ -42,7 +42,7 @@ public abstract class Director {
 	 * @return 文件内容
 	 */
 	public static Object deserialize(Builder builder) {
-		// XXX 过程
+		// TODO 过程
 		return null;
 	}
 
