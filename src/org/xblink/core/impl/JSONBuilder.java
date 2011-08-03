@@ -34,4 +34,14 @@ public class JSONBuilder extends Builder {
 		return "";
 	}
 
+	public String getArrayTypeStr() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getEnumTypeStr() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

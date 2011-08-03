@@ -28,8 +28,10 @@ public abstract class Director {
 		// 构建
 		sb.append(builder.getPrimitiveTypeStr());
 		sb.append(builder.getObjectTypeStr());
+		sb.append(builder.getArrayTypeStr());
 		sb.append(builder.getCollectionTypeStr());
 		sb.append(builder.getMapTypeStr());
+		sb.append(builder.getEnumTypeStr());
 		// 返回结果
 		return sb.toString();
 	}

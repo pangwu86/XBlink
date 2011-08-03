@@ -34,4 +34,14 @@ public class XMLBuilder extends Builder {
 		return "xml-mapType\n";
 	}
 
+	public String getArrayTypeStr() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getEnumTypeStr() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -7,7 +7,7 @@ import org.xblink.util.IOUtil;
 /**
  * XBlink(吾爱跳刀)，通用序列化反序列化工具集。<BR>
  * 
- * 支持JAVA中的基本类型，对象类型，数组类型，List，Set，Map等集合类型。<BR>
+ * 支持JAVA中的基本类型，对象类型，数组类型，List，Set，Map，枚举等。<BR>
  * 
  * 支持生成XML，JSON，YAML,及任意你喜欢的格式文件。（当然非默认格式的输出需要你加入对应的实现）<BR>
  * 
@@ -28,12 +28,12 @@ public abstract class XBlink {
 	 *            需要被序列化对象
 	 * @param xbConfig
 	 *            XBlink配置信息
-	 * @param wanted
-	 *            任意你想要的格式名称，例如EXCEL或者XML
+	 * @param docTypeName
+	 *            任意你想要的文档格式名称，例如EXCEL或者XML
 	 * @return
 	 */
-	public static String toAny(Object obj, XBConfig xbConfig, String wanted) {
-		return XBlinkImpl.toAny(obj, xbConfig, null, wanted);
+	public static String toAny(Object obj, XBConfig xbConfig, String docTypeName) {
+		return XBlinkImpl.toAny(obj, xbConfig, null, docTypeName);
 	}
 
 	/**
@@ -47,12 +47,12 @@ public abstract class XBlink {
 	 *            XBlink配置信息
 	 * @param filePath
 	 *            保存文件的路径
-	 * @param wanted
-	 *            任意你想要的格式名称，例如EXCEL或者XML
+	 * @param docTypeName
+	 *            任意你想要的文档格式名称，例如EXCEL或者XML
 	 * @return
 	 */
-	public static String toAny(Object obj, XBConfig xbConfig, String filePath, String wanted) {
-		return XBlinkImpl.toAny(obj, xbConfig, IOUtil.getOutputStream(filePath), wanted);
+	public static String toAny(Object obj, XBConfig xbConfig, String filePath, String docTypeName) {
+		return XBlinkImpl.toAny(obj, xbConfig, IOUtil.getOutputStream(filePath), docTypeName);
 	}
 
 	/**
@@ -66,12 +66,12 @@ public abstract class XBlink {
 	 *            XBlink配置信息
 	 * @param outputStream
 	 *            输出流
-	 * @param wanted
-	 *            任意你想要的格式名称，例如EXCEL或者XML
+	 * @param docTypeName
+	 *            任意你想要的文档格式名称，例如EXCEL或者XML
 	 * @return
 	 */
-	public static String toAny(Object obj, XBConfig xbConfig, OutputStream outputStream, String wanted) {
-		return XBlinkImpl.toAny(obj, xbConfig, outputStream, wanted);
+	public static String toAny(Object obj, XBConfig xbConfig, OutputStream outputStream, String docTypeName) {
+		return XBlinkImpl.toAny(obj, xbConfig, outputStream, docTypeName);
 	}
 
 	// ******　XML序列化方法　××××××

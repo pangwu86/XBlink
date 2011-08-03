@@ -42,7 +42,7 @@ public abstract class Builder {
 	/**
 	 * 基础类型序列化结果。<BR>
 	 * 
-	 * 八种基础类型，各种JAVA中常见类型，例如String，date等。
+	 * 八种基础类型，外加各种JAVA中常见类型，例如String，date等。
 	 * 
 	 * @return
 	 */
@@ -58,9 +58,18 @@ public abstract class Builder {
 	public abstract String getObjectTypeStr();
 
 	/**
+	 * 数组类型序列化结果。<BR>
+	 * 
+	 * 数组类型，基本类型数组与对象数组。
+	 * 
+	 * @return
+	 */
+	public abstract String getArrayTypeStr();
+
+	/**
 	 * 集合类型序列化结果。<BR>
 	 * 
-	 * 数组，List，Set三种类型。
+	 * List，Set三种类型。
 	 * 
 	 * @return
 	 */
@@ -74,5 +83,14 @@ public abstract class Builder {
 	 * @return
 	 */
 	public abstract String getMapTypeStr();
+
+	/**
+	 * 枚举类型序列化结果。<BR>
+	 * 
+	 * Enum类型。
+	 * 
+	 * @return
+	 */
+	public abstract String getEnumTypeStr();
 
 }

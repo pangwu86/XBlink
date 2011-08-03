@@ -12,7 +12,7 @@ import org.xblink.core.impl.YAMLBuilder;
 import org.xblink.util.Lang;
 
 /**
- * XBlink实现类。
+ * XBlink功能实现类。
  * 
  * @author pangwu86@gmail.com
  * 
@@ -20,36 +20,14 @@ import org.xblink.util.Lang;
 public abstract class XBlinkImpl {
 
 	/**
-	 * builder的名称模板
+	 * builder的类名模板
 	 */
 	private final static String BUILDER_TEMPLATE = "org.xblink.core.impl.%SBuilder";
 
 	// 序列化通用方法
 
-	@SuppressWarnings("unchecked")
-	static String toAny(Object obj, XBConfig xbConfig, OutputStream outputStream, String wanted) {
-		// 格式名称
-		if (Lang.isBlankStr(wanted)) {
-			throw new RuntimeException("没有输入需要转换的格式名称,无法执行后续操作。");
-		}
-		// 找到对应的Builder
-		String builderClzName = String.format(BUILDER_TEMPLATE, wanted.toUpperCase());
-		Class<? extends Builder> builderClz;
-		Constructor<? extends Builder> builderCons;
-		Builder builder;
-		try {
-			builderClz = (Class<? extends Builder>) Class.forName(builderClzName);
-			// 实例化Builder
-			builderCons = builderClz.getDeclaredConstructor(Object.class);
-			builder = builderCons.newInstance(obj);
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(String.format("没有找到%s格式的实现类,无法执行后续操作。", wanted), e);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-
-		// 序列化
-		return serialize(builder, xbConfig, outputStream);
+	static String toAny(Object obj, XBConfig xbConfig, OutputStream outputStream, String docTypeName) {
+		return serialize(findBuilder(obj, docTypeName), xbConfig, outputStream);
 	}
 
 	// 序列化默认方法
@@ -67,6 +45,39 @@ public abstract class XBlinkImpl {
 	}
 
 	// 内部方法
+
+	/**
+	 * 根据类型名称查找对应的Builder实现类。
+	 * 
+	 * @param obj
+	 *            待处理对象
+	 * @param docTypeName
+	 *            文档类型名称
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	private static Builder findBuilder(Object obj, String docTypeName) {
+		// 格式名称
+		if (Lang.isBlankStr(docTypeName)) {
+			throw new RuntimeException("没有输入需要转换的格式名称,无法执行后续操作。");
+		}
+		// 找到对应的Builder
+		String builderClzName = String.format(BUILDER_TEMPLATE, docTypeName.toUpperCase());
+		Class<? extends Builder> builderClz;
+		Constructor<? extends Builder> builderCons;
+		Builder builder;
+		try {
+			builderClz = (Class<? extends Builder>) Class.forName(builderClzName);
+			// 实例化Builder
+			builderCons = builderClz.getDeclaredConstructor(Object.class);
+			builder = builderCons.newInstance(obj);
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException(String.format("没有找到%s格式的实现类,无法执行后续操作。", docTypeName), e);
+		} catch (Exception e) {
+			throw new RuntimeException("Builder实例化失败。", e);
+		}
+		return builder;
+	}
 
 	/**
 	 * 序列化。

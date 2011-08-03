@@ -29,7 +29,7 @@ public abstract class IOUtil {
 			// 两层装饰
 			return new BufferedOutputStream(new FileOutputStream(getFile(filePath)));
 		} catch (Exception e) {
-			throw new RuntimeException("无法获得输出流。", e);
+			throw new RuntimeException(String.format("无法根据这个路径[%s]获得输出流。", filePath), e);
 		}
 	}
 

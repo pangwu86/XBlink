@@ -8,25 +8,31 @@ package org.xblink;
  * 
  */
 public class XBConfig {
-
-	/**
-	 * 默认配置信息。
-	 */
-	private final static XBConfig DEFAULT_XBCONFIG = new XBConfig();
+	
+	private static XBConfig defaultConfig = new XBConfig();
 
 	/**
 	 * 获得默认配置信息。
 	 * 
 	 * @return
 	 */
-	public static XBConfig getDefaultXBConfig() {
-		return DEFAULT_XBCONFIG;
+	static XBConfig getDefaultXBConfig() {
+		return defaultConfig;
 	}
 
-	public XBConfig() {
-		// 默认参数设置
+	/**
+	 * 私有的构造函数
+	 */
+	private XBConfig() {
+		// TODO 设置默认参数
+	}
+	
+	public static XBConfig createXBConfig(){
+		return new XBConfig();
 	}
 
 	// 这里可以设定各种需要的参数
+	
+	
 
 }

@@ -34,4 +34,16 @@ public class EXCELBuilder extends Builder {
 		return "excel-mapType\n";
 	}
 
+	@Override
+	public String getArrayTypeStr() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getEnumTypeStr() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
