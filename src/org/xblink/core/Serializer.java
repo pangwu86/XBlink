@@ -1,14 +1,14 @@
 package org.xblink.core;
 
 /**
- * 构建者。<BR>
+ * 序列化器，也是文档的构造器。<BR>
  * 
- * 解析对象，生成文件。
+ * 功能就是解析对象，根据其变量的类型生成对应的字符串。
  * 
- * @author pangwu86@gmail.com
+ * @author 胖五(pangwu86@gmail.com)
  * 
  */
-public abstract class Builder {
+public abstract class Serializer {
 
 	private Object obj = null;
 
@@ -17,7 +17,7 @@ public abstract class Builder {
 	 * 
 	 * @param obj
 	 */
-	public Builder(Object obj) {
+	public Serializer(Object obj) {
 		this.obj = obj;
 	}
 

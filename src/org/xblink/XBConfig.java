@@ -4,7 +4,7 @@ package org.xblink;
  * XBlink运行时参数设置。<BR>
  * 
  * 
- * @author pangwu86@gmail.com
+ * @author 胖五(pangwu86@gmail.com)
  * 
  */
 public class XBConfig {

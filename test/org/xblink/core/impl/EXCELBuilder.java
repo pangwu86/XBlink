@@ -1,14 +1,14 @@
 package org.xblink.core.impl;
 
-import org.xblink.core.Builder;
+import org.xblink.core.Serializer;
 
 /**
  * 测试用
  * 
- * @author pangwu86@gmail.com
+ * @author 胖五(pangwu86@gmail.com)
  * 
  */
-public class EXCELBuilder extends Builder {
+public class EXCELBuilder extends Serializer {
 
 	public EXCELBuilder(Object obj) {
 		super(obj);

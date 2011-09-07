@@ -5,10 +5,10 @@ package org.xblink.util;
  * 
  * 这里参照了Nutz的一部分实现。
  * 
- * @author pangwu86@gmail.com
+ * @author 胖五(pangwu86@gmail.com)
  * 
  */
-public class Lang {
+public abstract class Lang {
 
 	/**
 	 * 判断是否是空字符串

@@ -1,16 +1,16 @@
-package org.xblink.core.impl;
+package org.xblink.core.impl.serializer;
 
-import org.xblink.core.Builder;
+import org.xblink.core.Serializer;
 
 /**
  * YAML格式构建器。
  * 
- * @author pangwu86@gmail.com
+ * @author 胖五(pangwu86@gmail.com)
  * 
  */
-public class YAMLBuilder extends Builder {
+public class YAMLSerializer extends Serializer {
 
-	public YAMLBuilder(Object obj) {
+	public YAMLSerializer(Object obj) {
 		super(obj);
 	}
 

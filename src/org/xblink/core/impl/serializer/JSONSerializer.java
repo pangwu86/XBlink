@@ -1,16 +1,16 @@
-package org.xblink.core.impl;
+package org.xblink.core.impl.serializer;
 
-import org.xblink.core.Builder;
+import org.xblink.core.Serializer;
 
 /**
  * JSON格式构建器。
  * 
- * @author pangwu86@gmail.com
+ * @author 胖五(pangwu86@gmail.com)
  * 
  */
-public class JSONBuilder extends Builder {
+public class JSONSerializer extends Serializer {
 
-	public JSONBuilder(Object obj) {
+	public JSONSerializer(Object obj) {
 		super(obj);
 	}
 

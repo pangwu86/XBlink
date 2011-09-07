@@ -11,7 +11,7 @@ import org.xblink.XBConfig;
  * 
  * 这里对生成各种格式文件的实际操作委托到了Builder中。
  * 
- * @author pangwu86@gmail.com
+ * @author 胖五(pangwu86@gmail.com)
  * 
  */
 public abstract class Director {
@@ -21,19 +21,9 @@ public abstract class Director {
 	 * 
 	 * @return 文件内容
 	 */
-	public static String serialize(Builder builder, XBConfig xbConfig) {
-		StringBuilder sb = new StringBuilder();
-		// 分析
-		builder.analysis();
-		// 构建
-		sb.append(builder.getPrimitiveTypeStr());
-		sb.append(builder.getObjectTypeStr());
-		sb.append(builder.getArrayTypeStr());
-		sb.append(builder.getCollectionTypeStr());
-		sb.append(builder.getMapTypeStr());
-		sb.append(builder.getEnumTypeStr());
-		// 返回结果
-		return sb.toString();
+	public static String serialize(Serializer serializer, XBConfig xbConfig) {
+		// TODO 过程
+		return null;
 	}
 
 	/**
@@ -41,7 +31,7 @@ public abstract class Director {
 	 * 
 	 * @return 文件内容
 	 */
-	public static Object deserialize(Builder builder) {
+	public static Object deserialize(Deserializer deserializer, XBConfig xbConfig) {
 		// TODO 过程
 		return null;
 	}

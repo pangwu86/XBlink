@@ -9,7 +9,7 @@ import java.io.OutputStream;
 /**
  * IO流的一些方法。
  * 
- * @author pangwu86@gmail.com
+ * @author 胖五(pangwu86@gmail.com)
  * 
  */
 public abstract class IOUtil {

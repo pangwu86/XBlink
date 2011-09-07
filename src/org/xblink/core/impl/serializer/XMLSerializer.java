@@ -1,16 +1,16 @@
-package org.xblink.core.impl;
+package org.xblink.core.impl.serializer;
 
-import org.xblink.core.Builder;
+import org.xblink.core.Serializer;
 
 /**
  * XML格式构建器。
  * 
- * @author pangwu86@gmail.com
+ * @author 胖五(pangwu86@gmail.com)
  * 
  */
-public class XMLBuilder extends Builder {
+public class XMLSerializer extends Serializer {
 
-	public XMLBuilder(Object obj) {
+	public XMLSerializer(Object obj) {
 		super(obj);
 	}
 

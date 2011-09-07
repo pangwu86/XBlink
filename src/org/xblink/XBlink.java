@@ -12,7 +12,7 @@ import org.xblink.util.IOUtil;
  * 支持生成XML，JSON，YAML,及任意你喜欢的格式文件。（当然非默认格式的输出需要你加入对应的实现）<BR>
  * 
  * 
- * @author pangwu86@gmail.com
+ * @author 胖五(pangwu86@gmail.com)
  * 
  */
 public class XBlink {
@@ -36,7 +36,7 @@ public class XBlink {
 	 * @return
 	 */
 	public static String toAny(Object obj, XBConfig xbConfig, String docTypeName) {
-		return XBlinkImpl.toAny(obj, xbConfig, null, docTypeName);
+		return XBlinkHelper.toAny(obj, xbConfig, null, docTypeName);
 	}
 
 	/**
@@ -55,7 +55,7 @@ public class XBlink {
 	 * @return
 	 */
 	public static String toAny(Object obj, XBConfig xbConfig, String filePath, String docTypeName) {
-		return XBlinkImpl.toAny(obj, xbConfig, IOUtil.getOutputStream(filePath), docTypeName);
+		return XBlinkHelper.toAny(obj, xbConfig, IOUtil.getOutputStream(filePath), docTypeName);
 	}
 
 	/**
@@ -73,8 +73,9 @@ public class XBlink {
 	 *            任意你想要的文档格式名称，例如EXCEL或者XML
 	 * @return
 	 */
-	public static String toAny(Object obj, XBConfig xbConfig, OutputStream outputStream, String docTypeName) {
-		return XBlinkImpl.toAny(obj, xbConfig, outputStream, docTypeName);
+	public static String toAny(Object obj, XBConfig xbConfig, OutputStream outputStream,
+			String docTypeName) {
+		return XBlinkHelper.toAny(obj, xbConfig, outputStream, docTypeName);
 	}
 
 	// ******　XML序列化方法　××××××
@@ -89,7 +90,7 @@ public class XBlink {
 	 * @return XML字符串
 	 */
 	public static String toXML(Object obj, XBConfig xbConfig) {
-		return XBlinkImpl.toXML(obj, xbConfig, null);
+		return XBlinkHelper.toXML(obj, xbConfig, null);
 	}
 
 	/**
@@ -104,7 +105,7 @@ public class XBlink {
 	 * @return XML字符串
 	 */
 	public static String toXML(Object obj, XBConfig xbConfig, String filePath) {
-		return XBlinkImpl.toXML(obj, xbConfig, IOUtil.getOutputStream(filePath));
+		return XBlinkHelper.toXML(obj, xbConfig, IOUtil.getOutputStream(filePath));
 	}
 
 	/**
@@ -119,7 +120,7 @@ public class XBlink {
 	 * @return XML字符串
 	 */
 	public static String toXML(Object obj, XBConfig xbConfig, OutputStream outputStream) {
-		return XBlinkImpl.toXML(obj, xbConfig, IOUtil.getOutputStream(outputStream));
+		return XBlinkHelper.toXML(obj, xbConfig, IOUtil.getOutputStream(outputStream));
 	}
 
 	// ******　JSON序列化方法　××××××
@@ -134,7 +135,7 @@ public class XBlink {
 	 * @return JSON字符串
 	 */
 	public static String toJSON(Object obj, XBConfig xbConfig) {
-		return XBlinkImpl.toJSON(obj, xbConfig, null);
+		return XBlinkHelper.toJSON(obj, xbConfig, null);
 	}
 
 	/**
@@ -149,7 +150,7 @@ public class XBlink {
 	 * @return JSON字符串
 	 */
 	public static String toJSON(Object obj, XBConfig xbConfig, String filePath) {
-		return XBlinkImpl.toJSON(obj, xbConfig, IOUtil.getOutputStream(filePath));
+		return XBlinkHelper.toJSON(obj, xbConfig, IOUtil.getOutputStream(filePath));
 	}
 
 	/**
@@ -164,7 +165,7 @@ public class XBlink {
 	 * @return JSON字符串
 	 */
 	public static String toJSON(Object obj, XBConfig xbConfig, OutputStream outputStream) {
-		return XBlinkImpl.toJSON(obj, xbConfig, IOUtil.getOutputStream(outputStream));
+		return XBlinkHelper.toJSON(obj, xbConfig, IOUtil.getOutputStream(outputStream));
 	}
 
 	// ******　YAML序列化方法　××××××
@@ -179,7 +180,7 @@ public class XBlink {
 	 * @return YAML字符串
 	 */
 	public static String toYAML(Object obj, XBConfig xbConfig) {
-		return XBlinkImpl.toYAML(obj, xbConfig, null);
+		return XBlinkHelper.toYAML(obj, xbConfig, null);
 	}
 
 	/**
@@ -194,7 +195,7 @@ public class XBlink {
 	 * @return YAML字符串
 	 */
 	public static String toYAML(Object obj, XBConfig xbConfig, String filePath) {
-		return XBlinkImpl.toYAML(obj, xbConfig, IOUtil.getOutputStream(filePath));
+		return XBlinkHelper.toYAML(obj, xbConfig, IOUtil.getOutputStream(filePath));
 	}
 
 	/**
@@ -209,7 +210,7 @@ public class XBlink {
 	 * @return YAML字符串
 	 */
 	public static String toYAML(Object obj, XBConfig xbConfig, OutputStream outputStream) {
-		return XBlinkImpl.toYAML(obj, xbConfig, IOUtil.getOutputStream(outputStream));
+		return XBlinkHelper.toYAML(obj, xbConfig, IOUtil.getOutputStream(outputStream));
 	}
 
 	// XXX 反序列化方法
