@@ -8,7 +8,7 @@ import org.xblink.core.Serializer;
 import org.xblink.core.SerializerFactory;
 
 /**
- * XBlink功能实现类，算是一个辅助类吧，其实是为了XBlink这个类看起来更加简洁，把几个方法放在这个类中了。
+ * XBlink小助手，算是一个辅助类吧，其实是为了XBlink这个类看起来更加简洁，只保留对外的API，而把几个不想公开的方法放在这个类中了。
  * 
  * @author 胖五(pangwu86@gmail.com)
  * 

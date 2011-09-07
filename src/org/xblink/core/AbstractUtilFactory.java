@@ -5,7 +5,7 @@ import java.lang.reflect.Constructor;
 import org.xblink.util.Lang;
 
 /**
- * 工厂的几个工具方法。
+ * 工厂的几个方法。
  * 
  * @author 胖五(pangwu86@gmail.com)
  * 
