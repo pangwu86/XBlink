@@ -2,15 +2,24 @@ package org.xblink.core;
 
 import java.lang.reflect.Constructor;
 
+import org.xblink.core.impl.deserializer.JSONDeserializer;
+import org.xblink.core.impl.deserializer.XMLDeserializer;
+import org.xblink.core.impl.deserializer.YAMLDeserializer;
+import org.xblink.core.impl.serializer.JSONSerializer;
+import org.xblink.core.impl.serializer.XMLSerializer;
+import org.xblink.core.impl.serializer.YAMLSerializer;
 import org.xblink.util.Lang;
 
 /**
- * 工厂的几个方法。
+ * 生产序列化器与反序列化器的工厂
  * 
  * @author 胖五(pangwu86@gmail.com)
  * 
  */
-public abstract class AbstractUtilFactory {
+public class SerialFactory {
+
+	private SerialFactory() {
+	}
 
 	/**
 	 * Serializer的类名模板
@@ -22,13 +31,13 @@ public abstract class AbstractUtilFactory {
 	 */
 	private final static String DESERIALIZER_TEMPLATE = "org.xblink.core.impl.deserializer.%SDeserializer";
 
-	protected static Serializer findSerializerByDocTypeName(Object obj, String docTypeName) {
+	public static Serializer findSerializerByDocTypeName(Object obj, String docTypeName) {
 		isBlankStr(docTypeName);
 		String serializerClzName = String.format(SERIALIZER_TEMPLATE, docTypeName.toUpperCase());
 		return (Serializer) getInstanceByObject(obj, serializerClzName, docTypeName);
 	}
 
-	protected static Deserializer findDeserializerByDocTypeName(Object obj, String docTypeName) {
+	public static Deserializer findDeserializerByDocTypeName(Object obj, String docTypeName) {
 		isBlankStr(docTypeName);
 		String deserializerClzName = String
 				.format(DESERIALIZER_TEMPLATE, docTypeName.toUpperCase());
@@ -52,7 +61,7 @@ public abstract class AbstractUtilFactory {
 		return instance;
 	}
 
-	protected static void isNull(Object object) {
+	public static void isNull(Object object) {
 		if (null == object) {
 			throw new RuntimeException("无法对一个空对象(null)进行序列化或反序列化操作。");
 		}
@@ -63,6 +72,50 @@ public abstract class AbstractUtilFactory {
 		if (Lang.isBlankStr(docTypeName)) {
 			throw new RuntimeException("没有输入或指定转换文件的格式名称，无法执行序列化或反序列化操作。");
 		}
+	}
+
+	// ******************** 序列化器 ********************
+
+	public static Serializer createXMLSerializer(Object object) {
+		isNull(object);
+		return new XMLSerializer(object);
+	}
+
+	public static Serializer createJSONSerializer(Object object) {
+		isNull(object);
+		return new JSONSerializer(object);
+	}
+
+	public static Serializer createYAMLSerializer(Object object) {
+		isNull(object);
+		return new YAMLSerializer(object);
+	}
+
+	public static Serializer createANYSerializer(Object object, String docTypeName) {
+		isNull(object);
+		return findSerializerByDocTypeName(object, docTypeName);
+	}
+
+	// ******************** 反序列化器 ********************
+
+	public static Deserializer createXMLDeserializer(Object object) {
+		isNull(object);
+		return new XMLDeserializer(object);
+	}
+
+	public static Deserializer createJSONDeserializer(Object object) {
+		isNull(object);
+		return new JSONDeserializer(object);
+	}
+
+	public static Deserializer createYAMLDeserializer(Object object) {
+		isNull(object);
+		return new YAMLDeserializer(object);
+	}
+
+	public static Deserializer createANYDeserializer(Object object, String docTypeName) {
+		isNull(object);
+		return findDeserializerByDocTypeName(object, docTypeName);
 	}
 
 }

@@ -1,6 +1,7 @@
 package org.xblink;
 
 import java.io.OutputStream;
+import java.io.Writer;
 
 import org.xblink.util.IOUtil;
 
@@ -20,65 +21,98 @@ public class XBlink {
 	private XBlink() {
 	}
 
-	// ****** 通用序列化方法 ******
+	/**
+	 * 使用你设定的配置项，替换原有默认配置信息（全局唯一）。
+	 * 
+	 * @param xbConfig
+	 */
+	public static void setDefaultXBConfig(XBConfig xbConfig) {
+		// TODO 后面再补上
+	}
+
+	// ********************************* 通用方法 *********************************
 
 	/**
 	 * toAny意味着You will get what you want（你会得到任何你想要的东西）<BR>
 	 * 
-	 * XBlink最NB的方法，生成任意你想要的格式文件。
+	 * XBlink最NB的方法，生成任意你想要的格式文件。<BR>
+	 * 
+	 * 获得你需要的格式的字符串。
 	 * 
 	 * @param obj
 	 *            需要被序列化对象
 	 * @param xbConfig
-	 *            XBlink配置信息
+	 *            XBlink运行时配置信息(默认为null，会使用默认配置项)
 	 * @param docTypeName
-	 *            任意你想要的文档格式名称，例如EXCEL或者XML
-	 * @return
+	 *            任意你想要的文档格式名称，例如JSON或者XML
+	 * @return 字符串
 	 */
 	public static String toAny(Object obj, XBConfig xbConfig, String docTypeName) {
-		return XBlinkHelper.toAny(obj, xbConfig, null, docTypeName);
+		return XBlinkHelper.toAny(obj, xbConfig, IOUtil.getDocWriter(), docTypeName);
 	}
 
 	/**
 	 * toAny意味着You will get what you want（你会得到任何你想要的东西）<BR>
 	 * 
-	 * XBlink最NB的方法，生成任意你想要的格式文件。
+	 * XBlink最NB的方法，生成任意你想要的格式文件。<BR>
+	 * 
+	 * 生成对应的文件。
 	 * 
 	 * @param obj
 	 *            需要被序列化对象
 	 * @param xbConfig
-	 *            XBlink配置信息
+	 *            XBlink运行时配置信息(默认为null，会使用默认配置项)
 	 * @param filePath
-	 *            保存文件的路径
+	 *            保存文件的路径(绝对路径)
 	 * @param docTypeName
-	 *            任意你想要的文档格式名称，例如EXCEL或者XML
-	 * @return
+	 *            任意你想要的文档格式名称，例如JSON或者XML
 	 */
-	public static String toAny(Object obj, XBConfig xbConfig, String filePath, String docTypeName) {
-		return XBlinkHelper.toAny(obj, xbConfig, IOUtil.getOutputStream(filePath), docTypeName);
+	public static void toAny(Object obj, XBConfig xbConfig, String filePath, String docTypeName) {
+		XBlinkHelper.toAny(obj, xbConfig, IOUtil.getDocWriter(filePath), docTypeName);
 	}
 
 	/**
 	 * toAny意味着You will get what you want（你会得到任何你想要的东西）<BR>
 	 * 
-	 * XBlink最NB的方法，生成任意你想要的格式文件。
+	 * XBlink最NB的方法，生成任意你想要的格式文件。<BR>
+	 * 
+	 * 生成对应的文件。
 	 * 
 	 * @param obj
 	 *            需要被序列化对象
 	 * @param xbConfig
-	 *            XBlink配置信息
+	 *            XBlink运行时配置信息(默认为null，会使用默认配置项)
 	 * @param outputStream
 	 *            输出流
 	 * @param docTypeName
-	 *            任意你想要的文档格式名称，例如EXCEL或者XML
-	 * @return
+	 *            任意你想要的文档格式名称，例如JSON或者XML
 	 */
-	public static String toAny(Object obj, XBConfig xbConfig, OutputStream outputStream,
+	public static void toAny(Object obj, XBConfig xbConfig, OutputStream outputStream,
 			String docTypeName) {
-		return XBlinkHelper.toAny(obj, xbConfig, outputStream, docTypeName);
+		XBlinkHelper.toAny(obj, xbConfig, IOUtil.getDocWriter(outputStream), docTypeName);
 	}
 
-	// ******　XML序列化方法　××××××
+	/**
+	 * toAny意味着You will get what you want（你会得到任何你想要的东西）<BR>
+	 * 
+	 * XBlink最NB的方法，生成任意你想要的格式文件。<BR>
+	 * 
+	 * 生成对应的文件。
+	 * 
+	 * @param obj
+	 *            需要被序列化对象
+	 * @param xbConfig
+	 *            XBlink运行时配置信息(默认为null，会使用默认配置项)
+	 * @param writer
+	 *            字符输出流
+	 * @param docTypeName
+	 *            任意你想要的文档格式名称，例如JSON或者XML
+	 */
+	public static void toAny(Object obj, XBConfig xbConfig, Writer writer, String docTypeName) {
+		XBlinkHelper.toAny(obj, xbConfig, IOUtil.getDocWriter(writer), docTypeName);
+	}
+
+	// ********************************* XML方法 *********************************
 
 	/**
 	 * 返回XML文件字符串。
@@ -86,133 +120,58 @@ public class XBlink {
 	 * @param obj
 	 *            需要被序列化对象
 	 * @param xbConfig
-	 *            XBlink配置信息
+	 *            XBlink运行时配置信息(默认为null，会使用默认配置项)
 	 * @return XML字符串
 	 */
 	public static String toXML(Object obj, XBConfig xbConfig) {
-		return XBlinkHelper.toXML(obj, xbConfig, null);
+		return XBlinkHelper.toXML(obj, xbConfig, IOUtil.getDocWriter());
 	}
 
 	/**
-	 * 返回XML文件字符串，生成XML文件。
+	 * 生成XML文件。
 	 * 
 	 * @param obj
 	 *            需要被序列化对象
 	 * @param xbConfig
-	 *            XBlink配置信息
+	 *            XBlink运行时配置信息(默认为null，会使用默认配置项)
 	 * @param filePath
-	 *            保存文件的路径
-	 * @return XML字符串
+	 *            保存文件的路径(绝对路径)
 	 */
-	public static String toXML(Object obj, XBConfig xbConfig, String filePath) {
-		return XBlinkHelper.toXML(obj, xbConfig, IOUtil.getOutputStream(filePath));
+	public static void toXML(Object obj, XBConfig xbConfig, String filePath) {
+		XBlinkHelper.toXML(obj, xbConfig, IOUtil.getDocWriter(filePath));
 	}
 
 	/**
-	 * 返回XML文件字符串，生成XML文件。
+	 * 生成XML文件。
 	 * 
 	 * @param obj
 	 *            需要被序列化对象
 	 * @param xbConfig
-	 *            XBlink配置信息
+	 *            XBlink运行时配置信息(默认为null，会使用默认配置项)
 	 * @param outputStream
 	 *            输出流
-	 * @return XML字符串
 	 */
-	public static String toXML(Object obj, XBConfig xbConfig, OutputStream outputStream) {
-		return XBlinkHelper.toXML(obj, xbConfig, IOUtil.getOutputStream(outputStream));
+	public static void toXML(Object obj, XBConfig xbConfig, OutputStream outputStream) {
+		XBlinkHelper.toXML(obj, xbConfig, IOUtil.getDocWriter(outputStream));
 	}
 
-	// ******　JSON序列化方法　××××××
-
 	/**
-	 * 返回JSON文件字符串。
+	 * 生成XML文件。
 	 * 
 	 * @param obj
 	 *            需要被序列化对象
 	 * @param xbConfig
-	 *            XBlink配置信息
-	 * @return JSON字符串
+	 *            XBlink运行时配置信息(默认为null，会使用默认配置项)
+	 * @param writer
+	 *            字节输出流
 	 */
-	public static String toJSON(Object obj, XBConfig xbConfig) {
-		return XBlinkHelper.toJSON(obj, xbConfig, null);
+	public static void toXML(Object obj, XBConfig xbConfig, Writer writer) {
+		XBlinkHelper.toXML(obj, xbConfig, IOUtil.getDocWriter(writer));
 	}
 
-	/**
-	 * 返回JSON文件字符串，生成JSON文件。
-	 * 
-	 * @param obj
-	 *            需要被序列化对象
-	 * @param xbConfig
-	 *            XBlink配置信息
-	 * @param filePath
-	 *            保存文件的路径
-	 * @return JSON字符串
-	 */
-	public static String toJSON(Object obj, XBConfig xbConfig, String filePath) {
-		return XBlinkHelper.toJSON(obj, xbConfig, IOUtil.getOutputStream(filePath));
+	public static Object fromXML() {
+
+		return null;
 	}
-
-	/**
-	 * 返回JSON文件字符串，生成JSON文件。
-	 * 
-	 * @param obj
-	 *            需要被序列化对象
-	 * @param xbConfig
-	 *            XBlink配置信息
-	 * @param outputStream
-	 *            输出流
-	 * @return JSON字符串
-	 */
-	public static String toJSON(Object obj, XBConfig xbConfig, OutputStream outputStream) {
-		return XBlinkHelper.toJSON(obj, xbConfig, IOUtil.getOutputStream(outputStream));
-	}
-
-	// ******　YAML序列化方法　××××××
-
-	/**
-	 * 返回YAML文件字符串。
-	 * 
-	 * @param obj
-	 *            需要被序列化对象
-	 * @param xbConfig
-	 *            XBlink配置信息
-	 * @return YAML字符串
-	 */
-	public static String toYAML(Object obj, XBConfig xbConfig) {
-		return XBlinkHelper.toYAML(obj, xbConfig, null);
-	}
-
-	/**
-	 * 返回YAML文件字符串，生成YAML文件。
-	 * 
-	 * @param obj
-	 *            需要被序列化对象
-	 * @param xbConfig
-	 *            XBlink配置信息
-	 * @param filePath
-	 *            保存文件的路径
-	 * @return YAML字符串
-	 */
-	public static String toYAML(Object obj, XBConfig xbConfig, String filePath) {
-		return XBlinkHelper.toYAML(obj, xbConfig, IOUtil.getOutputStream(filePath));
-	}
-
-	/**
-	 * 返回YAML文件字符串，生成YAML文件。
-	 * 
-	 * @param obj
-	 *            需要被序列化对象
-	 * @param xbConfig
-	 *            XBlink配置信息
-	 * @param outputStream
-	 *            输出流
-	 * @return YAML字符串
-	 */
-	public static String toYAML(Object obj, XBConfig xbConfig, OutputStream outputStream) {
-		return XBlinkHelper.toYAML(obj, xbConfig, IOUtil.getOutputStream(outputStream));
-	}
-
-	// XXX 反序列化方法
 
 }
