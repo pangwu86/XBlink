@@ -11,22 +11,25 @@ import java.io.Writer;
  */
 public class DocWorkerFactory {
 
-	public DocWriter createDocWriter() {
+	private DocWorkerFactory() {
+	}
+
+	public static DocWriter createDocWriter() {
 		// TODO
 		return null;
 	}
 
-	public DocWriter createDocWriter(Writer out) {
+	public static DocWriter createDocWriter(Writer out) {
 		// TODO
 		return null;
 	}
 
-	public DocWriter createDocWriter(OutputStream out) {
+	public static DocWriter createDocWriter(OutputStream out) {
 		// TODO
 		return null;
 	}
 
-	public DocWriter createDocWriter(String filePath) {
+	public static DocWriter createDocWriter(String filePath) {
 		// TODO
 		return null;
 	}

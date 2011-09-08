@@ -3,7 +3,7 @@ package org.xblink;
 import java.io.OutputStream;
 import java.io.Writer;
 
-import org.xblink.util.IOUtil;
+import org.xblink.core.DocWorkerFactory;
 
 /**
  * XBlink(吾爱跳刀)，通用序列化反序列化工具集。<BR>
@@ -23,14 +23,20 @@ public class XBlink {
 
 	/**
 	 * 使用你设定的配置项，替换原有默认配置信息（全局唯一）。
-	 * 
-	 * @param xbConfig
 	 */
 	public static void setDefaultXBConfig(XBConfig xbConfig) {
-		// TODO 后面再补上
+		XBConfigHelper.setDefaultXBConfig(xbConfig);
 	}
 
-	// ********************************* 通用方法 *********************************
+	/**
+	 * 使用你设定的配置项，使用一次后马上失效。
+	 * 
+	 */
+	public static void setTransientXBConfig(XBConfig xbConfig) {
+		XBConfigHelper.setTransientXBConfig(xbConfig);
+	}
+
+	// ********************************* 通用序列化 *********************************
 
 	/**
 	 * toAny意味着You will get what you want（你会得到任何你想要的东西）<BR>
@@ -41,14 +47,12 @@ public class XBlink {
 	 * 
 	 * @param obj
 	 *            需要被序列化对象
-	 * @param xbConfig
-	 *            XBlink运行时配置信息(默认为null，会使用默认配置项)
 	 * @param docTypeName
 	 *            任意你想要的文档格式名称，例如JSON或者XML
 	 * @return 字符串
 	 */
-	public static String toAny(Object obj, XBConfig xbConfig, String docTypeName) {
-		return XBlinkHelper.toAny(obj, xbConfig, IOUtil.getDocWriter(), docTypeName);
+	public static String toAny(Object obj, String docTypeName) {
+		return XBlinkHelper.toAny(obj, XBConfigHelper.getXbConfig(), DocWorkerFactory.createDocWriter(), docTypeName);
 	}
 
 	/**
@@ -60,15 +64,13 @@ public class XBlink {
 	 * 
 	 * @param obj
 	 *            需要被序列化对象
-	 * @param xbConfig
-	 *            XBlink运行时配置信息(默认为null，会使用默认配置项)
 	 * @param filePath
 	 *            保存文件的路径(绝对路径)
 	 * @param docTypeName
 	 *            任意你想要的文档格式名称，例如JSON或者XML
 	 */
-	public static void toAny(Object obj, XBConfig xbConfig, String filePath, String docTypeName) {
-		XBlinkHelper.toAny(obj, xbConfig, IOUtil.getDocWriter(filePath), docTypeName);
+	public static void toAny(Object obj, String filePath, String docTypeName) {
+		XBlinkHelper.toAny(obj, XBConfigHelper.getXbConfig(), DocWorkerFactory.createDocWriter(filePath), docTypeName);
 	}
 
 	/**
@@ -80,16 +82,14 @@ public class XBlink {
 	 * 
 	 * @param obj
 	 *            需要被序列化对象
-	 * @param xbConfig
-	 *            XBlink运行时配置信息(默认为null，会使用默认配置项)
 	 * @param outputStream
 	 *            输出流
 	 * @param docTypeName
 	 *            任意你想要的文档格式名称，例如JSON或者XML
 	 */
-	public static void toAny(Object obj, XBConfig xbConfig, OutputStream outputStream,
-			String docTypeName) {
-		XBlinkHelper.toAny(obj, xbConfig, IOUtil.getDocWriter(outputStream), docTypeName);
+	public static void toAny(Object obj, OutputStream outputStream, String docTypeName) {
+		XBlinkHelper.toAny(obj, XBConfigHelper.getXbConfig(), DocWorkerFactory.createDocWriter(outputStream),
+				docTypeName);
 	}
 
 	/**
@@ -101,30 +101,28 @@ public class XBlink {
 	 * 
 	 * @param obj
 	 *            需要被序列化对象
-	 * @param xbConfig
-	 *            XBlink运行时配置信息(默认为null，会使用默认配置项)
 	 * @param writer
 	 *            字符输出流
 	 * @param docTypeName
 	 *            任意你想要的文档格式名称，例如JSON或者XML
 	 */
-	public static void toAny(Object obj, XBConfig xbConfig, Writer writer, String docTypeName) {
-		XBlinkHelper.toAny(obj, xbConfig, IOUtil.getDocWriter(writer), docTypeName);
+	public static void toAny(Object obj, Writer writer, String docTypeName) {
+		XBlinkHelper.toAny(obj, XBConfigHelper.getXbConfig(), DocWorkerFactory.createDocWriter(writer), docTypeName);
 	}
 
-	// ********************************* XML方法 *********************************
+	// ****************************** 通用反序列化 ******************************
+
+	// ****************************** XML序列化 *********************************
 
 	/**
 	 * 返回XML文件字符串。
 	 * 
 	 * @param obj
 	 *            需要被序列化对象
-	 * @param xbConfig
-	 *            XBlink运行时配置信息(默认为null，会使用默认配置项)
 	 * @return XML字符串
 	 */
-	public static String toXML(Object obj, XBConfig xbConfig) {
-		return XBlinkHelper.toXML(obj, xbConfig, IOUtil.getDocWriter());
+	public static String toXML(Object obj) {
+		return XBlinkHelper.toXML(obj, XBConfigHelper.getXbConfig(), DocWorkerFactory.createDocWriter());
 	}
 
 	/**
@@ -132,13 +130,11 @@ public class XBlink {
 	 * 
 	 * @param obj
 	 *            需要被序列化对象
-	 * @param xbConfig
-	 *            XBlink运行时配置信息(默认为null，会使用默认配置项)
 	 * @param filePath
 	 *            保存文件的路径(绝对路径)
 	 */
-	public static void toXML(Object obj, XBConfig xbConfig, String filePath) {
-		XBlinkHelper.toXML(obj, xbConfig, IOUtil.getDocWriter(filePath));
+	public static void toXML(Object obj, String filePath) {
+		XBlinkHelper.toXML(obj, XBConfigHelper.getXbConfig(), DocWorkerFactory.createDocWriter(filePath));
 	}
 
 	/**
@@ -146,13 +142,11 @@ public class XBlink {
 	 * 
 	 * @param obj
 	 *            需要被序列化对象
-	 * @param xbConfig
-	 *            XBlink运行时配置信息(默认为null，会使用默认配置项)
 	 * @param outputStream
 	 *            输出流
 	 */
-	public static void toXML(Object obj, XBConfig xbConfig, OutputStream outputStream) {
-		XBlinkHelper.toXML(obj, xbConfig, IOUtil.getDocWriter(outputStream));
+	public static void toXML(Object obj, OutputStream outputStream) {
+		XBlinkHelper.toXML(obj, XBConfigHelper.getXbConfig(), DocWorkerFactory.createDocWriter(outputStream));
 	}
 
 	/**
@@ -160,16 +154,21 @@ public class XBlink {
 	 * 
 	 * @param obj
 	 *            需要被序列化对象
-	 * @param xbConfig
-	 *            XBlink运行时配置信息(默认为null，会使用默认配置项)
 	 * @param writer
 	 *            字节输出流
 	 */
-	public static void toXML(Object obj, XBConfig xbConfig, Writer writer) {
-		XBlinkHelper.toXML(obj, xbConfig, IOUtil.getDocWriter(writer));
+	public static void toXML(Object obj, Writer writer) {
+		XBlinkHelper.toXML(obj, XBConfigHelper.getXbConfig(), DocWorkerFactory.createDocWriter(writer));
 	}
 
-	public static Object fromXML() {
+	// ****************************** XML反序列化 ********************************
+
+	public static <T> T fromXML(CharSequence cs, Class<T> clz) {
+
+		return null;
+	}
+
+	public static Object fromXML(CharSequence cs, Object obj) {
 
 		return null;
 	}

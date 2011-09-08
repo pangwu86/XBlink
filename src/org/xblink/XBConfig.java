@@ -9,16 +9,15 @@ package org.xblink;
  */
 public class XBConfig {
 
-	private static XBConfig defaultConfig = new XBConfig();
-
 	private XBConfig() {
 		// TODO 设置默认参数
 	}
 
-	protected static XBConfig getDefaultXBConfig() {
-		return defaultConfig;
-	}
-
+	/**
+	 * 生成一个XBlink运行时配置项。
+	 * 
+	 * @return 配置项
+	 */
 	public static XBConfig createXBConfig() {
 		return new XBConfig();
 	}
