@@ -5,9 +5,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.Writer;
-
-import org.xblink.core.DocWriter;
 
 /**
  * IO流的一些方法。
@@ -16,26 +13,6 @@ import org.xblink.core.DocWriter;
  * 
  */
 public abstract class IOUtil {
-
-	public static DocWriter getDocWriter() {
-		// TODO
-		return null;
-	}
-
-	public static DocWriter getDocWriter(OutputStream outputStream) {
-
-		return null;
-	}
-
-	public static DocWriter getDocWriter(Writer writer) {
-
-		return null;
-	}
-
-	public static DocWriter getDocWriter(String filePath) {
-
-		return null;
-	}
 
 	/**
 	 * 获得输出流。

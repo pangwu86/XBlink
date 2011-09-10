@@ -1,6 +1,9 @@
 package org.xblink.core;
 
+import java.io.File;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Reader;
 import java.io.Writer;
 
 /**
@@ -29,8 +32,28 @@ public class DocWorkerFactory {
 		return null;
 	}
 
-	public static DocWriter createDocWriter(String filePath) {
+	public static DocWriter createDocWriter(File file) {
 		// TODO
+		return null;
+	}
+
+	public static DocReader createDocReader(CharSequence cs) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static DocReader createDocReader(File file) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static DocReader createDocReader(InputStream in) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static DocReader createDocReader(Reader reader) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 

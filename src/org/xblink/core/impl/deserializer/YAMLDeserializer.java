@@ -10,8 +10,9 @@ import org.xblink.core.Deserializer;
  */
 public class YAMLDeserializer extends Deserializer {
 
-	public YAMLDeserializer(Object obj) {
-		super(obj);
+	public YAMLDeserializer(Object obj, Class<?> clz) {
+		super(obj, clz);
+		// TODO Auto-generated constructor stub
 	}
 
 }

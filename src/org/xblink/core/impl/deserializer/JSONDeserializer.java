@@ -10,8 +10,9 @@ import org.xblink.core.Deserializer;
  */
 public class JSONDeserializer extends Deserializer {
 
-	public JSONDeserializer(Object obj) {
-		super(obj);
+	public JSONDeserializer(Object obj, Class<?> clz) {
+		super(obj, clz);
+		// TODO Auto-generated constructor stub
 	}
 
 }

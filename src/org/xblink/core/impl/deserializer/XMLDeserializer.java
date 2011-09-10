@@ -10,8 +10,9 @@ import org.xblink.core.Deserializer;
  */
 public class XMLDeserializer extends Deserializer {
 
-	public XMLDeserializer(Object obj) {
-		super(obj);
+	public XMLDeserializer(Object obj, Class<?> clz) {
+		super(obj, clz);
+		// TODO Auto-generated constructor stub
 	}
 
 }

@@ -31,39 +31,72 @@ public class SerialFactory {
 	 */
 	private final static String DESERIALIZER_TEMPLATE = "org.xblink.core.impl.deserializer.%SDeserializer";
 
-	public static Serializer findSerializerByDocTypeName(Object obj, String docTypeName) {
+	private static Serializer findSerializerByDocTypeName(Object obj, String docTypeName) {
 		isBlankStr(docTypeName);
-		String serializerClzName = String.format(SERIALIZER_TEMPLATE, docTypeName.toUpperCase());
-		return (Serializer) getInstanceByObject(obj, serializerClzName, docTypeName);
+		String className = String.format(SERIALIZER_TEMPLATE, docTypeName.toUpperCase());
+		Constructor<?> constructor = getConstructorForSerial(className);
+		return createSerializer(obj, constructor, docTypeName);
 	}
 
-	public static Deserializer findDeserializerByDocTypeName(Object obj, String docTypeName) {
+	private static Deserializer findDeserializerByDocTypeName(Object obj, Class<?> clz, String docTypeName) {
 		isBlankStr(docTypeName);
-		String deserializerClzName = String
-				.format(DESERIALIZER_TEMPLATE, docTypeName.toUpperCase());
-		return (Deserializer) getInstanceByObject(obj, deserializerClzName, docTypeName);
+		String className = String.format(DESERIALIZER_TEMPLATE, docTypeName.toUpperCase());
+		Constructor<?> constructor = getConstructorForDeserial(className);
+		return createDeserializer(obj, clz, constructor, docTypeName);
 	}
 
-	private static Object getInstanceByObject(Object obj, String className, String docTypeName) {
-		Object instance;
+	private static Constructor<?> getConstructorForSerial(String className) {
+		Constructor<?> constructor = null;
 		try {
-			Class<?> clz;
-			Constructor<?> constructor;
-			clz = Class.forName(className);
-			// 实例化对象
+			Class<?> clz = Class.forName(className);
 			constructor = clz.getDeclaredConstructor(Object.class);
-			instance = constructor.newInstance(obj);
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(String.format("没有找到%s格式的实现类,无法执行后续操作。", docTypeName), e);
+		} catch (Exception e) {
+			throw new RuntimeException(String.format("没有找到%s格式的实现类，无法执行后续操作。", className), e);
+		}
+		return constructor;
+	}
+
+	private static Constructor<?> getConstructorForDeserial(String className) {
+		Constructor<?> constructor = null;
+		try {
+			Class<?> clz = Class.forName(className);
+			constructor = clz.getDeclaredConstructor(Object.class, Class.class);
+		} catch (Exception e) {
+			throw new RuntimeException(String.format("没有找到%s格式的实现类，无法执行后续操作。", className), e);
+		}
+		return constructor;
+	}
+
+	private static Serializer createSerializer(Object obj, Constructor<?> constructor, String docTypeName) {
+		Serializer instance;
+		try {
+			instance = (Serializer) constructor.newInstance(obj);
 		} catch (Exception e) {
 			throw new RuntimeException(String.format("%s格式的实现类实例化失败。", docTypeName), e);
 		}
 		return instance;
 	}
 
-	public static void isNull(Object object) {
+	private static Deserializer createDeserializer(Object obj, Class<?> clz, Constructor<?> constructor,
+			String docTypeName) {
+		Deserializer instance;
+		try {
+			instance = (Deserializer) constructor.newInstance(obj, clz);
+		} catch (Exception e) {
+			throw new RuntimeException(String.format("%s格式的实现类实例化失败。", docTypeName), e);
+		}
+		return instance;
+	}
+
+	public static void notSerializeNull(Object object) {
 		if (null == object) {
-			throw new RuntimeException("无法对一个空对象(null)进行序列化或反序列化操作。");
+			throw new RuntimeException("无法对一个空对象(null)进行序列化操作。");
+		}
+	}
+
+	public static void notDeserializeNull(Object object, Class<?> clz) {
+		if (null == object && null == clz) {
+			throw new RuntimeException("没有参考对象或参考类，无法进行反序列化操作。");
 		}
 	}
 
@@ -77,45 +110,45 @@ public class SerialFactory {
 	// ******************** 序列化器 ********************
 
 	public static Serializer createXMLSerializer(Object object) {
-		isNull(object);
+		notSerializeNull(object);
 		return new XMLSerializer(object);
 	}
 
 	public static Serializer createJSONSerializer(Object object) {
-		isNull(object);
+		notSerializeNull(object);
 		return new JSONSerializer(object);
 	}
 
 	public static Serializer createYAMLSerializer(Object object) {
-		isNull(object);
+		notSerializeNull(object);
 		return new YAMLSerializer(object);
 	}
 
 	public static Serializer createANYSerializer(Object object, String docTypeName) {
-		isNull(object);
+		notSerializeNull(object);
 		return findSerializerByDocTypeName(object, docTypeName);
 	}
 
 	// ******************** 反序列化器 ********************
 
-	public static Deserializer createXMLDeserializer(Object object) {
-		isNull(object);
-		return new XMLDeserializer(object);
+	public static Deserializer createXMLDeserializer(Object object, Class<?> clz) {
+		notDeserializeNull(object, clz);
+		return new XMLDeserializer(object, clz);
 	}
 
-	public static Deserializer createJSONDeserializer(Object object) {
-		isNull(object);
-		return new JSONDeserializer(object);
+	public static Deserializer createJSONDeserializer(Object object, Class<?> clz) {
+		notDeserializeNull(object, clz);
+		return new JSONDeserializer(object, clz);
 	}
 
-	public static Deserializer createYAMLDeserializer(Object object) {
-		isNull(object);
-		return new YAMLDeserializer(object);
+	public static Deserializer createYAMLDeserializer(Object object, Class<?> clz) {
+		notDeserializeNull(object, clz);
+		return new YAMLDeserializer(object, clz);
 	}
 
-	public static Deserializer createANYDeserializer(Object object, String docTypeName) {
-		isNull(object);
-		return findDeserializerByDocTypeName(object, docTypeName);
+	public static Deserializer createANYDeserializer(Object object, Class<?> clz, String docTypeName) {
+		notDeserializeNull(object, clz);
+		return findDeserializerByDocTypeName(object, clz, docTypeName);
 	}
 
 }

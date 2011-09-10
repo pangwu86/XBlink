@@ -1,5 +1,7 @@
 package org.xblink;
 
+import org.xblink.core.Deserializer;
+import org.xblink.core.DocReader;
 import org.xblink.core.DocWriter;
 import org.xblink.core.SerialFactory;
 import org.xblink.core.Serializer;
@@ -42,10 +44,43 @@ class XBlinkHelper {
 	 */
 	private static String serializing(Serializer serializer, XBConfig xbConfig, DocWriter docWriter) {
 		// TODO
-
 		return null;
 	}
 
 	// ***************************************反序列化****************************************
+
+	@SuppressWarnings("unchecked")
+	public static <T> T fromAny(Class<T> clz, XBConfig xbConfig, DocReader docReader, String docTypeName) {
+		return (T) deserializing(SerialFactory.createANYDeserializer(null, clz, docTypeName), xbConfig, docReader);
+	}
+
+	public static Object fromAny(Object obj, XBConfig xbConfig, DocReader docReader, String docTypeName) {
+		return deserializing(SerialFactory.createANYDeserializer(obj, null, docTypeName), xbConfig, docReader);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> T fromXML(Class<T> clz, XBConfig xbConfig, DocReader docReader) {
+		return (T) deserializing(SerialFactory.createXMLDeserializer(null, clz), xbConfig, docReader);
+	}
+
+	public static Object fromXML(Object obj, XBConfig xbConfig, DocReader docReader) {
+		return deserializing(SerialFactory.createXMLDeserializer(obj, null), xbConfig, docReader);
+	}
+
+	/**
+	 * 反序列化。
+	 * 
+	 * @param deserializer
+	 *            反序列化器
+	 * @param xbConfig
+	 *            XBlink配置信息
+	 * @param DocReader
+	 *            文档读取器
+	 * @return 字符串
+	 */
+	private static Object deserializing(Deserializer deserializer, XBConfig xbConfig, DocReader docReader) {
+		// TODO
+		return null;
+	}
 
 }

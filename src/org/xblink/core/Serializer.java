@@ -3,8 +3,6 @@ package org.xblink.core;
 /**
  * 序列化器，也是文档的构造器。<BR>
  * 
- * 功能就是解析对象，根据其变量的类型生成对应的字符串。
- * 
  * @author 胖五(pangwu86@gmail.com)
  * 
  */
