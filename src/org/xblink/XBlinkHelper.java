@@ -1,10 +1,15 @@
 package org.xblink;
 
-import org.xblink.core.Deserializer;
-import org.xblink.core.DocReader;
-import org.xblink.core.DocWriter;
-import org.xblink.core.SerialFactory;
-import org.xblink.core.Serializer;
+import java.io.Reader;
+import java.io.Writer;
+
+import org.xblink.core.doc.DocReader;
+import org.xblink.core.doc.DocWorkerFactory;
+import org.xblink.core.doc.DocWriter;
+import org.xblink.core.serial.Deserializer;
+import org.xblink.core.serial.SerialFactory;
+import org.xblink.core.serial.Serializer;
+import org.xblink.util.StringUtil;
 
 /**
  * XBlink小助手，算是一个辅助类吧，其实是为了XBlink这个类看起来更加简洁，只保留对外的API，而把几个不想公开的方法放在这个类中了。
@@ -17,18 +22,23 @@ class XBlinkHelper {
 	private XBlinkHelper() {
 	}
 
-	// ***************************************序列化****************************************
-
-	// 序列化通用方法
-
-	static String toAny(Object obj, XBConfig xbConfig, DocWriter docWriter, String docTypeName) {
-		return serializing(SerialFactory.createANYSerializer(obj, docTypeName), xbConfig, docWriter);
+	private static void missDocTypeName(String docTypeName) {
+		// 格式名称
+		if (StringUtil.isBlankStr(docTypeName)) {
+			throw new RuntimeException("没有输入或指定转换文件的[格式名称]，无法执行对应格式的序列化或反序列化操作。");
+		}
 	}
 
-	// 序列化默认方法
+	// ***************************************序列化****************************************
 
-	static String toXML(Object obj, XBConfig xbConfig, DocWriter docWriter) {
-		return serializing(SerialFactory.createXMLSerializer(obj), xbConfig, docWriter);
+	protected static String toAny(Object obj, XBConfig xbConfig, Writer writer, String docTypeName) {
+		missDocTypeName(docTypeName);
+		return serializing(SerialFactory.createSerializer(obj), xbConfig,
+				DocWorkerFactory.createAnyWriter(writer, docTypeName));
+	}
+
+	protected static String toXml(Object obj, XBConfig xbConfig, Writer writer) {
+		return serializing(SerialFactory.createSerializer(obj), xbConfig, DocWorkerFactory.createXmlWriter(writer));
 	}
 
 	/**
@@ -50,21 +60,27 @@ class XBlinkHelper {
 	// ***************************************反序列化****************************************
 
 	@SuppressWarnings("unchecked")
-	public static <T> T fromAny(Class<T> clz, XBConfig xbConfig, DocReader docReader, String docTypeName) {
-		return (T) deserializing(SerialFactory.createANYDeserializer(null, clz, docTypeName), xbConfig, docReader);
+	protected static <T> T fromAny(Class<T> clz, XBConfig xbConfig, Reader reader, String docTypeName) {
+		missDocTypeName(docTypeName);
+		return (T) deserializing(SerialFactory.createDeserializer(null, clz), xbConfig,
+				DocWorkerFactory.createAnyReader(reader, docTypeName));
 	}
 
-	public static Object fromAny(Object obj, XBConfig xbConfig, DocReader docReader, String docTypeName) {
-		return deserializing(SerialFactory.createANYDeserializer(obj, null, docTypeName), xbConfig, docReader);
+	protected static Object fromAny(Object obj, XBConfig xbConfig, Reader reader, String docTypeName) {
+		missDocTypeName(docTypeName);
+		return deserializing(SerialFactory.createDeserializer(obj, null), xbConfig,
+				DocWorkerFactory.createAnyReader(reader, docTypeName));
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> T fromXML(Class<T> clz, XBConfig xbConfig, DocReader docReader) {
-		return (T) deserializing(SerialFactory.createXMLDeserializer(null, clz), xbConfig, docReader);
+	protected static <T> T fromXml(Class<T> clz, XBConfig xbConfig, Reader reader) {
+		return (T) deserializing(SerialFactory.createDeserializer(null, clz), xbConfig,
+				DocWorkerFactory.createXmlReader(reader));
 	}
 
-	public static Object fromXML(Object obj, XBConfig xbConfig, DocReader docReader) {
-		return deserializing(SerialFactory.createXMLDeserializer(obj, null), xbConfig, docReader);
+	protected static Object fromXml(Object obj, XBConfig xbConfig, Reader reader) {
+		return deserializing(SerialFactory.createDeserializer(obj, null), xbConfig,
+				DocWorkerFactory.createXmlReader(reader));
 	}
 
 	/**

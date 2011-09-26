@@ -1,6 +1,8 @@
 package org.xblink.core;
 
 import org.xblink.XBConfig;
+import org.xblink.core.serial.Deserializer;
+import org.xblink.core.serial.Serializer;
 
 /**
  * 引导者。<BR>

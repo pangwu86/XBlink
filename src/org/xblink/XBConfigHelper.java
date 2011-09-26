@@ -11,7 +11,7 @@ public class XBConfigHelper {
 	/**
 	 * 默认的配置项，全局唯一。在没有设定临时配置项时，以此配置为主。
 	 */
-	private static XBConfig defaultXbConfig = XBConfig.createXBConfig();
+	private static XBConfig globalXbConfig = XBConfig.createXBConfig();
 
 	/**
 	 * 临时的配置项，设定后调用就会采用当前配置项，调用后即抛弃。
@@ -33,7 +33,7 @@ public class XBConfigHelper {
 		Integer current = count.get();
 		if (null == current || 0 == current.intValue()) {
 			// 没有的情况下，使用默认配置项
-			return defaultXbConfig;
+			return globalXbConfig;
 		}
 		XBConfig xbConfig = transientXbConfig.get();
 		transientXbConfig.set(null);
@@ -46,8 +46,8 @@ public class XBConfigHelper {
 		count.set(1);
 	}
 
-	protected static void setDefaultXBConfig(XBConfig xbConfig) {
-		defaultXbConfig = xbConfig;
+	protected static void setGlobalXBConfig(XBConfig xbConfig) {
+		globalXbConfig = xbConfig;
 	}
 
 }
