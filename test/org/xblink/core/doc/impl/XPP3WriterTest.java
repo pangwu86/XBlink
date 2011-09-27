@@ -1,5 +1,6 @@
 package org.xblink.core.doc.impl;
 
+import java.io.BufferedWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 
@@ -11,7 +12,8 @@ public class XPP3WriterTest {
 	@Test
 	public void writeXml() throws Exception {
 		Writer writer = new StringWriter();
-		DocWriter dw = new XPP3Writer(writer);
+		DocWriter dw = new XPP3Writer(new BufferedWriter(writer));
+		// DocWriter dw = new XPP3Writer(writer);
 
 		// 编写文件
 		dw.writeStartDocument();

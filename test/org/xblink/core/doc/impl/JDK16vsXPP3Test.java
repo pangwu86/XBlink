@@ -5,7 +5,7 @@ import org.xblink.util.WatchTimer;
 
 public class JDK16vsXPP3Test {
 
-	public static int num = 100;
+	public static int num = 1000;
 
 	@Test
 	public void jdk16WriterPerformance() throws Exception {

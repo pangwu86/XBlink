@@ -20,7 +20,6 @@ public class DocWorkerFactory {
 
 	static {
 		// TODO 根据配置文件，来选择读写实现类
-
 	}
 
 	private final static String WRITER_IMPL_CLASS_NAME = "org.xblink.core.doc.impl.%sWriter";
