@@ -4,8 +4,8 @@ import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.Constructor;
 
-import org.xblink.core.doc.impl.XmlReader;
-import org.xblink.core.doc.impl.XmlWriter;
+import org.xblink.core.doc.impl.JDK16Reader;
+import org.xblink.core.doc.impl.JDK16Writer;
 import org.xblink.util.StringUtil;
 
 /**
@@ -17,6 +17,11 @@ import org.xblink.util.StringUtil;
 public class DocWorkerFactory {
 
 	private DocWorkerFactory() {
+	}
+
+	static {
+		// TODO 根据配置文件，来选择读写实现类
+
 	}
 
 	private final static String WRITER_IMPL_CLASS_NAME = "org.xblink.core.doc.impl.%sWriter";
@@ -57,7 +62,7 @@ public class DocWorkerFactory {
 	// ******************** 生成Writer ********************
 
 	public static DocWriter createXmlWriter(Writer writer) {
-		return new XmlWriter(writer);
+		return new JDK16Writer(writer);
 	}
 
 	public static DocWriter createAnyWriter(Writer writer, String docTypeName) {
@@ -67,7 +72,7 @@ public class DocWorkerFactory {
 	// ******************** 生成Reader ********************
 
 	public static DocReader createXmlReader(Reader reader) {
-		return new XmlReader(reader);
+		return new JDK16Reader(reader);
 	}
 
 	public static DocReader createAnyReader(Reader reader, String docTypeName) {

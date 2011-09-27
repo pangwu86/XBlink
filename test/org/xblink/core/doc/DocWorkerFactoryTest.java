@@ -5,7 +5,7 @@ import java.io.StringWriter;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.xblink.core.doc.impl.XmlWriter;
+import org.xblink.core.doc.impl.JDK16Writer;
 
 public class DocWorkerFactoryTest {
 
@@ -24,13 +24,13 @@ public class DocWorkerFactoryTest {
 	@Test
 	public void createANYWriter2() throws Exception {
 		DocWriter docWriter = DocWorkerFactory.createAnyWriter(new StringWriter(), "XML");
-		Assert.assertTrue(docWriter instanceof XmlWriter);
+		Assert.assertTrue(docWriter instanceof JDK16Writer);
 	}
 
 	@Test
 	public void createXmlWriter() throws Exception {
 		DocWriter docWriter = DocWorkerFactory.createXmlWriter(new StringWriter());
-		Assert.assertTrue(docWriter instanceof XmlWriter);
+		Assert.assertTrue(docWriter instanceof JDK16Writer);
 	}
 
 	@Test

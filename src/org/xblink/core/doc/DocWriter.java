@@ -1,17 +1,10 @@
 package org.xblink.core.doc;
 
-import java.io.Writer;
-
 /**
- * 
+ * 定义了书写文本文件的几个动作。
  * 
  * @author 胖五(pangwu86@gmail.com)
  */
-public abstract class DocWriter {
+public interface DocWriter {
 
-	private Writer writer;
-
-	public DocWriter(Writer writer) {
-		this.writer = writer;
-	}
 }

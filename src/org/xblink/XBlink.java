@@ -9,11 +9,11 @@ import java.io.Writer;
 import org.xblink.util.IOUtil;
 
 /**
- * XBlink(吾爱跳刀)，通用序列化反序列化工具集。<BR>
+ * XBlink(吾爱跳刀)，通用序列化反序列化工具集。
  * 
- * 支持JAVA中的基本类型，对象类型，数组类型，List，Set，Map，枚举等。<BR>
+ * 支持JAVA中的基本类型，对象类型，数组类型，List，Set，Map，枚举等。
  * 
- * 支持生成XML，JSON，YAML,及任意你喜欢的格式文件。（当然非默认格式的输出需要你加入对应的实现）<BR>
+ * 支持生成XML，JSON，YAML,及任意你喜欢的格式文件。（当然非默认格式的输出需要你加入对应的实现）
  * 
  * 
  * @author 胖五(pangwu86@gmail.com)
@@ -48,9 +48,9 @@ public class XBlink {
 	// ********************************* 通用序列化 *********************************
 
 	/**
-	 * toAny意味着你可以通过对象获得你想要的格式的文件<BR>
+	 * toAny意味着你可以通过对象获得你想要的格式的文件
 	 * 
-	 * XBlink最NB的序列化方法，生成任意你想要的格式文件。<BR>
+	 * XBlink最NB的序列化方法，生成任意你想要的格式文件。
 	 * 
 	 * 获得你需要的格式的字符串。
 	 * 
@@ -65,9 +65,9 @@ public class XBlink {
 	}
 
 	/**
-	 * toAny意味着你可以通过对象获得你想要的格式的文件<BR>
+	 * toAny意味着你可以通过对象获得你想要的格式的文件
 	 * 
-	 * XBlink最NB的序列化方法，生成任意你想要的格式文件。<BR>
+	 * XBlink最NB的序列化方法，生成任意你想要的格式文件。
 	 * 
 	 * 生成对应的文件。
 	 * 
@@ -83,9 +83,9 @@ public class XBlink {
 	}
 
 	/**
-	 * toAny意味着你可以通过对象获得你想要的格式的文件<BR>
+	 * toAny意味着你可以通过对象获得你想要的格式的文件
 	 * 
-	 * XBlink最NB的序列化方法，生成任意你想要的格式文件。<BR>
+	 * XBlink最NB的序列化方法，生成任意你想要的格式文件。
 	 * 
 	 * 生成对应的文件。
 	 * 
@@ -101,9 +101,9 @@ public class XBlink {
 	}
 
 	/**
-	 * toAny意味着你可以通过对象获得你想要的格式的文件<BR>
+	 * toAny意味着你可以通过对象获得你想要的格式的文件
 	 * 
-	 * XBlink最NB的序列化方法，生成任意你想要的格式文件。<BR>
+	 * XBlink最NB的序列化方法，生成任意你想要的格式文件。
 	 * 
 	 * 生成对应的文件。
 	 * 
@@ -121,9 +121,9 @@ public class XBlink {
 	// ****************************** 通用反序列化 ******************************
 
 	/**
-	 * fromAny意味着可以从任意格式的文件中得到你想要的那个对象<BR>
+	 * fromAny意味着可以从任意格式的文件中得到你想要的那个对象
 	 * 
-	 * XBlink最NB的反序列方法，生成你需要的对象。<BR>
+	 * XBlink最NB的反序列方法，生成你需要的对象。
 	 * 
 	 * @param cs
 	 *            字符信息
@@ -138,14 +138,14 @@ public class XBlink {
 	}
 
 	/**
-	 * fromAny意味着可以从任意格式的文件中得到你想要的那个对象<BR>
+	 * fromAny意味着可以从任意格式的文件中得到你想要的那个对象
 	 * 
-	 * XBlink最NB的反序列方法，生成你需要的对象。<BR>
+	 * XBlink最NB的反序列方法，生成你需要的对象。
 	 * 
 	 * @param cs
 	 *            字符信息
-	 * @param clz
-	 *            參考类
+	 * @param obj
+	 *            参考对象
 	 * @param docTypeName
 	 *            任意你想要的文档格式名称，例如JSON或者XML
 	 * @return 与参考对象类型相同的对象
@@ -155,9 +155,9 @@ public class XBlink {
 	}
 
 	/**
-	 * fromAny意味着可以从任意格式的文件中得到你想要的那个对象<BR>
+	 * fromAny意味着可以从任意格式的文件中得到你想要的那个对象
 	 * 
-	 * XBlink最NB的反序列方法，生成你需要的对象。<BR>
+	 * XBlink最NB的反序列方法，生成你需要的对象。
 	 * 
 	 * @param file
 	 *            待解析的文件
@@ -172,14 +172,14 @@ public class XBlink {
 	}
 
 	/**
-	 * fromAny意味着可以从任意格式的文件中得到你想要的那个对象<BR>
+	 * fromAny意味着可以从任意格式的文件中得到你想要的那个对象
 	 * 
-	 * XBlink最NB的反序列方法，生成你需要的对象。<BR>
+	 * XBlink最NB的反序列方法，生成你需要的对象。
 	 * 
 	 * @param file
 	 *            待解析的文件
-	 * @param clz
-	 *            參考类
+	 * @param obj
+	 *            参考对象
 	 * @param docTypeName
 	 *            任意你想要的文档格式名称，例如JSON或者XML
 	 * @return 与参考对象类型相同的对象
@@ -189,9 +189,9 @@ public class XBlink {
 	}
 
 	/**
-	 * fromAny意味着可以从任意格式的文件中得到你想要的那个对象<BR>
+	 * fromAny意味着可以从任意格式的文件中得到你想要的那个对象
 	 * 
-	 * XBlink最NB的反序列方法，生成你需要的对象。<BR>
+	 * XBlink最NB的反序列方法，生成你需要的对象。
 	 * 
 	 * @param in
 	 *            输入流
@@ -206,14 +206,14 @@ public class XBlink {
 	}
 
 	/**
-	 * fromAny意味着可以从任意格式的文件中得到你想要的那个对象<BR>
+	 * fromAny意味着可以从任意格式的文件中得到你想要的那个对象
 	 * 
-	 * XBlink最NB的反序列方法，生成你需要的对象。<BR>
+	 * XBlink最NB的反序列方法，生成你需要的对象。
 	 * 
 	 * @param in
 	 *            输入流
-	 * @param clz
-	 *            參考类
+	 * @param obj
+	 *            参考对象
 	 * @param docTypeName
 	 *            任意你想要的文档格式名称，例如JSON或者XML
 	 * @return 与参考对象类型相同的对象
@@ -223,9 +223,9 @@ public class XBlink {
 	}
 
 	/**
-	 * fromAny意味着可以从任意格式的文件中得到你想要的那个对象<BR>
+	 * fromAny意味着可以从任意格式的文件中得到你想要的那个对象
 	 * 
-	 * XBlink最NB的反序列方法，生成你需要的对象。<BR>
+	 * XBlink最NB的反序列方法，生成你需要的对象。
 	 * 
 	 * @param reader
 	 *            字符输入流
@@ -240,14 +240,14 @@ public class XBlink {
 	}
 
 	/**
-	 * fromAny意味着可以从任意格式的文件中得到你想要的那个对象<BR>
+	 * fromAny意味着可以从任意格式的文件中得到你想要的那个对象
 	 * 
-	 * XBlink最NB的反序列方法，生成你需要的对象。<BR>
+	 * XBlink最NB的反序列方法，生成你需要的对象。
 	 * 
 	 * @param reader
 	 *            字符输入流
-	 * @param clz
-	 *            參考类
+	 * @param obj
+	 *            参考对象
 	 * @param docTypeName
 	 *            任意你想要的文档格式名称，例如JSON或者XML
 	 * @return 与参考对象类型相同的对象

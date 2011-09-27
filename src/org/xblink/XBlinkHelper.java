@@ -15,7 +15,6 @@ import org.xblink.util.StringUtil;
  * XBlink小助手，算是一个辅助类吧，其实是为了XBlink这个类看起来更加简洁，只保留对外的API，而把几个不想公开的方法放在这个类中了。
  * 
  * @author 胖五(pangwu86@gmail.com)
- * 
  */
 class XBlinkHelper {
 
@@ -25,7 +24,7 @@ class XBlinkHelper {
 	private static void missDocTypeName(String docTypeName) {
 		// 格式名称
 		if (StringUtil.isBlankStr(docTypeName)) {
-			throw new RuntimeException("没有输入或指定转换文件的[格式名称]，无法执行对应格式的序列化或反序列化操作。");
+			throw new IllegalArgumentException("没有输入或指定转换文件的[格式名称]，无法执行对应格式的序列化或反序列化操作。");
 		}
 	}
 

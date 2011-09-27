@@ -16,13 +16,13 @@ public class SerialFactory {
 
 	private static void serializeNull(Object object) {
 		if (null == object) {
-			throw new RuntimeException("无法对一个空对象(null)进行序列化操作。");
+			throw new IllegalArgumentException("无法对一个空对象(null)进行序列化操作。");
 		}
 	}
 
 	private static void deserializeNull(Object object, Class<?> clz) {
 		if (null == object && null == clz) {
-			throw new RuntimeException("没有参考对象或参考类，无法进行反序列化操作。");
+			throw new IllegalArgumentException("没有参考对象或参考类，无法进行反序列化操作。");
 		}
 	}
 
