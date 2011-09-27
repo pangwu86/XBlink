@@ -1,5 +1,8 @@
 package org.xblink.core.serial;
 
+import org.xblink.XBConfig;
+import org.xblink.core.doc.DocWriter;
+
 /**
  * 分析对象，通过DocWriter，输出对应的文本格式信息。
  * 
@@ -19,5 +22,7 @@ public abstract class Serializer {
 	public Serializer(Object obj) {
 		this.obj = obj;
 	}
+
+	public abstract void doIt(XBConfig xbConfig, DocWriter docWriter);
 
 }

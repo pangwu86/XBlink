@@ -56,4 +56,9 @@ public class MytypeWriter extends AbstractDocWriter {
 
 	}
 
+	public String getString() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

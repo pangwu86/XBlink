@@ -87,4 +87,9 @@ public class JDK16Writer extends AbstractDocWriter {
 	public void flush() throws Exception {
 		innerWriter.flush();
 	}
+
+	public String getString() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

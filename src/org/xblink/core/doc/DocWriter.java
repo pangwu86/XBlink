@@ -93,4 +93,11 @@ public interface DocWriter {
 	 */
 	public void flush() throws Exception;
 
+	/**
+	 * 返回生成的文本。
+	 * 
+	 * @return 文本内容
+	 */
+	public String getString();
+
 }

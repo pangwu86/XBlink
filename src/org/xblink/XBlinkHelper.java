@@ -41,7 +41,7 @@ class XBlinkHelper {
 	}
 
 	/**
-	 * 序列化。
+	 * 序列化。如果不生成文件，则直接返回生成的字符串。
 	 * 
 	 * @param serializer
 	 *            序列化器
@@ -52,8 +52,8 @@ class XBlinkHelper {
 	 * @return 字符串
 	 */
 	private static String serializing(Serializer serializer, XBConfig xbConfig, DocWriter docWriter) {
-		// TODO
-		return null;
+		serializer.doIt(xbConfig, docWriter);
+		return docWriter.getString();
 	}
 
 	// ***************************************反序列化****************************************

@@ -1,5 +1,6 @@
 package org.xblink.core.doc.impl;
 
+import java.io.StringWriter;
 import java.io.Writer;
 
 import org.xblink.core.doc.AbstractDocWriter;
@@ -86,6 +87,13 @@ public class XPP3Writer extends AbstractDocWriter {
 
 	public void flush() throws Exception {
 		innerWriter.flush();
+	}
+
+	public String getString() {
+		if (writer instanceof StringWriter) {
+			return writer.toString();
+		}
+		return null;
 	}
 
 }
