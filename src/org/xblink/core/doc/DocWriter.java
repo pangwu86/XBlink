@@ -7,4 +7,90 @@ package org.xblink.core.doc;
  */
 public interface DocWriter {
 
+	/**
+	 * 编写文档开头。
+	 * 
+	 * @throws Exception
+	 *             异常
+	 */
+	public void writeStartDocument() throws Exception;
+
+	/**
+	 * 编写文档结尾。
+	 * 
+	 * @throws Exception
+	 *             异常
+	 */
+	public void writeEndDocument() throws Exception;
+
+	/**
+	 * 编写开始标签。
+	 * 
+	 * @param tagName
+	 *            标签名称
+	 * @throws Exception
+	 *             异常
+	 */
+	public void writeStartTag(String tagName) throws Exception;
+
+	/**
+	 * 编写结束标签。
+	 * 
+	 * @param tagName
+	 *            标签名称
+	 * @throws Exception
+	 *             异常
+	 */
+	public void writeEndTag(String tagName) throws Exception;
+
+	/**
+	 * 编写属性，调用前一定要先调用writeStartTag。
+	 * 
+	 * @param name
+	 *            属性名称
+	 * @param value
+	 *            属性值
+	 * @throws Exception
+	 *             异常
+	 */
+	public void writeAttribute(String name, String value) throws Exception;
+
+	/**
+	 * 编写内容。
+	 * 
+	 * @param text
+	 *            内容
+	 * @throws Exception
+	 *             异常
+	 */
+	public void writeText(String text) throws Exception;
+
+	/**
+	 * 编写元素。
+	 * 
+	 * @param tagName
+	 *            元素名称
+	 * @param text
+	 *            内容
+	 * @throws Exception
+	 *             异常
+	 */
+	public void writeElementText(String tagName, String text) throws Exception;
+
+	/**
+	 * 关闭当前Writer。
+	 * 
+	 * @throws Exception
+	 *             异常
+	 */
+	public void close() throws Exception;
+
+	/**
+	 * 输出当前内容。
+	 * 
+	 * @throws Exception
+	 *             异常
+	 */
+	public void flush() throws Exception;
+
 }

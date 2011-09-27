@@ -23,10 +23,11 @@ import java.lang.annotation.Target;
  * 生成结果为:
  * 
  * <pre>
- * <User>
- * 		<name>你设定的值</name>
- * </User>
+ * <code>
+ * <User><name>你设定的值</name></User>
+ * </code>
  * </pre>
+ * 
  * 
  * @author pangwu86(pangwu86@gmail.com)
  * 

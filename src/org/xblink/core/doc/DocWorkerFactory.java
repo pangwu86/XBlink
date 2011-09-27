@@ -4,9 +4,8 @@ import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.Constructor;
 
-import org.xblink.core.doc.impl.JDK16Reader;
-import org.xblink.core.doc.impl.JDK16Writer;
-import org.xblink.util.StringUtil;
+import org.xblink.core.doc.impl.XPP3Reader;
+import org.xblink.core.doc.impl.XPP3Writer;
 
 /**
  * 生成DocReader与DocWriter的工厂。
@@ -37,7 +36,7 @@ public class DocWorkerFactory {
 	}
 
 	private static Object getInstance(Object initarg, Class<?> paramClz, String docTypeName, String implClassName) {
-		String className = String.format(implClassName, StringUtil.upperFirstLowerOther(docTypeName));
+		String className = String.format(implClassName, docTypeName);
 		Constructor<?> constructor = getConstructor(className, paramClz);
 		Object instance = null;
 		try {
@@ -62,7 +61,8 @@ public class DocWorkerFactory {
 	// ******************** 生成Writer ********************
 
 	public static DocWriter createXmlWriter(Writer writer) {
-		return new JDK16Writer(writer);
+		// TODO 不同的实现
+		return new XPP3Writer(writer);
 	}
 
 	public static DocWriter createAnyWriter(Writer writer, String docTypeName) {
@@ -72,7 +72,8 @@ public class DocWorkerFactory {
 	// ******************** 生成Reader ********************
 
 	public static DocReader createXmlReader(Reader reader) {
-		return new JDK16Reader(reader);
+		// TODO 不同的实现
+		return new XPP3Reader(reader);
 	}
 
 	public static DocReader createAnyReader(Reader reader, String docTypeName) {

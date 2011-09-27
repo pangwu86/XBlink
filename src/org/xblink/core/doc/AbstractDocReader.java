@@ -14,4 +14,8 @@ public abstract class AbstractDocReader implements DocReader {
 	public AbstractDocReader(Reader reader) {
 		this.reader = reader;
 	}
+
+	public Reader getReader() {
+		return this.reader;
+	}
 }

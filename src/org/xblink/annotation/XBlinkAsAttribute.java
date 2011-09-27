@@ -23,7 +23,9 @@ import java.lang.annotation.Target;
  * 生成结果为:
  * 
  * <pre>
+ * <code>
  * <User name='设定的值'/>
+ * </code>
  * </pre>
  * 
  * @author pangwu86(pangwu86@gmail.com)

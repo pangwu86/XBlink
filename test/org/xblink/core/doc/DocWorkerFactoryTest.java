@@ -6,31 +6,33 @@ import java.io.StringWriter;
 import org.junit.Assert;
 import org.junit.Test;
 import org.xblink.core.doc.impl.JDK16Writer;
+import org.xblink.core.doc.impl.XPP3Writer;
 
 public class DocWorkerFactoryTest {
 
 	@Test
 	public void createANYReader() throws Exception {
-		DocReader docReader = DocWorkerFactory.createAnyReader(new StringReader("123"), "MyType");
+		DocReader docReader = DocWorkerFactory.createAnyReader(new StringReader("123"), "Mytype");
 		Assert.assertNotNull(docReader);
 	}
 
 	@Test
 	public void createANYWriter() throws Exception {
-		DocWriter docWriter = DocWorkerFactory.createAnyWriter(new StringWriter(), "MyType");
+		DocWriter docWriter = DocWorkerFactory.createAnyWriter(new StringWriter(), "Mytype");
 		Assert.assertNotNull(docWriter);
 	}
 
 	@Test
 	public void createANYWriter2() throws Exception {
-		DocWriter docWriter = DocWorkerFactory.createAnyWriter(new StringWriter(), "XML");
-		Assert.assertTrue(docWriter instanceof JDK16Writer);
+		DocWriter docWriter = DocWorkerFactory.createAnyWriter(new StringWriter(), "XPP3");
+		Assert.assertFalse(docWriter instanceof JDK16Writer);
+		Assert.assertTrue(docWriter instanceof XPP3Writer);
 	}
 
 	@Test
 	public void createXmlWriter() throws Exception {
 		DocWriter docWriter = DocWorkerFactory.createXmlWriter(new StringWriter());
-		Assert.assertTrue(docWriter instanceof JDK16Writer);
+		Assert.assertTrue(docWriter instanceof XPP3Writer);
 	}
 
 	@Test
