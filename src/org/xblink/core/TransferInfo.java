@@ -15,11 +15,12 @@ import org.xblink.core.path.PathTracker;
  */
 public class TransferInfo {
 
-	private PathTracker pathTracker;
-	private XBConfig xbConfig;
-	private DocWriter docWriter;
-	private DocReader docReader;
-	private Map<Object, ReferenceObject> refMap;
+	private final PathTracker pathTracker;
+	private final XBConfig xbConfig;
+	private final DocWriter docWriter;
+	private final DocReader docReader;
+	// TODO 这里究竟是用Object好呢，还是Integer好呢？
+	private final Map<Object, ReferenceObject> refMap;
 
 	public TransferInfo(PathTracker pathTracker, XBConfig xbConfig, DocWriter docWriter, DocReader docReader) {
 		this.pathTracker = pathTracker;
@@ -27,6 +28,26 @@ public class TransferInfo {
 		this.docWriter = docWriter;
 		this.docReader = docReader;
 		this.refMap = new HashMap<Object, ReferenceObject>();
+	}
+
+	public PathTracker getPathTracker() {
+		return pathTracker;
+	}
+
+	public XBConfig getXbConfig() {
+		return xbConfig;
+	}
+
+	public DocWriter getDocWriter() {
+		return docWriter;
+	}
+
+	public DocReader getDocReader() {
+		return docReader;
+	}
+
+	public Map<Object, ReferenceObject> getRefMap() {
+		return refMap;
 	}
 
 }

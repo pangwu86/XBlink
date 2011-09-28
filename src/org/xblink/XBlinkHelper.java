@@ -64,13 +64,14 @@ class XBlinkHelper {
 	 * @return 字符串
 	 */
 	private static String serializing(Object object, DocWriter docWriter) {
-		// 准备工作开始
-		PathTracker pathTracker = new PathTracker();
+		// 准备工作
+		XBConfig xbConfig = XBConfigHelper.getXbConfig();
+		PathTracker pathTracker = new PathTracker(xbConfig.isUseRelativePath());
 		DocWriter realDocWriter = new PathTrackingWriter(docWriter, pathTracker);
 		try {
 			// 开始序列化
 			realDocWriter.writeStartDocument();
-			Serialize.doIt(object, new TransferInfo(pathTracker, XBConfigHelper.getXbConfig(), realDocWriter, null));
+			Serialize.doIt(object, new TransferInfo(pathTracker, xbConfig, realDocWriter, null));
 			realDocWriter.writeEndDocument();
 		} catch (Exception e) {
 			throw new RuntimeException("序列化失败。", e);

@@ -1,6 +1,5 @@
 package org.xblink;
 
-
 /**
  * XBlink运行时参数设置。<BR>
  * 
@@ -10,8 +9,11 @@ package org.xblink;
  */
 public class XBConfig {
 
+	private boolean useRelativePath;
+
 	private XBConfig() {
 		// TODO 设置默认参数
+		useRelativePath = true;
 	}
 
 	/**
@@ -21,6 +23,10 @@ public class XBConfig {
 	 */
 	public static XBConfig createXBConfig() {
 		return new XBConfig();
+	}
+
+	public boolean isUseRelativePath() {
+		return useRelativePath;
 	}
 
 	// 这里可以设定各种需要的参数
