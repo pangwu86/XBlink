@@ -61,7 +61,7 @@ public class XBlink {
 	 * @return 字符串
 	 */
 	public static String toAny(Object obj, String docTypeName) {
-		return XBlinkHelper.toAny(obj, XBConfigHelper.getXbConfig(), IOUtil.createWriter(), docTypeName);
+		return XBlinkHelper.toAny(obj, IOUtil.createWriter(), docTypeName);
 	}
 
 	/**
@@ -79,7 +79,7 @@ public class XBlink {
 	 *            任意你想要的文档格式名称，例如JSON或者XML
 	 */
 	public static void toAny(Object obj, File file, String docTypeName) {
-		XBlinkHelper.toAny(obj, XBConfigHelper.getXbConfig(), IOUtil.createWriter(file), docTypeName);
+		XBlinkHelper.toAny(obj, IOUtil.createWriter(file), docTypeName);
 	}
 
 	/**
@@ -97,7 +97,7 @@ public class XBlink {
 	 *            任意你想要的文档格式名称，例如JSON或者XML
 	 */
 	public static void toAny(Object obj, OutputStream outputStream, String docTypeName) {
-		XBlinkHelper.toAny(obj, XBConfigHelper.getXbConfig(), IOUtil.createWriter(outputStream), docTypeName);
+		XBlinkHelper.toAny(obj, IOUtil.createWriter(outputStream), docTypeName);
 	}
 
 	/**
@@ -115,7 +115,7 @@ public class XBlink {
 	 *            任意你想要的文档格式名称，例如JSON或者XML
 	 */
 	public static void toAny(Object obj, Writer writer, String docTypeName) {
-		XBlinkHelper.toAny(obj, XBConfigHelper.getXbConfig(), IOUtil.createWriter(writer), docTypeName);
+		XBlinkHelper.toAny(obj, IOUtil.createWriter(writer), docTypeName);
 	}
 
 	// ****************************** 通用反序列化 ******************************
@@ -134,7 +134,7 @@ public class XBlink {
 	 * @return 参考类的实例化对象
 	 */
 	public static <T> T fromAny(CharSequence cs, Class<T> clz, String docTypeName) {
-		return XBlinkHelper.fromAny(clz, XBConfigHelper.getXbConfig(), IOUtil.createReader(cs), docTypeName);
+		return XBlinkHelper.fromAny(clz, IOUtil.createReader(cs), docTypeName);
 	}
 
 	/**
@@ -151,7 +151,7 @@ public class XBlink {
 	 * @return 与参考对象类型相同的对象
 	 */
 	public static Object fromAny(CharSequence cs, Object obj, String docTypeName) {
-		return XBlinkHelper.fromAny(obj, XBConfigHelper.getXbConfig(), IOUtil.createReader(cs), docTypeName);
+		return XBlinkHelper.fromAny(obj, IOUtil.createReader(cs), docTypeName);
 	}
 
 	/**
@@ -168,7 +168,7 @@ public class XBlink {
 	 * @return 参考类的实例化对象
 	 */
 	public static <T> T fromAny(File file, Class<T> clz, String docTypeName) {
-		return XBlinkHelper.fromAny(clz, XBConfigHelper.getXbConfig(), IOUtil.createReader(file), docTypeName);
+		return XBlinkHelper.fromAny(clz, IOUtil.createReader(file), docTypeName);
 	}
 
 	/**
@@ -185,7 +185,7 @@ public class XBlink {
 	 * @return 与参考对象类型相同的对象
 	 */
 	public static Object fromAny(File file, Object obj, String docTypeName) {
-		return XBlinkHelper.fromAny(obj, XBConfigHelper.getXbConfig(), IOUtil.createReader(file), docTypeName);
+		return XBlinkHelper.fromAny(obj, IOUtil.createReader(file), docTypeName);
 	}
 
 	/**
@@ -202,7 +202,7 @@ public class XBlink {
 	 * @return 参考类的实例化对象
 	 */
 	public static <T> T fromAny(InputStream in, Class<T> clz, String docTypeName) {
-		return XBlinkHelper.fromAny(clz, XBConfigHelper.getXbConfig(), IOUtil.createReader(in), docTypeName);
+		return XBlinkHelper.fromAny(clz, IOUtil.createReader(in), docTypeName);
 	}
 
 	/**
@@ -219,7 +219,7 @@ public class XBlink {
 	 * @return 与参考对象类型相同的对象
 	 */
 	public static Object fromAny(InputStream in, Object obj, String docTypeName) {
-		return XBlinkHelper.fromAny(obj, XBConfigHelper.getXbConfig(), IOUtil.createReader(in), docTypeName);
+		return XBlinkHelper.fromAny(obj, IOUtil.createReader(in), docTypeName);
 	}
 
 	/**
@@ -236,7 +236,7 @@ public class XBlink {
 	 * @return 参考类的实例化对象
 	 */
 	public static <T> T fromAny(Reader reader, Class<T> clz, String docTypeName) {
-		return XBlinkHelper.fromAny(clz, XBConfigHelper.getXbConfig(), IOUtil.createReader(reader), docTypeName);
+		return XBlinkHelper.fromAny(clz, IOUtil.createReader(reader), docTypeName);
 	}
 
 	/**
@@ -253,7 +253,7 @@ public class XBlink {
 	 * @return 与参考对象类型相同的对象
 	 */
 	public static Object fromAny(Reader reader, Object obj, String docTypeName) {
-		return XBlinkHelper.fromAny(obj, XBConfigHelper.getXbConfig(), IOUtil.createReader(reader), docTypeName);
+		return XBlinkHelper.fromAny(obj, IOUtil.createReader(reader), docTypeName);
 	}
 
 	// ****************************** XML序列化 *********************************
@@ -266,7 +266,7 @@ public class XBlink {
 	 * @return XML字符串
 	 */
 	public static String toXml(Object obj) {
-		return XBlinkHelper.toXml(obj, XBConfigHelper.getXbConfig(), IOUtil.createWriter());
+		return XBlinkHelper.toXml(obj, IOUtil.createWriter());
 	}
 
 	/**
@@ -278,7 +278,7 @@ public class XBlink {
 	 *            要保存的文件
 	 */
 	public static void toXml(Object obj, File file) {
-		XBlinkHelper.toXml(obj, XBConfigHelper.getXbConfig(), IOUtil.createWriter(file));
+		XBlinkHelper.toXml(obj, IOUtil.createWriter(file));
 	}
 
 	/**
@@ -290,7 +290,7 @@ public class XBlink {
 	 *            输出流
 	 */
 	public static void toXml(Object obj, OutputStream outputStream) {
-		XBlinkHelper.toXml(obj, XBConfigHelper.getXbConfig(), IOUtil.createWriter(outputStream));
+		XBlinkHelper.toXml(obj, IOUtil.createWriter(outputStream));
 	}
 
 	/**
@@ -302,7 +302,7 @@ public class XBlink {
 	 *            字节输出流
 	 */
 	public static void toXml(Object obj, Writer writer) {
-		XBlinkHelper.toXml(obj, XBConfigHelper.getXbConfig(), IOUtil.createWriter(writer));
+		XBlinkHelper.toXml(obj, IOUtil.createWriter(writer));
 	}
 
 	// ****************************** XML反序列化 ********************************
@@ -317,7 +317,7 @@ public class XBlink {
 	 * @return 参考类的实例化对象
 	 */
 	public static <T> T fromXml(CharSequence cs, Class<T> clz) {
-		return XBlinkHelper.fromXml(clz, XBConfigHelper.getXbConfig(), IOUtil.createReader(cs));
+		return XBlinkHelper.fromXml(clz, IOUtil.createReader(cs));
 	}
 
 	/**
@@ -330,7 +330,7 @@ public class XBlink {
 	 * @return 与参考对象类型相同的对象
 	 */
 	public static Object fromXml(CharSequence cs, Object obj) {
-		return XBlinkHelper.fromXml(obj, XBConfigHelper.getXbConfig(), IOUtil.createReader(cs));
+		return XBlinkHelper.fromXml(obj, IOUtil.createReader(cs));
 	}
 
 	/**
@@ -343,7 +343,7 @@ public class XBlink {
 	 * @return 参考类的实例化对象
 	 */
 	public static <T> T fromXml(File file, Class<T> clz) {
-		return XBlinkHelper.fromXml(clz, XBConfigHelper.getXbConfig(), IOUtil.createReader(file));
+		return XBlinkHelper.fromXml(clz, IOUtil.createReader(file));
 	}
 
 	/**
@@ -356,7 +356,7 @@ public class XBlink {
 	 * @return 与参考对象类型相同的对象
 	 */
 	public static Object fromXml(File file, Object obj) {
-		return XBlinkHelper.fromXml(obj, XBConfigHelper.getXbConfig(), IOUtil.createReader(file));
+		return XBlinkHelper.fromXml(obj, IOUtil.createReader(file));
 	}
 
 	/**
@@ -369,7 +369,7 @@ public class XBlink {
 	 * @return 参考类的实例化对象
 	 */
 	public static <T> T fromXml(InputStream in, Class<T> clz) {
-		return XBlinkHelper.fromXml(clz, XBConfigHelper.getXbConfig(), IOUtil.createReader(in));
+		return XBlinkHelper.fromXml(clz, IOUtil.createReader(in));
 	}
 
 	/**
@@ -382,7 +382,7 @@ public class XBlink {
 	 * @return 与参考对象类型相同的对象
 	 */
 	public static Object fromXml(InputStream in, Object obj) {
-		return XBlinkHelper.fromXml(obj, XBConfigHelper.getXbConfig(), IOUtil.createReader(in));
+		return XBlinkHelper.fromXml(obj, IOUtil.createReader(in));
 	}
 
 	/**
@@ -395,7 +395,7 @@ public class XBlink {
 	 * @return 参考类的实例化对象
 	 */
 	public static <T> T fromXml(Reader reader, Class<T> clz) {
-		return XBlinkHelper.fromXml(clz, XBConfigHelper.getXbConfig(), IOUtil.createReader(reader));
+		return XBlinkHelper.fromXml(clz, IOUtil.createReader(reader));
 	}
 
 	/**
@@ -408,7 +408,7 @@ public class XBlink {
 	 * @return 与参考对象类型相同的对象
 	 */
 	public static Object fromXml(Reader reader, Object obj) {
-		return XBlinkHelper.fromXml(obj, XBConfigHelper.getXbConfig(), IOUtil.createReader(reader));
+		return XBlinkHelper.fromXml(obj, IOUtil.createReader(reader));
 	}
 
 }

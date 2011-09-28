@@ -1,5 +1,6 @@
 package org.xblink;
 
+
 /**
  * XBlink运行时参数设置。<BR>
  * 
@@ -8,10 +9,6 @@ package org.xblink;
  * 
  */
 public class XBConfig {
-
-	private static String INDENT_STRING = "\t";
-	private static String BR = System.getProperty("line.separator");
-	private static String ENCODING = "UTF-8";
 
 	private XBConfig() {
 		// TODO 设置默认参数
