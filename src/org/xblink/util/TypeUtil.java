@@ -46,4 +46,8 @@ public class TypeUtil {
 		return false;
 	}
 
+	public static boolean isMapType(Class<?> clz) {
+		// TODO
+		return false;
+	}
 }

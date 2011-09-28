@@ -1,6 +1,5 @@
 package org.xblink.core.convert.converters;
 
-import org.xblink.core.TransferInfo;
 import org.xblink.core.convert.Converter;
 
 /**
@@ -16,8 +15,7 @@ public class StringConverter implements Converter {
 		return type.equals(String.class);
 	}
 
-	public void obj2Text(Object obj, TransferInfo transferInfo) throws Exception {
-		transferInfo.getDocWriter().writeText(obj.toString());
+	public String obj2Text(Object obj) throws Exception {
+		return obj.toString();
 	}
-
 }

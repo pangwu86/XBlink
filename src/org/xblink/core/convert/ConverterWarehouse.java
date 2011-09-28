@@ -3,7 +3,6 @@ package org.xblink.core.convert;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.xblink.core.convert.converters.ReflectConverter;
 import org.xblink.core.convert.converters.StringConverter;
 
 /**
@@ -53,8 +52,9 @@ public class ConverterWarehouse {
 	private static Converter lookForConverterForType(Class<?> clz) {
 		if (clz == String.class) {
 			return StringConverter.INSTANCE;
+		} else {
+			throw new UnsupportedOperationException(String.format("没有找到[%s]这个类的转换器，无法执行正确的转换操作。", clz));
 		}
-		return ReflectConverter.INSTANCE;
 	}
 
 }

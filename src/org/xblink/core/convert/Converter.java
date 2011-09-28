@@ -1,9 +1,9 @@
 package org.xblink.core.convert;
 
-import org.xblink.core.TransferInfo;
-
 /**
  * 转换器，提供对象<--->文字相互转换的功能。
+ * 
+ * 注意，这里只负责两者的转换，不要加入输出等操作。
  * 
  * @author 胖五(pangwu86@gmail.com)
  */
@@ -23,12 +23,11 @@ public interface Converter {
 	 * 
 	 * @param obj
 	 *            转换对象
-	 * @param transferInfo
-	 *            传递信息
 	 * @throws Exception
 	 *             异常
+	 * @return 字符结果
 	 */
-	public void obj2Text(Object obj, TransferInfo transferInfo) throws Exception;
+	public String obj2Text(Object obj) throws Exception;
 
 	// public Object text2Obj(TransferInfo transferInfo);
 

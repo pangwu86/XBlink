@@ -23,12 +23,13 @@ public class ReflectConverter implements Converter {
 		return true;
 	}
 
-	public void obj2Text(Object obj, TransferInfo transferInfo) throws Exception {
+	public void obj2Text(Object obj, String tagName, TransferInfo transferInfo) throws Exception {
 		Class<?> objClz = obj.getClass();
 		for (Field field : getField(objClz)) {
 			if (!field.isAccessible()) {
 				field.setAccessible(true);
 			}
+			// 空的话不进行序列化
 			Object fieldValue = field.get(obj);
 			if (null == fieldValue) {
 				continue;

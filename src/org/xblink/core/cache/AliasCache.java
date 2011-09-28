@@ -53,14 +53,14 @@ public class AliasCache {
 	}
 
 	private static String getFieldNameByAlias(XBlinkAlias fieldNameAlias, Field field, Map<Field, String> fiedlNameMap) {
-		String alias = null;
+		String name = null;
 		if (null != fieldNameAlias) {
-			alias = fieldNameAlias.value();
+			name = fieldNameAlias.value();
 		} else {
-			alias = field.getName();
+			name = field.getName();
 		}
-		fiedlNameMap.put(field, alias);
-		return alias;
+		fiedlNameMap.put(field, name);
+		return name;
 	}
 
 	/**
@@ -80,13 +80,13 @@ public class AliasCache {
 	}
 
 	private static String getClassNameByAlias(XBlinkAlias classNameAlias, Class<?> clz) {
-		String alias = null;
+		String name = null;
 		if (null != classNameAlias) {
-			alias = classNameAlias.value();
+			name = classNameAlias.value();
 		} else {
-			alias = StringUtil.lowerFirst(clz.getSimpleName());
+			name = StringUtil.lowerFirst(clz.getSimpleName());
 		}
-		classAliasMap.put(clz, alias);
-		return alias;
+		classAliasMap.put(clz, name);
+		return name;
 	}
 }
