@@ -25,8 +25,10 @@ public interface Converter {
 	 *            转换对象
 	 * @param transferInfo
 	 *            传递信息
+	 * @throws Exception
+	 *             异常
 	 */
-	public void obj2Text(Object obj, TransferInfo transferInfo);
+	public void obj2Text(Object obj, TransferInfo transferInfo) throws Exception;
 
 	// public Object text2Obj(TransferInfo transferInfo);
 

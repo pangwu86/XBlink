@@ -52,4 +52,23 @@ public abstract class StringUtil {
 		}
 		return sb.toString();
 	}
+
+	/**
+	 * 将字符串首字母小写
+	 * 
+	 * @param s
+	 *            字符串
+	 * @return 首字母小写后的新字符串
+	 */
+	public static String lowerFirst(CharSequence s) {
+		if (null == s)
+			return null;
+		int len = s.length();
+		if (len == 0)
+			return "";
+		char c = s.charAt(0);
+		if (Character.isLowerCase(c))
+			return s.toString();
+		return new StringBuilder(len).append(Character.toLowerCase(c)).append(s.subSequence(1, len)).toString();
+	}
 }

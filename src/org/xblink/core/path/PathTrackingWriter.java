@@ -37,6 +37,10 @@ public class PathTrackingWriter implements DocWriter {
 		pathTracker.pop();
 	}
 
+	public void writeEndTagNotWithNewLine(String tagName) throws Exception {
+		docWriter.writeEndTagNotWithNewLine(tagName);
+	}
+
 	public void writeAttribute(String name, String value) throws Exception {
 		docWriter.writeAttribute(name, value);
 

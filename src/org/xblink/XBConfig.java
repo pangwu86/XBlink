@@ -29,6 +29,11 @@ public class XBConfig {
 		return useRelativePath;
 	}
 
+	public XBConfig setUseRelativePath(boolean use) {
+		this.useRelativePath = use;
+		return this;
+	}
+
 	// 这里可以设定各种需要的参数
 
 }

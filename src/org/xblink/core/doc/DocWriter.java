@@ -44,6 +44,16 @@ public interface DocWriter {
 	public void writeEndTag(String tagName) throws Exception;
 
 	/**
+	 * 编写结束标签。(不换行)
+	 * 
+	 * @param tagName
+	 *            标签名称
+	 * @throws Exception
+	 *             异常
+	 */
+	public void writeEndTagNotWithNewLine(String tagName) throws Exception;
+
+	/**
 	 * 编写属性，调用前一定要先调用writeStartTag。
 	 * 
 	 * @param name

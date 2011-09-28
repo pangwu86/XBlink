@@ -61,4 +61,9 @@ public class MytypeWriter extends AbstractDocWriter {
 		return null;
 	}
 
+	public void writeEndTagNotWithNewLine(String tagName) throws Exception {
+		// TODO Auto-generated method stub
+
+	}
+
 }

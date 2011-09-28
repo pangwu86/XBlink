@@ -59,6 +59,11 @@ public class XPP3Writer extends AbstractDocWriter {
 		innerWriter.endTag(null, tagName);
 	}
 
+	public void writeEndTagNotWithNewLine(String tagName) throws Exception {
+		indentIndex--;
+		innerWriter.endTag(null, tagName);
+	}
+
 	public void writeAttribute(String name, String value) throws Exception {
 		innerWriter.attribute(null, name, value);
 	}

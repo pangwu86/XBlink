@@ -71,7 +71,7 @@ class XBlinkHelper {
 		try {
 			// 开始序列化
 			realDocWriter.writeStartDocument();
-			Serialize.doIt(object, new TransferInfo(pathTracker, xbConfig, realDocWriter, null));
+			Serialize.doIt(object, new TransferInfo(pathTracker, xbConfig, realDocWriter, null), null);
 			realDocWriter.writeEndDocument();
 		} catch (Exception e) {
 			throw new RuntimeException("序列化失败。", e);
@@ -84,7 +84,7 @@ class XBlinkHelper {
 				}
 			}
 		}
-		return docWriter.toString();
+		return docWriter.getString();
 	}
 
 	// ***************************************反序列化****************************************

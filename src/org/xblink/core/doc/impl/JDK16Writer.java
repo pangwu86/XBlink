@@ -2,14 +2,13 @@ package org.xblink.core.doc.impl;
 
 import java.io.Writer;
 
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamWriter;
-
 import org.xblink.core.doc.AbstractDocWriter;
 import org.xblink.util.StringUtil;
 
 /**
  * XML格式Writer，基于JDK1.6中提供的javax.xml.stream包实现。
+ * 
+ * 这是设计了用来测试的一个实现，只能在JDK1.6下编译通过，可以无视这个类，删掉也没事。
  * 
  * @author 胖五(pangwu86@gmail.com)
  */
@@ -55,6 +54,11 @@ public class JDK16Writer extends AbstractDocWriter {
 		writeBR();
 		indentIndex--;
 		writeIndent();
+		innerWriter.writeEndElement();
+	}
+
+	public void writeEndTagNotWithNewLine(String tagName) throws Exception {
+		indentIndex--;
 		innerWriter.writeEndElement();
 	}
 
