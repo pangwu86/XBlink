@@ -1,13 +1,14 @@
 package org.xblink.core.type;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 import org.xblink.core.AnalysisObject;
 import org.xblink.core.TransferInfo;
 import org.xblink.core.cache.AliasCache;
 
 /**
- * Attribute与Element格式的共通方法。
+ * Attribute，Element与Object格式的基类。
  * 
  * @author 胖五(pangwu86@gmail.com)
  * 
@@ -15,7 +16,7 @@ import org.xblink.core.cache.AliasCache;
 public abstract class XBasicType extends AbstractXType {
 
 	public void writeItem(Object obj, AnalysisObject analysisObject, TransferInfo transferInfo) throws Exception {
-		for (Field field : analysisObject.getAttributeFieldTypes()) {
+		for (Field field : getFields(analysisObject)) {
 			if (!field.isAccessible()) {
 				field.setAccessible(true);
 			}
@@ -24,13 +25,15 @@ public abstract class XBasicType extends AbstractXType {
 			if (null == fieldValue) {
 				continue;
 			}
-			Class<?> objClz = obj.getClass();
-			Class<?> fieldClz = field.getClass();
-			String fieldValueStr = getText(fieldValue, fieldClz);
 			// 按照基本格式写入
-			writeBasicType(AliasCache.getFieldName(objClz, field), fieldValueStr, transferInfo);
+			writeBasicType(obj, analysisObject, transferInfo, fieldValue,
+					AliasCache.getFieldName(obj.getClass(), field));
 		}
 	}
 
-	public abstract void writeBasicType(String tagName, String value, TransferInfo transferInfo) throws Exception;
+	public abstract List<Field> getFields(AnalysisObject analysisObject);
+
+	public abstract void writeBasicType(Object obj, AnalysisObject analysisObject, TransferInfo transferInfo,
+			Object fieldValue, String tagName) throws Exception;
+
 }

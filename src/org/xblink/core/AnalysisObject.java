@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.xblink.annotation.XBlinkAsAttribute;
+import org.xblink.annotation.XBlinkOmitField;
 import org.xblink.util.ReflectUtil;
 import org.xblink.util.TypeUtil;
 
@@ -29,7 +30,11 @@ public class AnalysisObject {
 	public void analysing(Class<?> clz) {
 		// 遍历所有字段，分门别类的存放
 		for (Field field : ReflectUtil.getField(clz)) {
-			Class<?> fieldClz = field.getClass();
+			// 先判断该字段是否要忽略
+			if (null != field.getAnnotation(XBlinkOmitField.class)) {
+				continue;
+			}
+			Class<?> fieldClz = field.getType();
 			if (TypeUtil.isBasicType(fieldClz)) {
 				// 基本类型可以以Attribute的方式展现（目前仅限XML格式）
 				boolean isAttributeNode = null != field.getAnnotation(XBlinkAsAttribute.class);
@@ -51,30 +56,39 @@ public class AnalysisObject {
 	// ********* add **********
 
 	private void add2Obj(Field field) {
-		add2Container(field, objFieldTypes);
+		if (null == objFieldTypes) {
+			objFieldTypes = new ArrayList<Field>();
+		}
+		objFieldTypes.add(field);
 	}
 
 	private void add2Map(Field field) {
-		add2Container(field, mapFieldTypes);
+		if (null == mapFieldTypes) {
+			mapFieldTypes = new ArrayList<Field>();
+		}
+		mapFieldTypes.add(field);
 	}
 
 	private void add2Collection(Field field) {
-		add2Container(field, collectionFieldTypes);
+		if (null == collectionFieldTypes) {
+			collectionFieldTypes = new ArrayList<Field>();
+		}
+		collectionFieldTypes.add(field);
 	}
 
 	private void add2Element(Field field) {
-		add2Container(field, elementFieldTypes);
+		if (null == elementFieldTypes) {
+			elementFieldTypes = new ArrayList<Field>();
+		}
+		elementFieldTypes.add(field);
 	}
 
 	private void add2Attribute(Field field) {
-		add2Container(field, attributeFieldTypes);
-	}
-
-	private void add2Container(Field field, List<Field> container) {
-		if (null == container) {
-			container = new ArrayList<Field>();
+		if (null == attributeFieldTypes) {
+			attributeFieldTypes = new ArrayList<Field>();
 		}
-		container.add(field);
+		attributeFieldTypes.add(field);
+
 	}
 
 	// *********** 提供给外面的信息 *************

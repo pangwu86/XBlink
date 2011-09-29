@@ -57,4 +57,8 @@ public class ConverterWarehouse {
 		}
 	}
 
+	public static String getTextByData(Class<?> clz, Object obj) throws Exception {
+		return searchConverterForType(clz).obj2Text(obj);
+	}
+
 }
