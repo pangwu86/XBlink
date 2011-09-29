@@ -2,8 +2,6 @@ package org.xblink.core.path;
 
 import java.util.LinkedList;
 
-import org.xblink.core.Constant;
-
 /**
  * 记录文件层次路径，返回当前访问节点的路径。
  * 
@@ -58,7 +56,7 @@ public class PathTracker {
 	 * @return 相对于根节点的路径
 	 */
 	public String getCurrentPathAsString() {
-		return getPath(getCurrentPath());
+		return PathCalc.getPathFromRoot(getCurrentPath());
 	}
 
 	/**
@@ -70,10 +68,7 @@ public class PathTracker {
 	 */
 	public String getRelativePathAsString(String[] refPath) {
 		String[] currentPath = getCurrentPath();
-		int currentDepth = currentPath.length;
-		int refDepth = refPath.length;
-		// TODO 需要一个快捷的算法，计算出相对路径
-		return null;
+		return PathCalc.calc(currentPath, refPath);
 	}
 
 	/**
@@ -87,21 +82,7 @@ public class PathTracker {
 		if (useRelativePath) {
 			return getRelativePathAsString(refPath);
 		}
-		return getPath(refPath);
+		return PathCalc.getPathFromRoot(refPath);
 	}
 
-	/**
-	 * 将字符数组路径变成字符串路径。
-	 * 
-	 * @param path
-	 *            字符数组路径
-	 * @return 字符串路经
-	 */
-	private String getPath(String[] path) {
-		StringBuilder sb = new StringBuilder();
-		for (String s : path) {
-			sb.append(Constant.PATH_SEPARATER).append(s);
-		}
-		return sb.toString();
-	}
 }

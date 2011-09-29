@@ -5,7 +5,6 @@ import java.io.StringWriter;
 import org.junit.Test;
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
-import org.xblink.XBConfig;
 import org.xblink.XBlink;
 import org.xblink.util.WatchTimer;
 
@@ -23,12 +22,10 @@ public class LoopA1 {
 
 	@Test
 	public void XBlink() throws Exception {
-		XBConfig xbConfig = XBConfig.createXBConfig().setUseRelativePath(false);
-		XBlink.setGlobalXBConfig(xbConfig);
 
 		WatchTimer timer = new WatchTimer();
 		for (int i = 0; i < number; i++) {
-			XBlink.toXml(loopA);
+			System.out.println(XBlink.toXml(loopA));
 		}
 		String spendTime = timer.getTimer();
 		System.out.println("XBlink : " + number + " : " + spendTime);

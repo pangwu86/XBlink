@@ -1,7 +1,6 @@
 package performance.testcase.demo;
 
 import org.junit.Test;
-import org.xblink.XBConfig;
 import org.xblink.XBlink;
 
 import performance.model.BasicObject;
@@ -40,8 +39,6 @@ public class BasicObjectTest {
 		b3.setBasicObject(b3);
 		b4.setBasicObject(b1);
 
-		XBConfig xbConfig = XBConfig.createXBConfig().setUseRelativePath(false);
-		XBlink.setTransientXBConfig(xbConfig);
 		System.out.println(XBlink.toXml(b1));
 	}
 
