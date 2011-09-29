@@ -37,8 +37,8 @@ public class BasicObjectTest {
 
 		b1.setBasicObject(b2);
 		b2.setBasicObject(b3);
-		b3.setBasicObject(b1);
-		// b4.setBasicObject(b1);
+		b3.setBasicObject(b3);
+		b4.setBasicObject(b1);
 
 		XBConfig xbConfig = XBConfig.createXBConfig().setUseRelativePath(false);
 		XBlink.setTransientXBConfig(xbConfig);

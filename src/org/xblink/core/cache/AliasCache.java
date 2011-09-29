@@ -19,6 +19,10 @@ public class AliasCache {
 	private AliasCache() {
 	}
 
+	private static boolean useClassAliasCache = true;
+
+	private static boolean useFieldAliasCache = true;
+
 	// TODO 需要同步吗？会有多少性能影响呢
 	private static Map<Class<?>, String> classAliasMap = new HashMap<Class<?>, String>();
 
@@ -29,6 +33,14 @@ public class AliasCache {
 
 	}
 
+	public static void setUseClassAliasCache(boolean use) {
+		useClassAliasCache = use;
+	}
+
+	public static void setUseFieldAliasCache(boolean use) {
+		useFieldAliasCache = use;
+	}
+
 	/**
 	 * 获得成员名称。
 	 * 
@@ -37,29 +49,33 @@ public class AliasCache {
 	 * @return
 	 */
 	public static String getFieldName(Class<?> clz, Field field) {
-		Map<Field, String> fiedlNameMap = fieldAliasMap.get(clz);
-		if (null == fiedlNameMap) {
-			fiedlNameMap = new HashMap<Field, String>();
-			fieldAliasMap.put(clz, fiedlNameMap);
-		}
-
-		String fieldName = fiedlNameMap.get(field);
-		if (null == fieldName) {
-			// 查看是否有别名，没有就采用class.getName()
-			XBlinkAlias fieldNameAlias = (XBlinkAlias) field.getAnnotation(XBlinkAlias.class);
-			fieldName = getFieldNameByAlias(fieldNameAlias, field, fiedlNameMap);
+		String fieldName = null;
+		if (useFieldAliasCache) {
+			Map<Field, String> fiedlNameMap = fieldAliasMap.get(clz);
+			if (null == fiedlNameMap) {
+				fiedlNameMap = new HashMap<Field, String>();
+				fieldAliasMap.put(clz, fiedlNameMap);
+			}
+			fieldName = fiedlNameMap.get(field);
+			if (null == fieldName) {
+				// 查看是否有别名，没有就采用class.getName()
+				fieldName = getFieldNameByAlias(field);
+			}
+			fiedlNameMap.put(field, fieldName);
+		} else {
+			fieldName = getFieldNameByAlias(field);
 		}
 		return fieldName;
 	}
 
-	private static String getFieldNameByAlias(XBlinkAlias fieldNameAlias, Field field, Map<Field, String> fiedlNameMap) {
+	private static String getFieldNameByAlias(Field field) {
+		XBlinkAlias fieldNameAlias = (XBlinkAlias) field.getAnnotation(XBlinkAlias.class);
 		String name = null;
 		if (null != fieldNameAlias) {
 			name = fieldNameAlias.value();
 		} else {
 			name = field.getName();
 		}
-		fiedlNameMap.put(field, name);
 		return name;
 	}
 
@@ -70,23 +86,28 @@ public class AliasCache {
 	 * @return
 	 */
 	public static String getClassName(Class<?> clz) {
-		String className = classAliasMap.get(clz);
-		if (null == className) {
-			// 查看是否有别名，没有就采用class.getName()
-			XBlinkAlias classNameAlias = (XBlinkAlias) clz.getAnnotation(XBlinkAlias.class);
-			className = getClassNameByAlias(classNameAlias, clz);
+		String className = null;
+		if (useClassAliasCache) {
+			className = classAliasMap.get(clz);
+			if (null == className) {
+				// 查看是否有别名，没有就采用class.getName()
+				className = getClassNameByAlias(clz);
+			}
+			classAliasMap.put(clz, className);
+		} else {
+			className = getClassNameByAlias(clz);
 		}
 		return className;
 	}
 
-	private static String getClassNameByAlias(XBlinkAlias classNameAlias, Class<?> clz) {
+	private static String getClassNameByAlias(Class<?> clz) {
+		XBlinkAlias classNameAlias = (XBlinkAlias) clz.getAnnotation(XBlinkAlias.class);
 		String name = null;
 		if (null != classNameAlias) {
 			name = classNameAlias.value();
 		} else {
 			name = StringUtil.lowerFirst(clz.getSimpleName());
 		}
-		classAliasMap.put(clz, name);
 		return name;
 	}
 }

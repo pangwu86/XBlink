@@ -1,18 +1,18 @@
 package performance.model;
 
+import org.simpleframework.xml.Element;
+
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
 @XStreamAlias("loopC")
 public class LoopC {
-
-	@XStreamAsAttribute
+	@Element
 	private String cName;
-
+	@Element(required = false)
 	private LoopB loopBObj;
-
+	@Element(required = false)
 	private LoopC loopCObj;
-
+	@Element(required = false)
 	private LoopA loopAObj;
 
 	public String getcName() {

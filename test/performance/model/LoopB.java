@@ -2,15 +2,15 @@ package performance.model;
 
 import java.util.List;
 
+import org.simpleframework.xml.Element;
+
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
 @XStreamAlias("loopB")
 public class LoopB {
-
-	@XStreamAsAttribute
+	@Element
 	private String bName;
-
+	@Element(required = false)
 	private LoopC loopCObj;
 
 	private List<LoopA> loopAList;

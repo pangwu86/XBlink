@@ -9,7 +9,9 @@ package org.xblink;
  */
 public class XBConfig {
 
-	private boolean useRelativePath;
+	private boolean useRelativePath = true;
+
+	private boolean useCache = false;
 
 	private XBConfig() {
 		// TODO 设置默认参数
@@ -31,6 +33,15 @@ public class XBConfig {
 
 	public XBConfig setUseRelativePath(boolean use) {
 		this.useRelativePath = use;
+		return this;
+	}
+
+	public boolean isUseCache() {
+		return useCache;
+	}
+
+	public XBConfig setUseCache(boolean useCache) {
+		this.useCache = useCache;
 		return this;
 	}
 

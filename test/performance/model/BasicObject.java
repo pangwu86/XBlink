@@ -1,5 +1,11 @@
 package performance.model;
 
+import org.xblink.annotation.XBlinkAlias;
+
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
+@XStreamAlias("XStream")
+@XBlinkAlias("XBlink")
 public class BasicObject {
 
 	private String name;

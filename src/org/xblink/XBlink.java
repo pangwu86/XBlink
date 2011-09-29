@@ -6,6 +6,8 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 
+import org.xblink.core.cache.AliasCache;
+import org.xblink.core.cache.AnalysisCache;
 import org.xblink.util.IOUtil;
 
 /**
@@ -22,6 +24,24 @@ import org.xblink.util.IOUtil;
 public class XBlink {
 
 	private XBlink() {
+	}
+
+	/**
+	 * 打开缓存。(默认状态为打开)
+	 */
+	public static void openCache() {
+		AliasCache.setUseClassAliasCache(true);
+		AliasCache.setUseFieldAliasCache(true);
+		AnalysisCache.setUseAnalysisCache(true);
+	}
+
+	/**
+	 * 关闭缓存。
+	 */
+	public static void closeCache() {
+		AliasCache.setUseClassAliasCache(false);
+		AliasCache.setUseFieldAliasCache(false);
+		AnalysisCache.setUseAnalysisCache(false);
 	}
 
 	/**
