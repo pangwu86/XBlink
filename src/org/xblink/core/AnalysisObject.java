@@ -35,7 +35,7 @@ public class AnalysisObject {
 				continue;
 			}
 			Class<?> fieldClz = field.getType();
-			if (TypeUtil.isBasicType(fieldClz)) {
+			if (TypeUtil.isSingleValueType(fieldClz)) {
 				// 基本类型可以以Attribute的方式展现（目前仅限XML格式）
 				boolean isAttributeNode = null != field.getAnnotation(XBlinkAsAttribute.class);
 				if (isAttributeNode) {
@@ -134,6 +134,10 @@ public class AnalysisObject {
 
 	public List<Field> getCollectionFieldTypes() {
 		return collectionFieldTypes;
+	}
+
+	public List<Field> getMapFieldTypes() {
+		return mapFieldTypes;
 	}
 
 }

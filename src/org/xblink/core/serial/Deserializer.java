@@ -7,9 +7,9 @@ import org.xblink.core.TransferInfo;
  * 
  * @author 胖五(pangwu86@gmail.com)
  */
-public class Deserialize {
+public class Deserializer {
 
-	private Deserialize() {
+	private Deserializer() {
 	}
 
 	public static void doIt(Class<?> clz, TransferInfo transferInfo) {

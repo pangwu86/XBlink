@@ -1,19 +1,17 @@
-package org.xblink.core.type;
+package org.xblink.core.serial.xtype;
 
 import java.lang.reflect.Field;
-import java.util.List;
 
 import org.xblink.core.AnalysisObject;
 import org.xblink.core.TransferInfo;
 import org.xblink.core.cache.AliasCache;
 
 /**
- * Attribute，Element与Object格式的基类。
+ * XCollection与XMap格式的基类。
  * 
  * @author 胖五(pangwu86@gmail.com)
- * 
  */
-public abstract class XBasicType extends AbstractXType {
+public abstract class XContainerType implements XType {
 
 	public void writeItem(Object obj, AnalysisObject analysisObject, TransferInfo transferInfo) throws Exception {
 		for (Field field : getFields(analysisObject)) {
@@ -25,15 +23,12 @@ public abstract class XBasicType extends AbstractXType {
 			if (null == fieldValue) {
 				continue;
 			}
-			// 按照基本格式写入
-			writeBasicType(obj, analysisObject, transferInfo, fieldValue,
-					AliasCache.getFieldName(obj.getClass(), field));
+			// 外层名称
+			String collectionName = AliasCache.getFieldName(obj.getClass(), field);
+			writeOneItem(field.getType(), fieldValue, transferInfo, collectionName);
 		}
 	}
 
-	public abstract List<Field> getFields(AnalysisObject analysisObject);
-
-	public abstract void writeBasicType(Object obj, AnalysisObject analysisObject, TransferInfo transferInfo,
-			Object fieldValue, String tagName) throws Exception;
-
+	public abstract void writeOneItem(Class<?> objClz, Object obj, TransferInfo transferInfo, String collectionName)
+			throws Exception;
 }

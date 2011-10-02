@@ -9,7 +9,7 @@ import org.xblink.core.doc.DocWorkerFactory;
 import org.xblink.core.doc.DocWriter;
 import org.xblink.core.path.PathTracker;
 import org.xblink.core.path.PathTrackingWriter;
-import org.xblink.core.serial.Serialize;
+import org.xblink.core.serial.Serializer;
 import org.xblink.util.StringUtil;
 
 /**
@@ -71,7 +71,7 @@ class XBlinkHelper {
 		try {
 			// 开始序列化
 			realDocWriter.writeStartDocument();
-			Serialize.doIt(object, new TransferInfo(pathTracker, xbConfig, realDocWriter, null), null);
+			Serializer.writeUnknow(object, new TransferInfo(pathTracker, xbConfig, realDocWriter, null), null);
 			realDocWriter.writeEndDocument();
 		} catch (Exception e) {
 			throw new RuntimeException("序列化失败。", e);

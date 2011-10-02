@@ -1,4 +1,7 @@
-package org.xblink.core.type;
+package org.xblink.core.serial.xtype;
+
+import java.lang.reflect.Field;
+import java.util.List;
 
 import org.xblink.core.AnalysisObject;
 import org.xblink.core.TransferInfo;
@@ -9,6 +12,8 @@ import org.xblink.core.TransferInfo;
  * @author 胖五(pangwu86@gmail.com)
  */
 public interface XType {
+
+	public List<Field> getFields(AnalysisObject analysisObject);
 
 	public void writeItem(Object obj, AnalysisObject analysisObject, TransferInfo transferInfo) throws Exception;
 
