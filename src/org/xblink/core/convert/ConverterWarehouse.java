@@ -1,9 +1,11 @@
 package org.xblink.core.convert;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
-import org.xblink.core.convert.converters.StringConverter;
+import org.xblink.util.ResourceUtil;
 
 /**
  * 转换器仓库，根据Class类型，返回对应的转换器。
@@ -18,7 +20,21 @@ public class ConverterWarehouse {
 	private static Map<Class<?>, Converter> conMap = new HashMap<Class<?>, Converter>();
 
 	/** 是否用在多线程环境中 */
+	@SuppressWarnings("unused")
 	private static boolean useInMultiThreaded = false;
+
+	private static final String CONVERT_PACKAGE = "org.xblink.core.convert.converters";
+
+	private static final String CONVERT_IMPL = "org.xblink.core.convert.converters.%sConverter";
+
+	static {
+		// 扫描Classpath路径的转换器类，加载到缓存中
+		List<Class<?>> convertersClzs = ResourceUtil.scanPackage(CONVERT_PACKAGE);
+		for (Iterator<Class<?>> iterator = convertersClzs.iterator(); iterator.hasNext();) {
+			Class<?> converterClz = iterator.next();
+			setConverter(converterClz, null);
+		}
+	}
 
 	private ConverterWarehouse() {
 	}
@@ -34,31 +50,61 @@ public class ConverterWarehouse {
 	}
 
 	/**
+	 * 通过Class类型与对象，拿到其文字值。
+	 * 
+	 * @param clz
+	 * @param obj
+	 * @return
+	 * @throws Exception
+	 */
+	public static String getTextValueByData(Class<?> clz, Object obj) throws Exception {
+		return searchConverterForType(clz).obj2Text(obj);
+	}
+
+	/**
 	 * 寻获对应转换器。
 	 * 
 	 * @param clz
 	 *            类
 	 * @return 转换器
+	 * @throws Exception
 	 */
-	public static Converter searchConverterForType(Class<?> clz) {
+	public static Converter searchConverterForType(Class<?> clz) throws Exception {
 		Converter converter = conMap.get(clz);
 		if (null == converter) {
 			converter = lookForConverterForType(clz);
-			conMap.put(clz, converter);
 		}
 		return converter;
 	}
 
 	private static Converter lookForConverterForType(Class<?> clz) {
-		if (clz == String.class) {
-			return StringConverter.INSTANCE;
-		} else {
-			throw new UnsupportedOperationException(String.format("没有找到[%s]这个类的转换器，无法执行正确的转换操作。", clz));
+		// 根据名称，尝试加载这个类对应的转换器
+		String converterClzName = String.format(CONVERT_IMPL, clz.getSimpleName());
+		try {
+			Class<?> converterClz = Class.forName(converterClzName);
+			setConverter(converterClz, clz);
+		} catch (ClassNotFoundException e) {
+			throw new UnsupportedOperationException(String.format("没有找到[%s]这个类的转换器。", clz.getName()), e);
+		}
+		return conMap.get(clz);
+	}
+
+	private static void setConverter(Class<?> converterClz, Class<?> objClz) {
+		if (Converter.class.isAssignableFrom(converterClz)) {
+			// 加入到缓存中
+			try {
+				Converter converter = (Converter) converterClz.newInstance();
+				// 如果没有传入则不进行检查
+				if (null != objClz && !converter.canConvert(objClz)) {
+					throw new UnsupportedOperationException(String.format("[%s]转换器无法转换[%s]类型的对象。",
+							converterClz.getName(), objClz.getClass()));
+				}
+				for (Class<?> cls : converter.getTypes()) {
+					conMap.put(cls, converter);
+				}
+			} catch (Exception e) {
+				throw new UnsupportedOperationException(String.format("无法生成[%s]这个转换器。", converterClz.getName()));
+			}
 		}
 	}
-
-	public static String getTextByData(Class<?> clz, Object obj) throws Exception {
-		return searchConverterForType(clz).obj2Text(obj);
-	}
-
 }

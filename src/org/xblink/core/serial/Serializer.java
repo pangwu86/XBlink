@@ -40,6 +40,9 @@ public class Serializer {
 		if (TypeUtil.isSingleValueType(objClz)) {
 			// 单值类型
 			writeSingleValue(objClz, obj, transferInfo, tagName);
+		} else if (TypeUtil.isEnum(objClz)) {
+			// 枚举类型
+			writeEnum(objClz, obj, transferInfo, tagName);
 		} else {
 			// 其他类型都可以算作引用类型
 			if (isReferenceObject(obj, transferInfo)) {
@@ -73,7 +76,22 @@ public class Serializer {
 	 */
 	public static void writeSingleValue(Class<?> objClz, Object obj, TransferInfo transferInfo, String tagName)
 			throws Exception {
-		transferInfo.getDocWriter().writeElementText(tagName, ConverterWarehouse.getTextByData(objClz, obj));
+		// 枚举简单处理下，特殊枚举需要通过自定义转换器进行处理
+		transferInfo.getDocWriter().writeElementText(tagName, ConverterWarehouse.getTextValueByData(Enum.class, obj));
+	}
+
+	/**
+	 * 枚举类型对象序列化。
+	 * 
+	 * @param objClz
+	 * @param obj
+	 * @param transferInfo
+	 * @param tagName
+	 * @throws Exception
+	 */
+	public static void writeEnum(Class<?> objClz, Object obj, TransferInfo transferInfo, String tagName)
+			throws Exception {
+		transferInfo.getDocWriter().writeElementText(tagName, ConverterWarehouse.getTextValueByData(objClz, obj));
 	}
 
 	/**

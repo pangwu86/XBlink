@@ -26,8 +26,15 @@ public class TypeUtil {
 		singleValueTypeMap.put(long.class, n);
 		singleValueTypeMap.put(boolean.class, n);
 		singleValueTypeMap.put(char.class, n);
-		// TODO 八种基本类型的包装类
-
+		// 八种基本类型的包装类
+		singleValueTypeMap.put(Integer.class, n);
+		singleValueTypeMap.put(Byte.class, n);
+		singleValueTypeMap.put(Short.class, n);
+		singleValueTypeMap.put(Float.class, n);
+		singleValueTypeMap.put(Double.class, n);
+		singleValueTypeMap.put(Long.class, n);
+		singleValueTypeMap.put(Boolean.class, n);
+		singleValueTypeMap.put(Character.class, n);
 		// JAVA中常见类型
 		singleValueTypeMap.put(String.class, n);
 		singleValueTypeMap.put(StringBuffer.class, n);
@@ -36,6 +43,16 @@ public class TypeUtil {
 	}
 
 	private TypeUtil() {
+	}
+
+	/**
+	 * 是否是枚举类型。
+	 * 
+	 * @param clz
+	 * @return
+	 */
+	public static boolean isEnum(Class<?> clz) {
+		return clz.isEnum() || (clz.getSuperclass() != null && clz.getSuperclass().isEnum());
 	}
 
 	/**
@@ -55,10 +72,7 @@ public class TypeUtil {
 	 * @return
 	 */
 	public static boolean isCollectionType(Class<?> clz) {
-		if (clz.isArray() || Collection.class.isAssignableFrom(clz)) {
-			return true;
-		}
-		return false;
+		return clz.isArray() || Collection.class.isAssignableFrom(clz);
 	}
 
 	/**
@@ -68,10 +82,7 @@ public class TypeUtil {
 	 * @return
 	 */
 	public static boolean isMapType(Class<?> clz) {
-		if (Map.class.isAssignableFrom(clz)) {
-			return true;
-		}
-		return false;
+		return Map.class.isAssignableFrom(clz);
 	}
 
 	/**
@@ -81,10 +92,7 @@ public class TypeUtil {
 	 * @return
 	 */
 	public static boolean isPrimitiveType(Class<?> clz) {
-		if (byte.class == clz || short.class == clz || int.class == clz || float.class == clz || double.class == clz
-				|| long.class == clz || boolean.class == clz || char.class == clz) {
-			return true;
-		}
-		return false;
+		return byte.class == clz || short.class == clz || int.class == clz || float.class == clz || double.class == clz
+				|| long.class == clz || boolean.class == clz || char.class == clz;
 	}
 }

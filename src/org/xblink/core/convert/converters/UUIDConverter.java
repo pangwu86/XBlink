@@ -1,27 +1,30 @@
 package org.xblink.core.convert.converters;
 
+import java.util.UUID;
+
 import org.xblink.core.convert.Converter;
 
 /**
- * JAVA中的String类型，一个简单的转换器。
+ * UUID类型转换器。
  * 
  * @author 胖五(pangwu86@gmail.com)
  */
-public class StringConverter implements Converter {
+public class UUIDConverter implements Converter {
+
+	public Class<?>[] getTypes() {
+		return new Class<?>[] { UUID.class };
+	}
 
 	public boolean canConvert(Class<?> type) {
-		return type == String.class;
+		return UUID.class == type;
 	}
 
 	public String obj2Text(Object obj) throws Exception {
 		return obj.toString();
 	}
 
-	public Class<?>[] getTypes() {
-		return new Class<?>[] { String.class };
+	public Object text2Obj(String text) throws Exception {
+		return UUID.fromString(text);
 	}
 
-	public Object text2Obj(String text) throws Exception {
-		return text;
-	}
 }

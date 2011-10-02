@@ -8,7 +8,10 @@ package org.xblink.util;
  * @author 胖五(pangwu86@gmail.com)
  * 
  */
-public abstract class StringUtil {
+public class StringUtil {
+
+	private StringUtil() {
+	}
 
 	/**
 	 * 判断是否是空字符串

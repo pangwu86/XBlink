@@ -10,6 +10,13 @@ package org.xblink.core.convert;
 public interface Converter {
 
 	/**
+	 * 返回当前转换器可以处理的对象类型。
+	 * 
+	 * @return class对象
+	 */
+	public Class<?>[] getTypes();
+
+	/**
 	 * 是否可以转换这种类型。
 	 * 
 	 * @param type
@@ -29,6 +36,15 @@ public interface Converter {
 	 */
 	public String obj2Text(Object obj) throws Exception;
 
-	// public Object text2Obj(TransferInfo transferInfo);
+	/**
+	 * 将文字格式的值转换为对象。
+	 * 
+	 * @param text
+	 *            文字格式的值
+	 * @throws Exception
+	 *             异常
+	 * @return 对象
+	 */
+	public Object text2Obj(String text) throws Exception;
 
 }

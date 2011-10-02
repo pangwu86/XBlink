@@ -5,7 +5,6 @@ import java.io.StringWriter;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.xblink.core.doc.impl.JDK16Writer;
 import org.xblink.core.doc.impl.XPP3Writer;
 
 public class DocWorkerFactoryTest {
@@ -25,7 +24,7 @@ public class DocWorkerFactoryTest {
 	@Test
 	public void createANYWriter2() throws Exception {
 		DocWriter docWriter = DocWorkerFactory.createAnyWriter(new StringWriter(), "XPP3");
-		Assert.assertFalse(docWriter instanceof JDK16Writer);
+		// Assert.assertFalse(docWriter instanceof JDK16Writer);
 		Assert.assertTrue(docWriter instanceof XPP3Writer);
 	}
 
