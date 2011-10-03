@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
+import org.xblink.XBlink;
 
 import performance.model.ListA;
 
@@ -12,9 +13,7 @@ import com.thoughtworks.xstream.io.xml.Xpp3Driver;
 
 public class ListTest1 {
 
-	@Test
-	public void xstream() throws Exception {
-
+	public ListA getListA() {
 		ListA listA = new ListA();
 
 		List<String> strs = new ArrayList<String>();
@@ -34,11 +33,25 @@ public class ListTest1 {
 		listA.setObjs(objs);
 		listA.setUnknows(unknows);
 
+		return listA;
+	}
+
+	@Test
+	public void xstream() throws Exception {
 		XStream xStream = new XStream(new Xpp3Driver());
 		xStream.processAnnotations(new Class[] { ListA.class });
 
-		System.out.println(xStream.toXML(listA));
+		System.out.println(xStream.toXML(getListA()));
 
+		System.out.println(xStream.toXML(getListA().getObjs()));
+		System.out.println(xStream.toXML(getListA().getUnknows()));
+	}
+
+	@Test
+	public void xblink() throws Exception {
+		System.out.println(XBlink.toXml(getListA()));
+		System.out.println(XBlink.toXml(getListA().getObjs()));
+		System.out.println(XBlink.toXml(getListA().getUnknows()));
 	}
 
 }

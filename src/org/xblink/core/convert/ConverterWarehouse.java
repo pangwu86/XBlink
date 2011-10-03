@@ -14,6 +14,9 @@ import org.xblink.util.ResourceUtil;
  */
 public class ConverterWarehouse {
 
+	private ConverterWarehouse() {
+	}
+
 	// TODO 这里有两个问题
 	// 一是有线程安全的问题，有可能多个线程拿到同一个Converter并进行调用
 	// 二是如果不添加缓存，生成Converter的开销会有多大
@@ -34,9 +37,6 @@ public class ConverterWarehouse {
 			Class<?> converterClz = iterator.next();
 			setConverter(converterClz, null);
 		}
-	}
-
-	private ConverterWarehouse() {
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class ConverterWarehouse {
 		return conMap.get(clz);
 	}
 
-	private static void setConverter(Class<?> converterClz, Class<?> objClz) {
+	protected static void setConverter(Class<?> converterClz, Class<?> objClz) {
 		if (Converter.class.isAssignableFrom(converterClz)) {
 			// 加入到缓存中
 			try {
@@ -105,6 +105,8 @@ public class ConverterWarehouse {
 			} catch (Exception e) {
 				throw new UnsupportedOperationException(String.format("无法生成[%s]这个转换器。", converterClz.getName()));
 			}
+		} else {
+			throw new UnsupportedOperationException(String.format("[%s]不是XBlink支持的转换器类型。", converterClz.getName()));
 		}
 	}
 }

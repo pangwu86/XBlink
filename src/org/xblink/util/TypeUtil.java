@@ -13,10 +13,14 @@ import java.util.Map;
  */
 public class TypeUtil {
 
+	private TypeUtil() {
+	}
+
 	private static Map<Class<?>, Integer> singleValueTypeMap = new HashMap<Class<?>, Integer>();
+	private static Integer n = new Integer(1);
 
 	static {
-		Integer n = new Integer(1);
+
 		// 八种基本类型
 		singleValueTypeMap.put(int.class, n);
 		singleValueTypeMap.put(byte.class, n);
@@ -42,7 +46,13 @@ public class TypeUtil {
 		singleValueTypeMap.put(Date.class, n);
 	}
 
-	private TypeUtil() {
+	/**
+	 * 添加一个类型到单值集合中。
+	 * 
+	 * @param clz
+	 */
+	public static void add2SingaleValueMap(Class<?> clz) {
+		singleValueTypeMap.put(clz, n);
 	}
 
 	/**

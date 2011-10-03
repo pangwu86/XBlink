@@ -6,6 +6,7 @@ import org.xblink.core.ReferenceObject;
 import org.xblink.core.TransferInfo;
 import org.xblink.core.cache.AliasCache;
 import org.xblink.core.cache.AnalysisCache;
+import org.xblink.core.convert.ConverterRegistry;
 import org.xblink.core.convert.ConverterWarehouse;
 import org.xblink.core.serial.xtype.impl.XAttribute;
 import org.xblink.core.serial.xtype.impl.XCollection;
@@ -56,8 +57,14 @@ public class Serializer {
 					// Map类型
 					writeMap(objClz, obj, transferInfo, tagName);
 				} else {
-					// 对象类型
-					writeObject(objClz, obj, transferInfo, tagName);
+					// 当做对象处理前，需要查看该类是否有自定义的转换器
+					if (ConverterRegistry.hasCustomizedConverter(objClz)) {
+						// 单值类型
+						writeSingleValue(objClz, obj, transferInfo, tagName);
+					} else {
+						// 对象类型
+						writeObject(objClz, obj, transferInfo, tagName);
+					}
 				}
 			}
 		}
@@ -76,8 +83,7 @@ public class Serializer {
 	 */
 	public static void writeSingleValue(Class<?> objClz, Object obj, TransferInfo transferInfo, String tagName)
 			throws Exception {
-		// 枚举简单处理下，特殊枚举需要通过自定义转换器进行处理
-		transferInfo.getDocWriter().writeElementText(tagName, ConverterWarehouse.getTextValueByData(Enum.class, obj));
+		transferInfo.getDocWriter().writeElementText(tagName, ConverterWarehouse.getTextValueByData(objClz, obj));
 	}
 
 	/**
@@ -91,7 +97,8 @@ public class Serializer {
 	 */
 	public static void writeEnum(Class<?> objClz, Object obj, TransferInfo transferInfo, String tagName)
 			throws Exception {
-		transferInfo.getDocWriter().writeElementText(tagName, ConverterWarehouse.getTextValueByData(objClz, obj));
+		// 枚举简单处理下，特殊枚举需要通过自定义转换器进行处理
+		transferInfo.getDocWriter().writeElementText(tagName, ConverterWarehouse.getTextValueByData(Enum.class, obj));
 	}
 
 	/**

@@ -16,12 +16,15 @@ import org.xblink.util.TypeUtil;
  */
 public class AnalysisObject {
 
+	// TODO 简化字段
+
 	/** 字段集合 */
 	private List<Field> attributeFieldTypes;
 	private List<Field> elementFieldTypes;
 	private List<Field> objFieldTypes;
 	private List<Field> collectionFieldTypes;
 	private List<Field> mapFieldTypes;
+	private List<Field> customizedConverterFieldTypes;
 
 	public AnalysisObject(Class<?> clz) {
 		analysing(clz);
