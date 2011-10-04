@@ -19,4 +19,7 @@ public class Constant {
 	/** 引用节点的Key */
 	public final static String ATTRIBUTE_REFERENCE = "ref";
 
+	/** Map集合中每个对象 */
+	public final static String MAP_ENTRY = "entry";
+
 }

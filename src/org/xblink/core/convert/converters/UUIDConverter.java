@@ -20,7 +20,7 @@ public class UUIDConverter implements Converter {
 	}
 
 	public String obj2Text(Object obj) throws Exception {
-		return obj.toString();
+		return ((UUID) obj).toString();
 	}
 
 	public Object text2Obj(String text) throws Exception {

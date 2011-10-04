@@ -4,6 +4,7 @@ import java.io.Reader;
 import java.io.Writer;
 
 import org.xblink.core.TransferInfo;
+import org.xblink.core.convert.ConverterWarehouse;
 import org.xblink.core.doc.DocReader;
 import org.xblink.core.doc.DocWorkerFactory;
 import org.xblink.core.doc.DocWriter;
@@ -18,6 +19,10 @@ import org.xblink.util.StringUtil;
  * @author 胖五(pangwu86@gmail.com)
  */
 class XBlinkHelper {
+
+	static {
+		ConverterWarehouse.init();
+	}
 
 	private XBlinkHelper() {
 	}

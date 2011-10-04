@@ -10,7 +10,7 @@ import org.xblink.XBlink;
 public class SetTest1 {
 
 	@Test
-	public void hashset() throws Exception {
+	public void set() throws Exception {
 		Set<Object> objSet1 = new HashSet<Object>();
 		Set<Object> objSet2 = new TreeSet<Object>();
 

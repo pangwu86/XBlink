@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.xblink.core.AnalysisObject;
+import org.xblink.core.Constant;
 import org.xblink.core.TransferInfo;
 import org.xblink.core.serial.Serializer;
 import org.xblink.core.serial.xtype.XContainerType;
@@ -30,8 +31,10 @@ public class XMap extends XContainerType {
 		Map map = (Map) obj;
 		for (Iterator iterator = map.entrySet().iterator(); iterator.hasNext();) {
 			Map.Entry entry = (Map.Entry) iterator.next();
+			transferInfo.getDocWriter().writeStartTag(Constant.MAP_ENTRY);
 			Serializer.writeUnknow(entry.getKey(), transferInfo, null);
 			Serializer.writeUnknow(entry.getValue(), transferInfo, null);
+			transferInfo.getDocWriter().writeEndTag(Constant.MAP_ENTRY);
 		}
 		transferInfo.getDocWriter().writeEndTag(collectionName);
 	}

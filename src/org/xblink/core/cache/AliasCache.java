@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.xblink.annotation.XBlinkAlias;
-import org.xblink.util.StringUtil;
 
 /**
  * 别名的缓存。
@@ -106,7 +105,10 @@ public class AliasCache {
 		if (null != classNameAlias) {
 			name = classNameAlias.value();
 		} else {
-			name = StringUtil.lowerFirst(clz.getSimpleName());
+			// TODO 这里到底采用哪种格式呢？
+			// name = StringUtil.lowerFirst(clz.getSimpleName());
+			// name = clz.getSimpleName();
+			name = clz.getSimpleName().toLowerCase();
 		}
 		return name;
 	}

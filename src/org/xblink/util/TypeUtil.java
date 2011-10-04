@@ -1,7 +1,6 @@
 package org.xblink.util;
 
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,33 +17,6 @@ public class TypeUtil {
 
 	private static Map<Class<?>, Integer> singleValueTypeMap = new HashMap<Class<?>, Integer>();
 	private static Integer n = new Integer(1);
-
-	static {
-
-		// 八种基本类型
-		singleValueTypeMap.put(int.class, n);
-		singleValueTypeMap.put(byte.class, n);
-		singleValueTypeMap.put(short.class, n);
-		singleValueTypeMap.put(float.class, n);
-		singleValueTypeMap.put(double.class, n);
-		singleValueTypeMap.put(long.class, n);
-		singleValueTypeMap.put(boolean.class, n);
-		singleValueTypeMap.put(char.class, n);
-		// 八种基本类型的包装类
-		singleValueTypeMap.put(Integer.class, n);
-		singleValueTypeMap.put(Byte.class, n);
-		singleValueTypeMap.put(Short.class, n);
-		singleValueTypeMap.put(Float.class, n);
-		singleValueTypeMap.put(Double.class, n);
-		singleValueTypeMap.put(Long.class, n);
-		singleValueTypeMap.put(Boolean.class, n);
-		singleValueTypeMap.put(Character.class, n);
-		// JAVA中常见类型
-		singleValueTypeMap.put(String.class, n);
-		singleValueTypeMap.put(StringBuffer.class, n);
-		singleValueTypeMap.put(StringBuilder.class, n);
-		singleValueTypeMap.put(Date.class, n);
-	}
 
 	/**
 	 * 添加一个类型到单值集合中。
