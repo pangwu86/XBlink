@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.xblink.core.AnalysisObject;
 import org.xblink.core.TransferInfo;
+import org.xblink.core.convert.ConverterWarehouse;
 import org.xblink.core.serial.xtype.XBasicType;
 
 /**
@@ -19,8 +20,8 @@ public class XAttribute extends XBasicType {
 	public static final XAttribute INSTANCE = new XAttribute();
 
 	public void writeBasicType(Object obj, AnalysisObject analysisObject, TransferInfo transferInfo, Object fieldValue,
-			String tagName) throws Exception {
-		String fieldValueStr = getText(fieldValue, fieldValue.getClass());
+			String tagName, Field field) throws Exception {
+		String fieldValueStr = ConverterWarehouse.getTextValueByData(fieldValue.getClass(), fieldValue);
 		transferInfo.getDocWriter().writeAttribute(tagName, fieldValueStr);
 	}
 

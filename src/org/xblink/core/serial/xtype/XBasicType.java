@@ -5,8 +5,6 @@ import java.lang.reflect.Field;
 import org.xblink.core.AnalysisObject;
 import org.xblink.core.TransferInfo;
 import org.xblink.core.cache.AliasCache;
-import org.xblink.core.convert.Converter;
-import org.xblink.core.convert.ConverterWarehouse;
 
 /**
  * XAttribute，XElement与XObject格式的基类。
@@ -27,17 +25,11 @@ public abstract class XBasicType implements XType {
 			}
 			// 按照基本格式写入
 			writeBasicType(obj, analysisObject, transferInfo, fieldValue,
-					AliasCache.getFieldName(obj.getClass(), field));
+					AliasCache.getFieldName(obj.getClass(), field), field);
 		}
 	}
 
-	public String getText(Object obj, Class<?> objClz) throws Exception {
-		// 根据对象类型，寻找对应的转换器，完成转换操作
-		Converter converter = ConverterWarehouse.searchConverterForType(objClz);
-		return converter.obj2Text(obj);
-	}
-
 	public abstract void writeBasicType(Object obj, AnalysisObject analysisObject, TransferInfo transferInfo,
-			Object fieldValue, String tagName) throws Exception;
+			Object fieldValue, String tagName, Field field) throws Exception;
 
 }

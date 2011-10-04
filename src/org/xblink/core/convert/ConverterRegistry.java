@@ -31,7 +31,7 @@ public class ConverterRegistry {
 	 *            转换对象的类
 	 * @return
 	 */
-	public static boolean hasCustomizedConverter(Class<?> objClz) {
+	public static boolean hasCustomizedConverterAndRegister(Class<?> objClz) {
 		XBlinkConverter xBlinkConverter = objClz.getAnnotation(XBlinkConverter.class);
 		if (null != xBlinkConverter) {
 			Class<? extends Converter> converterClz = xBlinkConverter.value();

@@ -21,10 +21,11 @@ public class AnalysisObject {
 	/** 字段集合 */
 	private List<Field> attributeFieldTypes;
 	private List<Field> elementFieldTypes;
+	private List<Field> enumFieldTypes;
+	private List<Field> customizedFieldTypes;
 	private List<Field> objFieldTypes;
 	private List<Field> collectionFieldTypes;
 	private List<Field> mapFieldTypes;
-	private List<Field> customizedConverterFieldTypes;
 
 	public AnalysisObject(Class<?> clz) {
 		analysing(clz);
@@ -38,7 +39,10 @@ public class AnalysisObject {
 				continue;
 			}
 			Class<?> fieldClz = field.getType();
-			if (TypeUtil.isSingleValueType(fieldClz)) {
+			if (TypeUtil.isCustomizedTypeField(field)) {
+				// 自定义转换器优先
+				add2Customized(field);
+			} else if (TypeUtil.isSingleValueType(fieldClz)) {
 				// 基本类型可以以Attribute的方式展现（目前仅限XML格式）
 				boolean isAttributeNode = null != field.getAnnotation(XBlinkAsAttribute.class);
 				if (isAttributeNode) {
@@ -46,6 +50,8 @@ public class AnalysisObject {
 				} else {
 					add2Element(field);
 				}
+			} else if (TypeUtil.isEnum(fieldClz)) {
+				add2Enum(field);
 			} else if (TypeUtil.isCollectionType(fieldClz)) {
 				add2Collection(field);
 			} else if (TypeUtil.isMapType(fieldClz)) {
@@ -86,6 +92,20 @@ public class AnalysisObject {
 		elementFieldTypes.add(field);
 	}
 
+	private void add2Enum(Field field) {
+		if (null == enumFieldTypes) {
+			enumFieldTypes = new ArrayList<Field>();
+		}
+		enumFieldTypes.add(field);
+	}
+
+	private void add2Customized(Field field) {
+		if (null == customizedFieldTypes) {
+			customizedFieldTypes = new ArrayList<Field>();
+		}
+		customizedFieldTypes.add(field);
+	}
+
 	private void add2Attribute(Field field) {
 		if (null == attributeFieldTypes) {
 			attributeFieldTypes = new ArrayList<Field>();
@@ -106,6 +126,14 @@ public class AnalysisObject {
 		return containerIsEmpty(elementFieldTypes);
 	}
 
+	public boolean enumIsEmpty() {
+		return containerIsEmpty(enumFieldTypes);
+	}
+
+	public boolean customizedIsEmpty() {
+		return containerIsEmpty(customizedFieldTypes);
+	}
+
 	public boolean objIsEmpty() {
 		return containerIsEmpty(objFieldTypes);
 	}
@@ -123,12 +151,21 @@ public class AnalysisObject {
 	}
 
 	// *************** get ********************
+
 	public List<Field> getAttributeFieldTypes() {
 		return attributeFieldTypes;
 	}
 
 	public List<Field> getElementFieldTypes() {
 		return elementFieldTypes;
+	}
+
+	public List<Field> getEnumFieldTypes() {
+		return enumFieldTypes;
+	}
+
+	public List<Field> getCustomizedFieldTypes() {
+		return customizedFieldTypes;
 	}
 
 	public List<Field> getObjFieldTypes() {

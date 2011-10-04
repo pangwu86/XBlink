@@ -18,7 +18,7 @@ public class XObject extends XBasicType {
 	public static final XObject INSTANCE = new XObject();
 
 	public void writeBasicType(Object obj, AnalysisObject analysisObject, TransferInfo transferInfo, Object fieldValue,
-			String tagName) throws Exception {
+			String tagName, Field field) throws Exception {
 		Serializer.writeUnknow(fieldValue, transferInfo, tagName);
 	}
 

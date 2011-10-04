@@ -43,12 +43,10 @@ public class PathTrackingWriter implements DocWriter {
 
 	public void writeAttribute(String name, String value) throws Exception {
 		docWriter.writeAttribute(name, value);
-
 	}
 
 	public void writeText(String text) throws Exception {
 		docWriter.writeText(text);
-
 	}
 
 	public void writeElementText(String tagName, String text) throws Exception {

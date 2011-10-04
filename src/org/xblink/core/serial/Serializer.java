@@ -10,7 +10,9 @@ import org.xblink.core.convert.ConverterRegistry;
 import org.xblink.core.convert.ConverterWarehouse;
 import org.xblink.core.serial.xtype.impl.XAttribute;
 import org.xblink.core.serial.xtype.impl.XCollection;
+import org.xblink.core.serial.xtype.impl.XCustomized;
 import org.xblink.core.serial.xtype.impl.XElement;
+import org.xblink.core.serial.xtype.impl.XEnum;
 import org.xblink.core.serial.xtype.impl.XMap;
 import org.xblink.core.serial.xtype.impl.XObject;
 import org.xblink.util.StringUtil;
@@ -58,7 +60,7 @@ public class Serializer {
 					writeMap(objClz, obj, transferInfo, tagName);
 				} else {
 					// 当做对象处理前，需要查看该类是否有自定义的转换器
-					if (ConverterRegistry.hasCustomizedConverter(objClz)) {
+					if (ConverterRegistry.hasCustomizedConverterAndRegister(objClz)) {
 						// 单值类型
 						writeSingleValue(objClz, obj, transferInfo, tagName);
 					} else {
@@ -169,6 +171,14 @@ public class Serializer {
 		// element类型
 		if (!analysisObject.elementIsEmpty()) {
 			XElement.INSTANCE.writeItem(obj, analysisObject, transferInfo);
+		}
+		// enum类型
+		if (!analysisObject.enumIsEmpty()) {
+			XEnum.INSTANCE.writeItem(obj, analysisObject, transferInfo);
+		}
+		// customized类型
+		if (!analysisObject.customizedIsEmpty()) {
+			XCustomized.INSTANCE.writeItem(obj, analysisObject, transferInfo);
 		}
 		// obj类型
 		if (!analysisObject.objIsEmpty()) {

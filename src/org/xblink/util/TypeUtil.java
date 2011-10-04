@@ -1,8 +1,11 @@
 package org.xblink.util;
 
+import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.xblink.annotation.XBlinkConverter;
 
 /**
  * 提供方法来判断对象或类的类型。
@@ -65,6 +68,17 @@ public class TypeUtil {
 	 */
 	public static boolean isMapType(Class<?> clz) {
 		return Map.class.isAssignableFrom(clz);
+	}
+
+	/**
+	 * 是否是使用了自定义转换器类型。
+	 * 
+	 * @param field
+	 * @return
+	 */
+	public static boolean isCustomizedTypeField(Field field) {
+		XBlinkConverter xBlinkConverter = field.getAnnotation(XBlinkConverter.class);
+		return null != xBlinkConverter;
 	}
 
 	/**

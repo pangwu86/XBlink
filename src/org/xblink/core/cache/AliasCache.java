@@ -107,8 +107,8 @@ public class AliasCache {
 		} else {
 			// TODO 这里到底采用哪种格式呢？
 			// name = StringUtil.lowerFirst(clz.getSimpleName());
-			// name = clz.getSimpleName();
-			name = clz.getSimpleName().toLowerCase();
+			// name = clz.getSimpleName().toLowerCase();
+			name = clz.getSimpleName();
 		}
 		return name;
 	}
