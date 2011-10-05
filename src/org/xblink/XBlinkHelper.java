@@ -9,7 +9,11 @@ import org.xblink.core.doc.DocReader;
 import org.xblink.core.doc.DocWorkerFactory;
 import org.xblink.core.doc.DocWriter;
 import org.xblink.core.path.PathTracker;
+import org.xblink.core.path.PathTrackingReader;
 import org.xblink.core.path.PathTrackingWriter;
+import org.xblink.core.reflect.ObjectOperator;
+import org.xblink.core.reflect.ObjectOperatorFactory;
+import org.xblink.core.serial.Deserializer;
 import org.xblink.core.serial.Serializer;
 import org.xblink.util.StringUtil;
 
@@ -76,7 +80,7 @@ class XBlinkHelper {
 		try {
 			// 开始序列化
 			realDocWriter.writeStartDocument();
-			Serializer.writeUnknow(object, new TransferInfo(pathTracker, xbConfig, realDocWriter, null), null);
+			Serializer.writeUnknow(object, new TransferInfo(pathTracker, xbConfig, realDocWriter, null, null), null);
 			realDocWriter.writeEndDocument();
 		} catch (Exception e) {
 			throw new RuntimeException("序列化失败。", e);
@@ -132,8 +136,35 @@ class XBlinkHelper {
 	 * @return 字符串
 	 */
 	private static Object deserializing(Object object, Class<?> clz, DocReader docReader) {
-		// TODO
-		return null;
+		// 准备工作
+		XBConfig xbConfig = XBConfigHelper.getXbConfig();
+		PathTracker pathTracker = new PathTracker(xbConfig.isUseRelativePath());
+		DocReader realDocReader = new PathTrackingReader(docReader, pathTracker);
+		ObjectOperator objectOperator = ObjectOperatorFactory.createObjectOperator();
+		// 参考对象与参考类进行处理
+		Object rootObj = getRootObj(object, clz, objectOperator);
+		try {
+			realDocReader.moveStart();
+			Deserializer.readUnknow(rootObj, new TransferInfo(pathTracker, xbConfig, null, realDocReader,
+					objectOperator), null);
+		} catch (Exception e) {
+			throw new RuntimeException("反序列化失败。", e);
+		} finally {
+			if (null != realDocReader) {
+				try {
+					realDocReader.close();
+				} catch (Exception e) {
+					throw new RuntimeException("关闭输入流失败。", e);
+				}
+			}
+		}
+		return rootObj;
 	}
 
+	private static Object getRootObj(Object object, Class<?> clz, ObjectOperator objectOperator) {
+		if (null == object) {
+			return objectOperator.newInstance(clz);
+		}
+		return object;
+	}
 }

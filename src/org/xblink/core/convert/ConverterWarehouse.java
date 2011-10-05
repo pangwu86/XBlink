@@ -69,6 +69,18 @@ public class ConverterWarehouse {
 	}
 
 	/**
+	 * 通过Class类型与文字值，拿到其对象。
+	 * 
+	 * @param clz
+	 * @param text
+	 * @return
+	 * @throws Exception
+	 */
+	public static Object getDataValueByText(Class<?> clz, String text) throws Exception {
+		return searchConverterForType(clz).text2Obj(text);
+	}
+
+	/**
 	 * 缓存中是否已经存在该转换器。
 	 * 
 	 * @param converterClz

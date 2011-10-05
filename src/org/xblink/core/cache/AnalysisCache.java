@@ -1,7 +1,7 @@
 package org.xblink.core.cache;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.xblink.core.AnalysisObject;
 
@@ -17,8 +17,7 @@ public class AnalysisCache {
 
 	private static boolean useAnalysisCache = true;
 
-	// TODO 没有同步，或许有线程问题
-	private static Map<Class<?>, AnalysisObject> anaylsisMap = new HashMap<Class<?>, AnalysisObject>();
+	private static Map<Class<?>, AnalysisObject> anaylsisMap = new ConcurrentHashMap<Class<?>, AnalysisObject>();
 
 	public static void setUseAnalysisCache(boolean use) {
 		useAnalysisCache = use;

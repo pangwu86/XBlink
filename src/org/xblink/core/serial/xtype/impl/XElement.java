@@ -17,13 +17,30 @@ public class XElement extends XBasicType {
 
 	public static final XElement INSTANCE = new XElement();
 
-	public void writeBasicType(Object obj, AnalysisObject analysisObject, TransferInfo transferInfo, Object fieldValue,
-			String tagName, Field field) throws Exception {
-		String fieldValueStr = ConverterWarehouse.getTextValueByData(fieldValue.getClass(), fieldValue);
-		transferInfo.getDocWriter().writeElementText(tagName, fieldValueStr);
-	}
-
 	public List<Field> getFields(AnalysisObject analysisObject) {
 		return analysisObject.getElementFieldTypes();
 	}
+
+	public void writeField(Object obj, AnalysisObject analysisObject, TransferInfo transferInfo, Field field,
+			String fieldName, Object fieldValue) throws Exception {
+		String fieldValueStr = ConverterWarehouse.getTextValueByData(fieldValue.getClass(), fieldValue);
+		transferInfo.getDocWriter().writeElementText(fieldName, fieldValueStr);
+	}
+
+	public void readField(Object obj, AnalysisObject analysisObject, TransferInfo transferInfo, Field field,
+			String fieldName) throws Exception {
+		String fieldValueStr = transferInfo.getDocReader().getTextValue();
+		// 空的话不进行反序列化
+		if (null == fieldValueStr) {
+			return;
+		}
+		Object fieldValue = ConverterWarehouse.getTextValueByData(field.getType(), fieldValueStr);
+		transferInfo.getObjectOperator().setField(obj, field, fieldValue);
+	}
+
+	public void readItem(Object obj, AnalysisObject analysisObject, TransferInfo transferInfo) throws Exception {
+		// TODO Auto-generated method stub
+
+	}
+
 }

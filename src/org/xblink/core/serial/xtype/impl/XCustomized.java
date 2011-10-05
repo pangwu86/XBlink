@@ -3,10 +3,8 @@ package org.xblink.core.serial.xtype.impl;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import org.xblink.annotation.XBlinkConverter;
 import org.xblink.core.AnalysisObject;
 import org.xblink.core.TransferInfo;
-import org.xblink.core.convert.Converter;
 import org.xblink.core.serial.xtype.XBasicType;
 
 /**
@@ -22,16 +20,21 @@ public class XCustomized extends XBasicType {
 		return analysisObject.getCustomizedFieldTypes();
 	}
 
-	public void writeBasicType(Object obj, AnalysisObject analysisObject, TransferInfo transferInfo, Object fieldValue,
-			String tagName, Field field) throws Exception {
+	public void writeField(Object obj, AnalysisObject analysisObject, TransferInfo transferInfo, Field field,
+			String fieldName, Object fieldValue) throws Exception {
 		String fieldValueStr = getFieldConveter(field).obj2Text(fieldValue);
-		transferInfo.getDocWriter().writeElementText(tagName, fieldValueStr);
+		transferInfo.getDocWriter().writeElementText(fieldName, fieldValueStr);
 	}
 
-	private Converter getFieldConveter(Field field) throws Exception {
-		XBlinkConverter xBlinkConverter = field.getAnnotation(XBlinkConverter.class);
-		Class<? extends Converter> converterClz = xBlinkConverter.value();
-		return converterClz.newInstance();
+	public void readField(Object obj, AnalysisObject analysisObject, TransferInfo transferInfo, Field field,
+			String fieldName, String fieldValueStr) throws Exception {
+		Object fieldValue = getFieldConveter(field).text2Obj(fieldValueStr);
+		transferInfo.getObjectOperator().setField(obj, field, fieldValue);
+	}
+
+	public void readItem(Object obj, AnalysisObject analysisObject, TransferInfo transferInfo) throws Exception {
+		// TODO Auto-generated method stub
+
 	}
 
 }

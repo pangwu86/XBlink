@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.xblink.annotation.XBlinkAsAttribute;
 import org.xblink.annotation.XBlinkConverter;
 
 /**
@@ -71,17 +72,6 @@ public class TypeUtil {
 	}
 
 	/**
-	 * 是否是使用了自定义转换器类型。
-	 * 
-	 * @param field
-	 * @return
-	 */
-	public static boolean isCustomizedTypeField(Field field) {
-		XBlinkConverter xBlinkConverter = field.getAnnotation(XBlinkConverter.class);
-		return null != xBlinkConverter;
-	}
-
-	/**
 	 * 是否是八种基本类型之一。
 	 * 
 	 * @param clz
@@ -90,5 +80,25 @@ public class TypeUtil {
 	public static boolean isPrimitiveType(Class<?> clz) {
 		return byte.class == clz || short.class == clz || int.class == clz || float.class == clz || double.class == clz
 				|| long.class == clz || boolean.class == clz || char.class == clz;
+	}
+
+	/**
+	 * 判断是否是使用了XBlinkAsAttribute注解的字段。
+	 * 
+	 * @param field
+	 * @return
+	 */
+	public static boolean isAttributeField(Field field) {
+		return null != field.getAnnotation(XBlinkAsAttribute.class);
+	}
+
+	/**
+	 * 判断是否是使用了XBlinkConverter注解的字段。
+	 * 
+	 * @param field
+	 * @return
+	 */
+	public static boolean isCustomizedField(Field field) {
+		return null != field.getAnnotation(XBlinkConverter.class);
 	}
 }

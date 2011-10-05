@@ -10,10 +10,12 @@ import org.xblink.XBlink;
 import performance.model.Person;
 import performance.model.PhoneNumber;
 
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.Xpp3Driver;
+
 public class PersonTest {
 
-	@Test
-	public void testToXml() throws Exception {
+	public Person getPerson() {
 		PhoneNumber phone = new PhoneNumber();
 		phone.setCode(123);
 		phone.setNumber("1234-456");
@@ -27,8 +29,12 @@ public class PersonTest {
 		joe.setLastname("Walnes");
 		joe.setPhone(phone);
 		joe.setFax(fax);
+		return joe;
+	}
 
-		XBlink.toXml(joe, new File("C:/Joe_xb.xml"));
+	@Test
+	public void testToXml() throws Exception {
+		XBlink.toXml(getPerson(), new File("C:/Joe_xb.xml"));
 		assertTrue(new File("C:/Joe_xb.xml").exists());
 	}
 
@@ -42,6 +48,13 @@ public class PersonTest {
 		assertTrue(joe.getPhone().getNumber().equals("1234-456"));
 		assertTrue(joe.getFax().getCode() == 123);
 		assertTrue(joe.getFax().getNumber().equals("9999-999"));
+	}
+
+	@Test
+	public void testXStream() throws Exception {
+		XStream xStream = new XStream(new Xpp3Driver());
+		xStream.processAnnotations(Person.class);
+		Person joe = (Person) xStream.fromXML(xStream.toXML(getPerson()));
 	}
 
 }

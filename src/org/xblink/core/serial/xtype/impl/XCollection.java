@@ -46,4 +46,9 @@ public class XCollection extends XContainerType {
 		transferInfo.getDocWriter().writeEndTag(collectionName);
 	}
 
+	public void readItem(Object obj, AnalysisObject analysisObject, TransferInfo transferInfo) throws Exception {
+		// TODO Auto-generated method stub
+
+	}
+
 }

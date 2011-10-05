@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.xblink.core.AnalysisObject;
 import org.xblink.core.TransferInfo;
+import org.xblink.core.convert.Converter;
 import org.xblink.core.convert.ConverterWarehouse;
 import org.xblink.core.serial.xtype.XBasicType;
 
@@ -22,10 +23,26 @@ public class XEnum extends XBasicType {
 		return analysisObject.getEnumFieldTypes();
 	}
 
-	public void writeBasicType(Object obj, AnalysisObject analysisObject, TransferInfo transferInfo, Object fieldValue,
-			String tagName, Field field) throws Exception {
+	// FIXME 枚举类型处理需要再修正
+
+	public void writeField(Object obj, AnalysisObject analysisObject, TransferInfo transferInfo, Field field,
+			String fieldName, Object fieldValue) throws Exception {
 		String fieldValueStr = ConverterWarehouse.getTextValueByData(Enum.class, fieldValue);
-		transferInfo.getDocWriter().writeElementText(tagName, fieldValueStr);
+		transferInfo.getDocWriter().writeElementText(fieldName, fieldValueStr);
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public void readField(Object obj, AnalysisObject analysisObject, TransferInfo transferInfo, Field field,
+			String fieldName) throws Exception {
+		Converter converter = ConverterWarehouse.searchConverterForType(Enum.class);
+		// Object fieldValue = ((EnumConverter) converter)
+		// .text2Obj(fieldValueStr, (Class<? extends Enum>) field.getType());
+		// transferInfo.getObjectOperator().setField(obj, field, fieldValue);
+	}
+
+	public void readItem(Object obj, AnalysisObject analysisObject, TransferInfo transferInfo) throws Exception {
+		// TODO Auto-generated method stub
+
 	}
 
 }

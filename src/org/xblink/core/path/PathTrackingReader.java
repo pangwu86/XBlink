@@ -1,29 +1,26 @@
-package org.xblink.core.doc.impl;
+package org.xblink.core.path;
 
-import java.io.Reader;
 import java.util.List;
 
-import org.xblink.core.doc.AbstractDocReader;
+import org.xblink.core.doc.DocReader;
 
-public class MytypeReader extends AbstractDocReader {
+public class PathTrackingReader implements DocReader {
 
-	public MytypeReader(Reader reader) {
-		super(reader);
+	private DocReader docReader;
+	private PathTracker pathTracker;
+
+	public PathTrackingReader(DocReader docReader, PathTracker pathTracker) {
+		this.docReader = docReader;
+		this.pathTracker = pathTracker;
 	}
 
 	public void close() {
-		// TODO Auto-generated method stub
-
+		docReader.close();
 	}
 
 	public boolean hasMoreChildren() {
 		// TODO Auto-generated method stub
 		return false;
-	}
-
-	public void moveStart() {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void moveDown() {
@@ -66,4 +63,8 @@ public class MytypeReader extends AbstractDocReader {
 		return null;
 	}
 
+	public void moveStart() {
+		// TODO Auto-generated method stub
+
+	}
 }

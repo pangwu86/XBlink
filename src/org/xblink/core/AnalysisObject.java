@@ -4,9 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.xblink.annotation.XBlinkAsAttribute;
 import org.xblink.annotation.XBlinkOmitField;
-import org.xblink.util.ReflectUtil;
 import org.xblink.util.TypeUtil;
 
 /**
@@ -33,19 +31,23 @@ public class AnalysisObject {
 
 	public void analysing(Class<?> clz) {
 		// 遍历所有字段，分门别类的存放
-		for (Field field : ReflectUtil.getField(clz)) {
+		for (Field field : clz.getDeclaredFields()) {
 			// 先判断该字段是否要忽略
 			if (null != field.getAnnotation(XBlinkOmitField.class)) {
 				continue;
 			}
 			Class<?> fieldClz = field.getType();
-			if (TypeUtil.isCustomizedTypeField(field)) {
+			if (TypeUtil.isCustomizedField(field)) {
 				// 自定义转换器优先
-				add2Customized(field);
+				if (TypeUtil.isAttributeField(field)) {
+					// 比较特殊的类型，同时添加了两个注解，这就需要以Attribute类型进行处理了
+					add2Attribute(field);
+				} else {
+					add2Customized(field);
+				}
 			} else if (TypeUtil.isSingleValueType(fieldClz)) {
 				// 基本类型可以以Attribute的方式展现（目前仅限XML格式）
-				boolean isAttributeNode = null != field.getAnnotation(XBlinkAsAttribute.class);
-				if (isAttributeNode) {
+				if (TypeUtil.isAttributeField(field)) {
 					add2Attribute(field);
 				} else {
 					add2Element(field);

@@ -63,6 +63,7 @@ public class Serializer {
 					// 当做对象处理前，需要查看该类是否有自定义的转换器
 					if (ConverterRegistry.hasCustomizedConverterAndRegister(objClz)) {
 						// 单值类型
+						// TODO 这个路径貌似永远也不会进来？需要验证
 						writeSingleValue(objClz, obj, transferInfo, tagName);
 					} else {
 						// 对象类型

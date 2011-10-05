@@ -3,6 +3,7 @@ package org.xblink.core.cache;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.xblink.annotation.XBlinkAlias;
 
@@ -22,14 +23,12 @@ public class AliasCache {
 
 	private static boolean useFieldAliasCache = true;
 
-	// TODO 需要同步吗？会有多少性能影响呢
-	private static Map<Class<?>, String> classAliasMap = new HashMap<Class<?>, String>();
+	private static Map<Class<?>, String> classAliasMap = new ConcurrentHashMap<Class<?>, String>();
 
-	private static Map<Class<?>, Map<Field, String>> fieldAliasMap = new HashMap<Class<?>, Map<Field, String>>();
+	private static Map<Class<?>, Map<Field, String>> fieldAliasMap = new ConcurrentHashMap<Class<?>, Map<Field, String>>();
 
 	static {
 		// TODO 几个特殊的别名，先加入到Map中，例如Map.class等等
-
 	}
 
 	public static void setUseClassAliasCache(boolean use) {

@@ -17,4 +17,5 @@ public interface XType {
 
 	public void writeItem(Object obj, AnalysisObject analysisObject, TransferInfo transferInfo) throws Exception;
 
+	public void readItem(Object obj, AnalysisObject analysisObject, TransferInfo transferInfo) throws Exception;
 }

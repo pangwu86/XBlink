@@ -7,6 +7,7 @@ import org.xblink.XBConfig;
 import org.xblink.core.doc.DocReader;
 import org.xblink.core.doc.DocWriter;
 import org.xblink.core.path.PathTracker;
+import org.xblink.core.reflect.ObjectOperator;
 
 /**
  * 用来传递在工作过程中的一些需要使用信息。
@@ -19,14 +20,16 @@ public class TransferInfo {
 	private final XBConfig xbConfig;
 	private final DocWriter docWriter;
 	private final DocReader docReader;
-	// TODO 这里究竟是用Object好呢，还是Integer好呢？
+	private final ObjectOperator objectOperator;
 	private final Map<Object, ReferenceObject> refMap;
 
-	public TransferInfo(PathTracker pathTracker, XBConfig xbConfig, DocWriter docWriter, DocReader docReader) {
+	public TransferInfo(PathTracker pathTracker, XBConfig xbConfig, DocWriter docWriter, DocReader docReader,
+			ObjectOperator objectOperator) {
 		this.pathTracker = pathTracker;
 		this.xbConfig = xbConfig;
 		this.docWriter = docWriter;
 		this.docReader = docReader;
+		this.objectOperator = objectOperator;
 		this.refMap = new HashMap<Object, ReferenceObject>();
 	}
 
@@ -48,6 +51,10 @@ public class TransferInfo {
 
 	public Map<Object, ReferenceObject> getRefMap() {
 		return refMap;
+	}
+
+	public ObjectOperator getObjectOperator() {
+		return objectOperator;
 	}
 
 }
