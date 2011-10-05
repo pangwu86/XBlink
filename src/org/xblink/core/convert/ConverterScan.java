@@ -15,6 +15,7 @@ import org.xblink.core.convert.converters.FileConverter;
 import org.xblink.core.convert.converters.FloatConverter;
 import org.xblink.core.convert.converters.IntegerConverter;
 import org.xblink.core.convert.converters.LongConverter;
+import org.xblink.core.convert.converters.NullConverter;
 import org.xblink.core.convert.converters.ShortConverter;
 import org.xblink.core.convert.converters.StringBufferConverter;
 import org.xblink.core.convert.converters.StringBuilderConverter;
@@ -47,6 +48,7 @@ public class ConverterScan {
 		converterList.add(BooleanConverter.class);
 		converterList.add(CharacterConverter.class);
 		// JAVA中常见类型
+		converterList.add(NullConverter.class);
 		converterList.add(EnumConverter.class);
 		converterList.add(FileConverter.class);
 		converterList.add(StringConverter.class);

@@ -46,6 +46,11 @@ public class MytypeWriter extends AbstractDocWriter {
 
 	}
 
+	public void writeReference(String tagName, String refName, String text) throws Exception {
+		// TODO Auto-generated method stub
+
+	}
+
 	public void close() throws Exception {
 		// TODO Auto-generated method stub
 
@@ -59,11 +64,6 @@ public class MytypeWriter extends AbstractDocWriter {
 	public String getString() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	public void writeEndTagNotWithNewLine(String tagName) throws Exception {
-		// TODO Auto-generated method stub
-
 	}
 
 }

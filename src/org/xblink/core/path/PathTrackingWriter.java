@@ -37,9 +37,8 @@ public class PathTrackingWriter implements DocWriter {
 		pathTracker.pop();
 	}
 
-	public void writeEndTagNotWithNewLine(String tagName) throws Exception {
-		// 这里虽然没有重新启动一行，但是在树形结构上还是要退到上一个节点
-		docWriter.writeEndTagNotWithNewLine(tagName);
+	public void writeReference(String tagName, String refName, String text) throws Exception {
+		docWriter.writeReference(tagName, refName, text);
 		// 退到上一层
 		pathTracker.pop();
 	}

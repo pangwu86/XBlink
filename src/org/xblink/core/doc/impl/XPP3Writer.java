@@ -38,7 +38,8 @@ public class XPP3Writer extends AbstractDocWriter {
 	}
 
 	public void writeStartDocument() throws Exception {
-		innerWriter.startDocument(encoding, null);
+		// TODO 不写了
+		// innerWriter.startDocument(encoding, null);
 	}
 
 	public void writeEndDocument() throws Exception {
@@ -56,11 +57,6 @@ public class XPP3Writer extends AbstractDocWriter {
 		writeBR();
 		indentIndex--;
 		writeIndent();
-		innerWriter.endTag(null, tagName);
-	}
-
-	public void writeEndTagNotWithNewLine(String tagName) throws Exception {
-		indentIndex--;
 		innerWriter.endTag(null, tagName);
 	}
 
@@ -84,6 +80,12 @@ public class XPP3Writer extends AbstractDocWriter {
 		innerWriter.startTag(null, tagName);
 		innerWriter.text(text);
 		innerWriter.endTag(null, tagName);
+	}
+
+	public void writeReference(String tagName, String refName, String text) throws Exception {
+		innerWriter.attribute(null, refName, text);
+		innerWriter.endTag(null, tagName);
+		indentIndex--;
 	}
 
 	public void close() throws Exception {

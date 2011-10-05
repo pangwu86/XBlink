@@ -1,22 +1,23 @@
 package org.xblink.core.serial;
 
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
+
 import org.xblink.core.AnalysisObject;
 import org.xblink.core.Constant;
 import org.xblink.core.ReferenceObject;
 import org.xblink.core.TransferInfo;
 import org.xblink.core.cache.AliasCache;
 import org.xblink.core.cache.AnalysisCache;
-import org.xblink.core.convert.ConverterRegistry;
+import org.xblink.core.convert.Converter;
 import org.xblink.core.convert.ConverterWarehouse;
-import org.xblink.core.serial.xtype.impl.XAttribute;
-import org.xblink.core.serial.xtype.impl.XCollection;
-import org.xblink.core.serial.xtype.impl.XCustomized;
-import org.xblink.core.serial.xtype.impl.XElement;
-import org.xblink.core.serial.xtype.impl.XEnum;
-import org.xblink.core.serial.xtype.impl.XMap;
-import org.xblink.core.serial.xtype.impl.XObject;
 import org.xblink.util.StringUtil;
 import org.xblink.util.TypeUtil;
+
+import com.thoughtworks.xstream.mapper.Mapper.Null;
 
 /**
  * 序列化一个对象。
@@ -24,6 +25,16 @@ import org.xblink.util.TypeUtil;
  * @author 胖五(pangwu86@gmail.com)
  */
 public class Serializer {
+
+	private static Converter nullConverter;
+
+	static {
+		try {
+			nullConverter = ConverterWarehouse.searchConverterForType(Null.class);
+		} catch (Exception e) {
+			throw new RuntimeException("没有找到或无法生成Null的转换器。", e);
+		}
+	}
 
 	private Serializer() {
 	}
@@ -60,15 +71,8 @@ public class Serializer {
 					// Map类型
 					writeMap(objClz, obj, transferInfo, tagName);
 				} else {
-					// 当做对象处理前，需要查看该类是否有自定义的转换器
-					if (ConverterRegistry.hasCustomizedConverterAndRegister(objClz)) {
-						// 单值类型
-						// TODO 这个路径貌似永远也不会进来？需要验证
-						writeSingleValue(objClz, obj, transferInfo, tagName);
-					} else {
-						// 对象类型
-						writeObject(objClz, obj, transferInfo, tagName);
-					}
+					// 对象类型
+					writeObject(objClz, obj, transferInfo, tagName);
 				}
 			}
 		}
@@ -87,7 +91,7 @@ public class Serializer {
 	 */
 	public static void writeSingleValue(Class<?> objClz, Object obj, TransferInfo transferInfo, String tagName)
 			throws Exception {
-		transferInfo.getDocWriter().writeElementText(tagName, ConverterWarehouse.getTextValueByData(objClz, obj));
+		writeSingleValue(obj, transferInfo, tagName, ConverterWarehouse.searchConverterForType(objClz));
 	}
 
 	/**
@@ -101,8 +105,12 @@ public class Serializer {
 	 */
 	public static void writeEnum(Class<?> objClz, Object obj, TransferInfo transferInfo, String tagName)
 			throws Exception {
-		// 枚举简单处理下，特殊枚举需要通过自定义转换器进行处理
-		transferInfo.getDocWriter().writeElementText(tagName, ConverterWarehouse.getTextValueByData(Enum.class, obj));
+		writeSingleValue(obj, transferInfo, tagName, ConverterWarehouse.searchConverterForType(Enum.class));
+	}
+
+	private static void writeSingleValue(Object obj, TransferInfo transferInfo, String tagName, Converter converter)
+			throws Exception {
+		transferInfo.getDocWriter().writeElementText(tagName, converter.obj2Text(obj));
 	}
 
 	/**
@@ -116,7 +124,22 @@ public class Serializer {
 	 */
 	public static void writeCollection(Class<?> objClz, Object obj, TransferInfo transferInfo, String tagName)
 			throws Exception {
-		XCollection.INSTANCE.writeOneItem(objClz, obj, transferInfo, tagName);
+		transferInfo.getDocWriter().writeStartTag(tagName);
+		recordReferenceObject(obj, transferInfo);
+		if (objClz.isArray()) {
+			int length = Array.getLength(obj);
+			for (int i = 0; i < length; i++) {
+				Object item = Array.get(obj, i);
+				writeUnknow(item, transferInfo, null);
+			}
+		} else {
+			Collection<?> collection = (Collection<?>) obj;
+			for (Iterator<?> iterator = collection.iterator(); iterator.hasNext();) {
+				Object item = iterator.next();
+				writeUnknow(item, transferInfo, null);
+			}
+		}
+		transferInfo.getDocWriter().writeEndTag(tagName);
 	}
 
 	/**
@@ -130,7 +153,17 @@ public class Serializer {
 	 */
 	public static void writeMap(Class<?> objClz, Object obj, TransferInfo transferInfo, String tagName)
 			throws Exception {
-		XMap.INSTANCE.writeOneItem(objClz, obj, transferInfo, tagName);
+		transferInfo.getDocWriter().writeStartTag(tagName);
+		Serializer.recordReferenceObject(obj, transferInfo);
+		Map<?, ?> map = (Map<?, ?>) obj;
+		for (Iterator<?> iterator = map.entrySet().iterator(); iterator.hasNext();) {
+			Map.Entry<?, ?> entry = (Map.Entry<?, ?>) iterator.next();
+			transferInfo.getDocWriter().writeStartTag(Constant.MAP_ENTRY);
+			Serializer.writeUnknow(entry.getKey(), transferInfo, null);
+			Serializer.writeUnknow(entry.getValue(), transferInfo, null);
+			transferInfo.getDocWriter().writeEndTag(Constant.MAP_ENTRY);
+		}
+		transferInfo.getDocWriter().writeEndTag(tagName);
 	}
 
 	/**
@@ -145,13 +178,9 @@ public class Serializer {
 	public static void writeReference(Class<?> objClz, Object obj, TransferInfo transferInfo, String tagName)
 			throws Exception {
 		ReferenceObject refObj = transferInfo.getRefMap().get(obj);
-		// 以Attribute的形式记录引用
-		// 例如：<a ref='../../b/c/a' />
 		transferInfo.getDocWriter().writeStartTag(tagName);
-		// 需要在写了当前节点名称后，再记录引用，否则节点名称会有错误
-		transferInfo.getDocWriter().writeAttribute(Constant.ATTRIBUTE_REFERENCE,
+		transferInfo.getDocWriter().writeReference(tagName, Constant.ATTRIBUTE_REFERENCE,
 				transferInfo.getPathTracker().getReferencePathAsString(refObj.getPath()));
-		transferInfo.getDocWriter().writeEndTagNotWithNewLine(tagName);
 	}
 
 	/**
@@ -166,37 +195,59 @@ public class Serializer {
 	public static void writeObject(Class<?> objClz, Object obj, TransferInfo transferInfo, String tagName)
 			throws Exception {
 		transferInfo.getDocWriter().writeStartTag(tagName);
-		// FIXME
+		// 记录引用的对象
 		recordReferenceObject(obj, transferInfo);
 		// 分析对象，根据分析结果，逐个类型进行序列化
-		AnalysisObject analysisObject = AnalysisCache.getAnalysisObject(objClz);
+		boolean ignoreTransient = transferInfo.getXbConfig().isIgnoreTransient();
+		AnalysisObject analysisObject = AnalysisCache.getAnalysisObject(objClz, ignoreTransient);
+		boolean ignoreNull = transferInfo.getXbConfig().isIgnoreNull();
 		// attribute类型
 		if (!analysisObject.attributeIsEmpty()) {
-			XAttribute.INSTANCE.writeItem(obj, analysisObject, transferInfo);
+			for (Field field : analysisObject.getAttributeFieldTypes()) {
+				// 判断空的话是否还要进行序列化
+				Object fieldValue = field.get(obj);
+				boolean useNullConverter = false;
+				if (null == fieldValue) {
+					if (ignoreNull) {
+						continue;
+					} else {
+						useNullConverter = true;
+					}
+				}
+				String fieldName = AliasCache.getFieldName(obj.getClass(), field);
+				Converter converter = null;
+				if (analysisObject.isFieldHasConverter(field) || useNullConverter) {
+					// Null转换器或者使用自定义转换器
+					converter = useNullConverter ? nullConverter : analysisObject.getFieldConverter(field);
+				} else {
+					converter = ConverterWarehouse.searchConverterForType(field.getType());
+				}
+				transferInfo.getDocWriter().writeAttribute(fieldName, converter.obj2Text(fieldValue));
+			}
 		}
-		// element类型
-		if (!analysisObject.elementIsEmpty()) {
-			XElement.INSTANCE.writeItem(obj, analysisObject, transferInfo);
-		}
-		// enum类型
-		if (!analysisObject.enumIsEmpty()) {
-			XEnum.INSTANCE.writeItem(obj, analysisObject, transferInfo);
-		}
-		// customized类型
-		if (!analysisObject.customizedIsEmpty()) {
-			XCustomized.INSTANCE.writeItem(obj, analysisObject, transferInfo);
-		}
-		// obj类型
-		if (!analysisObject.objIsEmpty()) {
-			XObject.INSTANCE.writeItem(obj, analysisObject, transferInfo);
-		}
-		// collection类型
-		if (!analysisObject.collectionIsEmpty()) {
-			XCollection.INSTANCE.writeItem(obj, analysisObject, transferInfo);
-		}
-		// map类型
-		if (!analysisObject.mapIsEmpty()) {
-			XMap.INSTANCE.writeItem(obj, analysisObject, transferInfo);
+		// 其他类型
+		if (!analysisObject.otherIsEmpty()) {
+			for (Field field : analysisObject.getOtherFieldTypes()) {
+				// 判断空的话是否还要进行序列化
+				Object fieldValue = field.get(obj);
+				boolean useNullConverter = false;
+				if (null == fieldValue) {
+					if (ignoreNull) {
+						continue;
+					} else {
+						useNullConverter = true;
+					}
+				}
+				String fieldName = AliasCache.getFieldName(obj.getClass(), field);
+				if (analysisObject.isFieldHasConverter(field) || useNullConverter) {
+					// Null转换器或者使用自定义转换器
+					Converter converter = useNullConverter ? nullConverter : analysisObject.getFieldConverter(field);
+					writeSingleValue(fieldValue, transferInfo, fieldName, converter);
+				} else {
+					// 其他情况
+					writeUnknow(fieldValue, transferInfo, fieldName);
+				}
+			}
 		}
 		transferInfo.getDocWriter().writeEndTag(tagName);
 	}
@@ -212,8 +263,7 @@ public class Serializer {
 	 * @throws Exception
 	 */
 	public static boolean isReferenceObject(Object obj, TransferInfo transferInfo) throws Exception {
-		// 判断对象是否已经序列化过，查看其是否是个引用对象
-		return null != transferInfo.getRefMap().get(obj);
+		return transferInfo.getRefMap().containsKey(obj);
 	}
 
 	/**
@@ -225,7 +275,6 @@ public class Serializer {
 	 * @throws Exception
 	 */
 	public static void recordReferenceObject(Object obj, TransferInfo transferInfo) throws Exception {
-		// 记录当前对象
 		String[] currentPath = transferInfo.getPathTracker().getCurrentPath();
 		transferInfo.getRefMap().put(obj, new ReferenceObject(obj, currentPath));
 	}

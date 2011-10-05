@@ -27,18 +27,19 @@ public class AnalysisCache {
 	 * 获得分析后的结果对象。
 	 * 
 	 * @param clz
+	 * @param ignoreTransient
 	 * @return
 	 */
-	public static AnalysisObject getAnalysisObject(Class<?> clz) {
+	public static AnalysisObject getAnalysisObject(Class<?> clz, boolean ignoreTransient) {
 		AnalysisObject analysisObject = null;
 		if (useAnalysisCache) {
 			analysisObject = anaylsisMap.get(clz);
 			if (null == analysisObject) {
-				analysisObject = new AnalysisObject(clz);
+				analysisObject = new AnalysisObject(clz, ignoreTransient);
 				anaylsisMap.put(clz, analysisObject);
 			}
 		} else {
-			analysisObject = new AnalysisObject(clz);
+			analysisObject = new AnalysisObject(clz, ignoreTransient);
 		}
 		return analysisObject;
 	}

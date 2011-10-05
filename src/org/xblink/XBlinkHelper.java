@@ -13,7 +13,6 @@ import org.xblink.core.path.PathTrackingReader;
 import org.xblink.core.path.PathTrackingWriter;
 import org.xblink.core.reflect.ObjectOperator;
 import org.xblink.core.reflect.ObjectOperatorFactory;
-import org.xblink.core.serial.Deserializer;
 import org.xblink.core.serial.Serializer;
 import org.xblink.util.StringUtil;
 
@@ -145,8 +144,9 @@ class XBlinkHelper {
 		Object rootObj = getRootObj(object, clz, objectOperator);
 		try {
 			realDocReader.moveStart();
-			Deserializer.readUnknow(rootObj, new TransferInfo(pathTracker, xbConfig, null, realDocReader,
-					objectOperator), null);
+			// Deserializer.readUnknow(rootObj, new TransferInfo(pathTracker,
+			// xbConfig, null, realDocReader,
+			// objectOperator), null);
 		} catch (Exception e) {
 			throw new RuntimeException("反序列化失败。", e);
 		} finally {
