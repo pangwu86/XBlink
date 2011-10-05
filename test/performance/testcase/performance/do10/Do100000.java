@@ -1,7 +1,6 @@
 package performance.testcase.performance.do10;
 
 import org.junit.Test;
-import org.xblink.XBConfig;
 import org.xblink.XBlink;
 import org.xblink.util.WatchTimer;
 
@@ -11,23 +10,19 @@ import performance.testcase.performance.DataCreater;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.Xpp3Driver;
 
-public class Do100NoCache {
+public class Do100000 {
 
-	public static int number = 100;
+	public static int number = 100000;
 	public static BasicObject basicObject = DataCreater.getLoopBasicObject();
 
 	@Test
 	public void XBlink() throws Exception {
-		XBConfig xbConfig = XBConfig.createXBConfig().setUseRelativePath(false);
-		XBlink.setGlobalXBConfig(xbConfig);
-		XBlink.closeCache();
-
 		WatchTimer timer = new WatchTimer();
 		for (int i = 0; i < number; i++) {
 			XBlink.toXml(basicObject);
 		}
 		String spendTime = timer.getTimer();
-		System.out.println("XBlinkNoCache : " + number + " : " + spendTime);
+		System.out.println("XBlink : " + number + " : " + spendTime);
 	}
 
 	@Test
@@ -41,7 +36,7 @@ public class Do100NoCache {
 		}
 		String spendTime = timer.getTimer();
 		System.out.println("XStream : " + number + " : " + spendTime);
-
+		System.out.println();
 	}
 
 }

@@ -1,7 +1,6 @@
 package performance.testcase.performance.do10;
 
 import org.junit.Test;
-import org.xblink.XBConfig;
 import org.xblink.XBlink;
 import org.xblink.util.WatchTimer;
 
@@ -18,9 +17,6 @@ public class Do10000 {
 
 	@Test
 	public void XBlink() throws Exception {
-		XBConfig xbConfig = XBConfig.createXBConfig().setUseRelativePath(false);
-		XBlink.setGlobalXBConfig(xbConfig);
-
 		WatchTimer timer = new WatchTimer();
 		for (int i = 0; i < number; i++) {
 			XBlink.toXml(basicObject);
@@ -40,7 +36,7 @@ public class Do10000 {
 		}
 		String spendTime = timer.getTimer();
 		System.out.println("XStream : " + number + " : " + spendTime);
-
+		System.out.println();
 	}
 
 }

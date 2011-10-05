@@ -25,7 +25,7 @@ public class LoopA1 {
 
 		WatchTimer timer = new WatchTimer();
 		for (int i = 0; i < number; i++) {
-			System.out.println(XBlink.toXml(loopA));
+			XBlink.toXml(loopA);
 		}
 		String spendTime = timer.getTimer();
 		System.out.println("XBlink : " + number + " : " + spendTime);
