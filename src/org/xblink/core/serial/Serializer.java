@@ -47,10 +47,11 @@ public class Serializer {
 			// 枚举类型
 			writeEnum(objClz, obj, transferInfo, tagName);
 		} else {
+			// 这里只要是可能被引用的类型，都要进行先写节点后马上缓存引用
 			// 其他类型都可以算作引用类型
 			if (isReferenceObject(obj, transferInfo)) {
 				// 引用类型
-				writeReference(objClz, transferInfo.getRefMap().get(obj), transferInfo, tagName);
+				writeReference(objClz, obj, transferInfo, tagName);
 			} else {
 				if (TypeUtil.isCollectionType(objClz)) {
 					// 集合类型
@@ -135,16 +136,18 @@ public class Serializer {
 	 * 引用类型序列化。
 	 * 
 	 * @param objClz
-	 * @param refObj
+	 * @param obj
 	 * @param transferInfo
 	 * @param tagName
 	 * @throws Exception
 	 */
-	public static void writeReference(Class<?> objClz, ReferenceObject refObj, TransferInfo transferInfo, String tagName)
+	public static void writeReference(Class<?> objClz, Object obj, TransferInfo transferInfo, String tagName)
 			throws Exception {
+		ReferenceObject refObj = transferInfo.getRefMap().get(obj);
 		// 以Attribute的形式记录引用
 		// 例如：<a ref='../../b/c/a' />
 		transferInfo.getDocWriter().writeStartTag(tagName);
+		// 需要在写了当前节点名称后，再记录引用，否则节点名称会有错误
 		transferInfo.getDocWriter().writeAttribute(Constant.ATTRIBUTE_REFERENCE,
 				transferInfo.getPathTracker().getReferencePathAsString(refObj.getPath()));
 		transferInfo.getDocWriter().writeEndTagNotWithNewLine(tagName);
@@ -162,6 +165,8 @@ public class Serializer {
 	public static void writeObject(Class<?> objClz, Object obj, TransferInfo transferInfo, String tagName)
 			throws Exception {
 		transferInfo.getDocWriter().writeStartTag(tagName);
+		// FIXME
+		recordReferenceObject(obj, transferInfo);
 		// 分析对象，根据分析结果，逐个类型进行序列化
 		AnalysisObject analysisObject = AnalysisCache.getAnalysisObject(objClz);
 		// attribute类型
@@ -206,16 +211,22 @@ public class Serializer {
 	 * @throws Exception
 	 */
 	public static boolean isReferenceObject(Object obj, TransferInfo transferInfo) throws Exception {
-		ReferenceObject refObj = transferInfo.getRefMap().get(obj);
 		// 判断对象是否已经序列化过，查看其是否是个引用对象
-		if (null != refObj) {
-			return true;
-		}
+		return null != transferInfo.getRefMap().get(obj);
+	}
+
+	/**
+	 * 记录当前对象，放入到引用对象缓存中。
+	 * 
+	 * @param obj
+	 * @param transferInfo
+	 * @return
+	 * @throws Exception
+	 */
+	public static void recordReferenceObject(Object obj, TransferInfo transferInfo) throws Exception {
 		// 记录当前对象
 		String[] currentPath = transferInfo.getPathTracker().getCurrentPath();
-		refObj = new ReferenceObject(obj, currentPath);
-		transferInfo.getRefMap().put(obj, refObj);
-		return false;
+		transferInfo.getRefMap().put(obj, new ReferenceObject(obj, currentPath));
 	}
 
 }

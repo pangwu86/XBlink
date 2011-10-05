@@ -28,6 +28,8 @@ public class XMap extends XContainerType {
 	public void writeOneItem(Class<?> objClz, Object obj, TransferInfo transferInfo, String collectionName)
 			throws Exception {
 		transferInfo.getDocWriter().writeStartTag(collectionName);
+		// FIXME
+		Serializer.recordReferenceObject(obj, transferInfo);
 		Map map = (Map) obj;
 		for (Iterator iterator = map.entrySet().iterator(); iterator.hasNext();) {
 			Map.Entry entry = (Map.Entry) iterator.next();

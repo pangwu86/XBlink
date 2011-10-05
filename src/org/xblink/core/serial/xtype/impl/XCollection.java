@@ -28,6 +28,8 @@ public class XCollection extends XContainerType {
 	public void writeOneItem(Class<?> objClz, Object obj, TransferInfo transferInfo, String collectionName)
 			throws Exception {
 		transferInfo.getDocWriter().writeStartTag(collectionName);
+		// FIXME
+		Serializer.recordReferenceObject(obj, transferInfo);
 		if (objClz.isArray()) {
 			int length = Array.getLength(obj);
 			for (int i = 0; i < length; i++) {
