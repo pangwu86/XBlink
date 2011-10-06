@@ -1,6 +1,6 @@
 package org.xblink.core.doc;
 
-import java.util.List;
+import java.util.Iterator;
 
 /**
  * 定义了读取文本文件的几个动作。
@@ -53,11 +53,11 @@ public interface DocReader {
 	public int getAttributeCount();
 
 	/**
-	 * 获得当前节点所有属性名称。
+	 * 获得当前节点所有属性名称的迭代器。
 	 * 
 	 * @return
 	 */
-	public List<String> getAttributeNames();
+	public Iterator<String> getAttributeNames();
 
 	/**
 	 * 根据指定名称获得当前节点的属性值。

@@ -17,7 +17,7 @@ public class JavaReflectObjectOperator extends AbstractObjectOperator {
 
 	public static JavaReflectObjectOperator INSTANCE = new JavaReflectObjectOperator();
 
-	public Object newInstance(Class<?> clz) {
+	protected Object newInstanceByImpl(Class<?> clz) {
 		Constructor<?> constructor = constructorCache.get(clz);
 		if (null != constructor) {
 			return newInstanceUsingConstructor(constructor);
@@ -51,7 +51,7 @@ public class JavaReflectObjectOperator extends AbstractObjectOperator {
 		throw new UnsupportedOperationException("当前版本不支持通过JAVA的序列化方式生成实例对象。");
 	}
 
-	public void setField(Object obj, Field field, Object fieldValue) {
+	protected void setFieldWithoutNull(Object obj, Field field, Object fieldValue) {
 		try {
 			field.set(obj, fieldValue);
 		} catch (Exception e) {

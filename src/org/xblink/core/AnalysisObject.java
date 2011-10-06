@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.xblink.annotation.XBlinkConverter;
 import org.xblink.annotation.XBlinkOmitField;
+import org.xblink.core.cache.AliasCache;
 import org.xblink.core.convert.Converter;
 import org.xblink.core.reflect.ObjectOperator;
 import org.xblink.core.reflect.ObjectOperatorFactory;
@@ -23,17 +23,21 @@ import org.xblink.util.TypeUtil;
 public class AnalysisObject {
 
 	private static ObjectOperator objectOperator = ObjectOperatorFactory.createObjectOperator();
-	private static Map<Field, Converter> customizedFieldTypes = new ConcurrentHashMap<Field, Converter>();
+	private static Map<Field, Converter> customizedFieldMap = new HashMap<Field, Converter>();
 
 	/** 字段集合 */
 	private List<Field> attributeFieldTypes;
 	private List<Field> otherFieldTypes;
+	private Map<String, Field> attributeFieldMap;
+	private Map<String, Field> otherFieldMap;
+	private Class<?> clz;
 
 	public AnalysisObject(Class<?> clz, boolean ignoreTransient) {
-		analysing(clz, ignoreTransient);
+		this.clz = clz;
+		analysing(ignoreTransient);
 	}
 
-	private void analysing(Class<?> clz, boolean ignoreTransient) {
+	private void analysing(boolean ignoreTransient) {
 		// 遍历所有字段，分门别类的存放
 		for (Field field : clz.getDeclaredFields()) {
 			// 先判断该字段是否要忽略
@@ -76,10 +80,10 @@ public class AnalysisObject {
 	}
 
 	private void record2Customized(Field field) {
-		if (null == customizedFieldTypes) {
-			customizedFieldTypes = new HashMap<Field, Converter>();
+		if (null == customizedFieldMap) {
+			customizedFieldMap = new HashMap<Field, Converter>();
 		}
-		customizedFieldTypes.put(field, createFieldConverter(field));
+		customizedFieldMap.put(field, createFieldConverter(field));
 	}
 
 	// ********* add **********
@@ -87,15 +91,19 @@ public class AnalysisObject {
 	private void add2Attribute(Field field) {
 		if (null == attributeFieldTypes) {
 			attributeFieldTypes = new ArrayList<Field>();
+			attributeFieldMap = new HashMap<String, Field>();
 		}
 		attributeFieldTypes.add(field);
+		attributeFieldMap.put(AliasCache.getFieldName(clz, field), field);
 	}
 
 	private void add2Other(Field field) {
 		if (null == otherFieldTypes) {
 			otherFieldTypes = new ArrayList<Field>();
+			otherFieldMap = new HashMap<String, Field>();
 		}
 		otherFieldTypes.add(field);
+		otherFieldMap.put(AliasCache.getFieldName(clz, field), field);
 	}
 
 	// *********** 提供给外面的信息 *************
@@ -120,6 +128,14 @@ public class AnalysisObject {
 		return otherFieldTypes;
 	}
 
+	public Map<String, Field> getAttributeFieldMap() {
+		return attributeFieldMap;
+	}
+
+	public Map<String, Field> getOtherFieldMap() {
+		return otherFieldMap;
+	}
+
 	/**
 	 * 根据Field获取对应的自定义转换器
 	 * 
@@ -127,7 +143,7 @@ public class AnalysisObject {
 	 * @return
 	 */
 	public Converter getFieldConverter(Field field) {
-		return customizedFieldTypes.get(field);
+		return customizedFieldMap.get(field);
 	}
 
 	/**
@@ -137,7 +153,7 @@ public class AnalysisObject {
 	 * @return
 	 */
 	public boolean isFieldHasConverter(Field field) {
-		return customizedFieldTypes.containsKey(field);
+		return customizedFieldMap.containsKey(field);
 	}
 
 }

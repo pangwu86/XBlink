@@ -14,13 +14,13 @@ public class PathCalc {
 	}
 
 	/**
-	 * 计算相对路径。
+	 * 根据当前节点路径与目标节点绝对路径，计算目标节点相对路径。
 	 * 
 	 * @param currentPath
 	 * @param targetPath
 	 * @return
 	 */
-	public static String calc(String[] currentPath, String[] targetPath) {
+	protected static String calcRelativePath(String[] currentPath, String[] targetPath) {
 		int cDepth = currentPath.length;
 		int tDepth = targetPath.length;
 		String[] paths = new String[cDepth + tDepth];
@@ -77,13 +77,25 @@ public class PathCalc {
 	}
 
 	/**
+	 * 根据当前节点路径与目标节点的相对路径，计算目标节点绝对路径。
+	 * 
+	 * @param currentPath
+	 * @param relativePath
+	 * @return
+	 */
+	protected static String calcAbsolutePath(String[] currentPath, String[] relativePath) {
+		// TODO
+		return null;
+	}
+
+	/**
 	 * 将字符数组路径变成字符串路径，返回从根目录开始的路径
 	 * 
 	 * @param path
 	 *            字符数组路径
 	 * @return 字符串路经
 	 */
-	public static String getPathFromRoot(String[] path) {
+	protected static String getPathFromRoot(String[] path) {
 		StringBuilder sb = new StringBuilder();
 		for (String s : path) {
 			if (StringUtil.isBlankStr(s)) {
@@ -92,6 +104,16 @@ public class PathCalc {
 			sb.append(Constant.PATH_SEPARATER).append(s);
 		}
 		return sb.toString();
+	}
+
+	/**
+	 * 分割字符串。
+	 * 
+	 * @param str
+	 * @return
+	 */
+	protected static String[] getSts(String str) {
+		return str.split(Constant.PATH_SEPARATER);
 	}
 
 }

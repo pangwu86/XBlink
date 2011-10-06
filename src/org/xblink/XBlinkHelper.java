@@ -13,6 +13,7 @@ import org.xblink.core.path.PathTrackingReader;
 import org.xblink.core.path.PathTrackingWriter;
 import org.xblink.core.reflect.ObjectOperator;
 import org.xblink.core.reflect.ObjectOperatorFactory;
+import org.xblink.core.serial.Deserializer;
 import org.xblink.core.serial.Serializer;
 import org.xblink.util.StringUtil;
 
@@ -76,10 +77,11 @@ class XBlinkHelper {
 		XBConfig xbConfig = XBConfigHelper.getXbConfig();
 		PathTracker pathTracker = new PathTracker(xbConfig.isUseRelativePath());
 		DocWriter realDocWriter = new PathTrackingWriter(docWriter, pathTracker);
+		TransferInfo transferInfo = new TransferInfo(pathTracker, xbConfig, realDocWriter, null, null);
 		try {
 			// 开始序列化
 			realDocWriter.writeStartDocument();
-			Serializer.writeUnknow(object, new TransferInfo(pathTracker, xbConfig, realDocWriter, null, null), null);
+			Serializer.writeUnknow(object, transferInfo, null);
 			realDocWriter.writeEndDocument();
 		} catch (Exception e) {
 			throw new RuntimeException("序列化失败。", e);
@@ -140,13 +142,12 @@ class XBlinkHelper {
 		PathTracker pathTracker = new PathTracker(xbConfig.isUseRelativePath());
 		DocReader realDocReader = new PathTrackingReader(docReader, pathTracker);
 		ObjectOperator objectOperator = ObjectOperatorFactory.createObjectOperator();
-		// 参考对象与参考类进行处理
-		Object rootObj = getRootObj(object, clz, objectOperator);
+		TransferInfo transferInfo = new TransferInfo(pathTracker, xbConfig, null, realDocReader, objectOperator);
+		Object result = null;
 		try {
-			realDocReader.moveStart();
-			// Deserializer.readUnknow(rootObj, new TransferInfo(pathTracker,
-			// xbConfig, null, realDocReader,
-			// objectOperator), null);
+			realDocReader.moveDown();
+			result = Deserializer.readUnknow(clz, object, null, transferInfo);
+			// TODO 处理引用调用失败的操作
 		} catch (Exception e) {
 			throw new RuntimeException("反序列化失败。", e);
 		} finally {
@@ -158,13 +159,6 @@ class XBlinkHelper {
 				}
 			}
 		}
-		return rootObj;
-	}
-
-	private static Object getRootObj(Object object, Class<?> clz, ObjectOperator objectOperator) {
-		if (null == object) {
-			return objectOperator.newInstance(clz);
-		}
-		return object;
+		return result;
 	}
 }

@@ -1,5 +1,16 @@
 package org.xblink.core.reflect;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
 import org.xblink.core.reflect.impl.JavaReflectObjectOperator;
 import org.xblink.core.reflect.impl.Sun14ReflectionObjectOperator;
 
@@ -15,10 +26,23 @@ public class ObjectOperatorFactory {
 
 	private static boolean useSun14ReflectionObjectCreater;
 
+	private static ObjectOperator defaultObjectOperator;
+
 	static {
 		// TODO 如何获取JDK版本信息，并以此为依据判断使用哪个转换器。
 		// System.getProperty("");
 		useSun14ReflectionObjectCreater = true;
+		if (useSun14ReflectionObjectCreater) {
+			defaultObjectOperator = Sun14ReflectionObjectOperator.INSTANCE;
+		} else {
+			defaultObjectOperator = JavaReflectObjectOperator.INSTANCE;
+		}
+		// 添加几个默认的接口与实现
+		defaultObjectOperator.addImpl(Map.class, HashMap.class);
+		defaultObjectOperator.addImpl(List.class, ArrayList.class);
+		defaultObjectOperator.addImpl(Set.class, HashSet.class);
+		defaultObjectOperator.addImpl(SortedSet.class, TreeSet.class);
+		defaultObjectOperator.addImpl(Calendar.class, GregorianCalendar.class);
 	}
 
 	/**
@@ -28,10 +52,7 @@ public class ObjectOperatorFactory {
 	 */
 	public static ObjectOperator createObjectOperator() {
 		// 感觉设置成单例就够用了。
-		if (useSun14ReflectionObjectCreater) {
-			return Sun14ReflectionObjectOperator.INSTANCE;
-		}
-		return JavaReflectObjectOperator.INSTANCE;
+		return defaultObjectOperator;
 	}
 
 }

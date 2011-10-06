@@ -1,7 +1,7 @@
 package org.xblink.core.doc.impl;
 
 import java.io.Reader;
-import java.util.List;
+import java.util.Iterator;
 
 import org.xblink.core.doc.AbstractDocReader;
 
@@ -51,17 +51,17 @@ public class MytypeReader extends AbstractDocReader {
 		return 0;
 	}
 
-	public List<String> getAttributeNames() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	public String getAttribute(String name) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public String getAttribute(int index) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Iterator<String> getAttributeNames() {
 		// TODO Auto-generated method stub
 		return null;
 	}

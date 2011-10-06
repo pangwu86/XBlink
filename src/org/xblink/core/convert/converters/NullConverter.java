@@ -11,6 +11,12 @@ import com.thoughtworks.xstream.mapper.Mapper.Null;
  */
 public class NullConverter implements Converter {
 
+	private static String NULL_STRING = "Null";
+
+	public boolean canConvert(String text) {
+		return NULL_STRING.equals(text);
+	}
+
 	public Class<?>[] getTypes() {
 		return new Class<?>[] { Null.class };
 	}
@@ -20,7 +26,7 @@ public class NullConverter implements Converter {
 	}
 
 	public String obj2Text(Object obj) throws Exception {
-		return "Null";
+		return NULL_STRING;
 	}
 
 	public Object text2Obj(String text) throws Exception {

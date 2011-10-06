@@ -34,7 +34,11 @@ public class NormalObject {
 
 	private Set<Object> objSet;
 
+	private Set objSet2;
+
 	private Map<Integer, Object> objMap;
+
+	private Map objMap2;
 
 	private NormalObject normalObject;
 

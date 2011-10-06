@@ -1,7 +1,7 @@
 package org.xblink.core.doc.impl;
 
 import java.io.Reader;
-import java.util.List;
+import java.util.Iterator;
 
 import org.xblink.core.doc.AbstractDocReader;
 import org.xblink.rep.org.xmlpull.mxp1.MXParser;
@@ -70,7 +70,7 @@ public class XPP3Reader extends AbstractDocReader {
 		return 0;
 	}
 
-	public List<String> getAttributeNames() {
+	public Iterator<String> getAttributeNames() {
 		// TODO Auto-generated method stub
 		return null;
 	}

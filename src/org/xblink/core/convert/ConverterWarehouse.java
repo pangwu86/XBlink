@@ -1,11 +1,12 @@
 package org.xblink.core.convert;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.xblink.util.TypeUtil;
 
@@ -19,12 +20,9 @@ public class ConverterWarehouse {
 	private ConverterWarehouse() {
 	}
 
-	// TODO 这里有两个问题
-	// 一是有线程安全的问题，有可能多个线程拿到同一个Converter并进行调用
-	// 二是如果不添加缓存，生成Converter的开销会有多大
-	private static Map<Class<?>, Converter> conMap = new HashMap<Class<?>, Converter>();
+	private static Map<Class<?>, Converter> conMap = new ConcurrentHashMap<Class<?>, Converter>();
 
-	private static Set<Class<?>> conClzSet = new HashSet<Class<?>>();
+	private static Set<Class<?>> conClzSet = Collections.synchronizedSet(new HashSet<Class<?>>());
 
 	/** 是否用在多线程环境中 */
 	@SuppressWarnings("unused")

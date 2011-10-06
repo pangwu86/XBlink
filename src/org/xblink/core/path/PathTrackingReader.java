@@ -1,6 +1,6 @@
 package org.xblink.core.path;
 
-import java.util.List;
+import java.util.Iterator;
 
 import org.xblink.core.doc.DocReader;
 
@@ -48,7 +48,7 @@ public class PathTrackingReader implements DocReader {
 		return 0;
 	}
 
-	public List<String> getAttributeNames() {
+	public Iterator<String> getAttributeNames() {
 		// TODO Auto-generated method stub
 		return null;
 	}

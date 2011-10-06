@@ -40,7 +40,7 @@ public class Sun14ReflectionObjectOperator extends AbstractObjectOperator {
 		}
 	}
 
-	public Object newInstance(Class<?> clz) {
+	protected Object newInstanceByImpl(Class<?> clz) {
 		try {
 			Constructor<?> constructor = getConstructor(clz);
 			return newInstanceUsingConstructor(constructor);
@@ -59,7 +59,7 @@ public class Sun14ReflectionObjectOperator extends AbstractObjectOperator {
 		return constructor;
 	}
 
-	public void setField(Object obj, Field field, Object fieldValue) {
+	protected void setFieldWithoutNull(Object obj, Field field, Object fieldValue) {
 		try {
 			long offset = getFieldOffset(field);
 			Class<?> type = field.getType();

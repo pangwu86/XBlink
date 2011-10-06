@@ -22,6 +22,7 @@ public class TransferInfo {
 	private final DocReader docReader;
 	private final ObjectOperator objectOperator;
 	private final Map<Object, ReferenceObject> refMap;
+	private final Map<String, Object> pathRefMap;
 
 	public TransferInfo(PathTracker pathTracker, XBConfig xbConfig, DocWriter docWriter, DocReader docReader,
 			ObjectOperator objectOperator) {
@@ -31,6 +32,7 @@ public class TransferInfo {
 		this.docReader = docReader;
 		this.objectOperator = objectOperator;
 		this.refMap = new HashMap<Object, ReferenceObject>();
+		this.pathRefMap = new HashMap<String, Object>();
 	}
 
 	public PathTracker getPathTracker() {
@@ -51,6 +53,10 @@ public class TransferInfo {
 
 	public Map<Object, ReferenceObject> getRefMap() {
 		return refMap;
+	}
+
+	public Map<String, Object> getPathRefMap() {
+		return pathRefMap;
 	}
 
 	public ObjectOperator getObjectOperator() {

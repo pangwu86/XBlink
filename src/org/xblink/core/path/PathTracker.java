@@ -68,7 +68,7 @@ public class PathTracker {
 	 */
 	public String getRelativePathAsString(String[] refPath) {
 		String[] currentPath = getCurrentPath();
-		return PathCalc.calc(currentPath, refPath);
+		return PathCalc.calcRelativePath(currentPath, refPath);
 	}
 
 	/**
@@ -83,6 +83,17 @@ public class PathTracker {
 			return getRelativePathAsString(refPath);
 		}
 		return PathCalc.getPathFromRoot(refPath);
+	}
+
+	/**
+	 * 根据传入的相对路径，计算出目标节点的绝对路径。
+	 * 
+	 * @param relativePath
+	 *            引用对象相对路径
+	 * @return
+	 */
+	public String getTargetNodeAbsolutePathAsString(String relativePath) {
+		return PathCalc.calcAbsolutePath(getCurrentPath(), PathCalc.getSts(relativePath));
 	}
 
 }

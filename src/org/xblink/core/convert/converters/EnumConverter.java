@@ -31,7 +31,7 @@ public class EnumConverter implements Converter {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public Object text2Obj(String text, Class<? extends Enum> enumType) throws Exception {
-		return Enum.valueOf(enumType, text);
+	public Object text2Obj(String text, Class<?> enumType) throws Exception {
+		return Enum.valueOf((Class<? extends Enum>) enumType, text);
 	}
 }
