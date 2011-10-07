@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.xblink.core.TransferInfo;
 import org.xblink.util.TypeUtil;
 
 /**
@@ -21,7 +22,7 @@ public class ConverterWarehouse {
 	private ConverterWarehouse() {
 	}
 
-	private static Map<Class<?>, Converter> conMap = new ConcurrentHashMap<Class<?>, Converter>();
+	private static Map<Class<?>, Converter> converterMap = new ConcurrentHashMap<Class<?>, Converter>();
 
 	private static Set<Class<?>> conClzSet = Collections.synchronizedSet(new HashSet<Class<?>>());
 
@@ -40,30 +41,6 @@ public class ConverterWarehouse {
 	}
 
 	/**
-	 * 通过Class类型与对象，拿到其文字值。
-	 * 
-	 * @param clz
-	 * @param obj
-	 * @return
-	 * @throws Exception
-	 */
-	public static String getTextValueByData(Class<?> clz, Object obj) throws Exception {
-		return searchConverterForType(clz).obj2Text(obj);
-	}
-
-	/**
-	 * 通过Class类型与文字值，拿到其对象。
-	 * 
-	 * @param clz
-	 * @param text
-	 * @return
-	 * @throws Exception
-	 */
-	public static Object getDataValueByText(Class<?> clz, String text) throws Exception {
-		return searchConverterForType(clz).text2Obj(text);
-	}
-
-	/**
 	 * 缓存中是否已经存在该转换器。
 	 * 
 	 * @param converterClz
@@ -78,13 +55,21 @@ public class ConverterWarehouse {
 	 * 
 	 * @param clz
 	 *            类
+	 * @param transferInfo
+	 *            相关信息
 	 * @return 转换器
 	 * @throws Exception
 	 */
-	public static Converter searchConverterForType(Class<?> clz) throws Exception {
-		Converter converter = conMap.get(clz);
+	public static Converter searchConverterForType(Class<?> clz, TransferInfo transferInfo) throws Exception {
+		Converter converter = converterMap.get(clz);
 		if (null == converter) {
 			converter = lookForConverterForType(clz);
+		}
+		if (!converter.isSingleValueType()) {
+			// 具有格式的转换器 需要transferInfo
+			FormValueTypeConverter formValueTypeConverter = ((FormValueTypeConverter) converter).newInstance();
+			formValueTypeConverter.setTransferInfo(transferInfo);
+			converter = formValueTypeConverter;
 		}
 		return converter;
 	}
@@ -95,7 +80,7 @@ public class ConverterWarehouse {
 	 * @return
 	 */
 	public static Collection<Converter> getAllConverters() {
-		return conMap.values();
+		return converterMap.values();
 	}
 
 	private static Converter lookForConverterForType(Class<?> clz) {
@@ -107,7 +92,7 @@ public class ConverterWarehouse {
 		} catch (ClassNotFoundException e) {
 			throw new UnsupportedOperationException(String.format("没有找到[%s]这个类的转换器。", clz.getName()), e);
 		}
-		return conMap.get(clz);
+		return converterMap.get(clz);
 	}
 
 	protected static void setConverter(Class<?> converterClz) {
@@ -118,9 +103,11 @@ public class ConverterWarehouse {
 				conClzSet.add(converterClz);
 				for (Class<?> cls : converter.getTypes()) {
 					// 转换器和起可以转换的对象类型加入到缓存中
-					conMap.put(cls, converter);
+					converterMap.put(cls, converter);
 					// 单值类型进行记录
-					TypeUtil.add2SingaleValueMap(cls);
+					if (converter.isSingleValueType()) {
+						TypeUtil.add2SingaleValueMap(cls);
+					}
 				}
 			} catch (Exception e) {
 				throw new UnsupportedOperationException(String.format("无法生成[%s]这个转换器。", converterClz.getName()));

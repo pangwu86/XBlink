@@ -1,15 +1,15 @@
-package org.xblink.core.convert.converters;
+package org.xblink.core.convert.converters.singleValue;
 
 import java.net.URL;
 
-import org.xblink.core.convert.Converter;
+import org.xblink.core.convert.SingleValueTypeConverter;
 
 /**
  * URL转换器。
  * 
  * @author 胖五(pangwu86@gmail.com)
  */
-public class URLConverter implements Converter {
+public class URLConverter extends SingleValueTypeConverter {
 
 	public Class<?>[] getTypes() {
 		return new Class<?>[] { URL.class };

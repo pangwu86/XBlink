@@ -104,6 +104,7 @@ public class XPP3Reader extends AbstractDocReader {
 		}
 	}
 
+	@SuppressWarnings("hiding")
 	public static class AttributeNameIterator<String> implements Iterator<String> {
 
 		private int current;
@@ -119,6 +120,7 @@ public class XPP3Reader extends AbstractDocReader {
 			return current < count;
 		}
 
+		@SuppressWarnings("unchecked")
 		public String next() {
 			return (String) reader.getAttributeName(current++);
 		}

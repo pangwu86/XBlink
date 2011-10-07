@@ -26,6 +26,13 @@ public interface Converter {
 	public boolean canConvert(Class<?> type);
 
 	/**
+	 * 是单值类型吗?
+	 * 
+	 * @return
+	 */
+	public boolean isSingleValueType();
+
+	/**
 	 * 将对象转换为文字格式的值。
 	 * 
 	 * @param obj

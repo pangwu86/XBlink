@@ -1,13 +1,13 @@
-package org.xblink.core.convert.converters;
+package org.xblink.core.convert.converters.singleValue;
 
-import org.xblink.core.convert.Converter;
+import org.xblink.core.convert.SingleValueTypeConverter;
 
 /**
  * short与其包装类转换器。
  * 
  * @author 胖五(pangwu86@gmail.com)
  */
-public class ShortConverter implements Converter {
+public class ShortConverter extends SingleValueTypeConverter {
 
 	public Class<?>[] getTypes() {
 		return new Class<?>[] { short.class, Short.class };

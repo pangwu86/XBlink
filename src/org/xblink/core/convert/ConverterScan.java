@@ -3,29 +3,29 @@ package org.xblink.core.convert;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.xblink.core.convert.converters.BigDecimalConverter;
-import org.xblink.core.convert.converters.BigIntegerConverter;
-import org.xblink.core.convert.converters.BooleanConverter;
-import org.xblink.core.convert.converters.ByteConverter;
-import org.xblink.core.convert.converters.CalendarConverter;
-import org.xblink.core.convert.converters.CharacterConverter;
-import org.xblink.core.convert.converters.CharsetConverter;
-import org.xblink.core.convert.converters.ClassConverter;
-import org.xblink.core.convert.converters.DateConverter;
-import org.xblink.core.convert.converters.DoubleConverter;
-import org.xblink.core.convert.converters.EnumConverter;
-import org.xblink.core.convert.converters.FileConverter;
-import org.xblink.core.convert.converters.FloatConverter;
-import org.xblink.core.convert.converters.IntegerConverter;
-import org.xblink.core.convert.converters.LongConverter;
-import org.xblink.core.convert.converters.NullConverter;
-import org.xblink.core.convert.converters.ShortConverter;
-import org.xblink.core.convert.converters.StringBufferConverter;
-import org.xblink.core.convert.converters.StringBuilderConverter;
-import org.xblink.core.convert.converters.StringConverter;
-import org.xblink.core.convert.converters.URIConverter;
-import org.xblink.core.convert.converters.URLConverter;
-import org.xblink.core.convert.converters.UUIDConverter;
+import org.xblink.core.convert.converters.singleValue.BigDecimalConverter;
+import org.xblink.core.convert.converters.singleValue.BigIntegerConverter;
+import org.xblink.core.convert.converters.singleValue.BooleanConverter;
+import org.xblink.core.convert.converters.singleValue.ByteConverter;
+import org.xblink.core.convert.converters.singleValue.CalendarConverter;
+import org.xblink.core.convert.converters.singleValue.CharacterConverter;
+import org.xblink.core.convert.converters.singleValue.CharsetConverter;
+import org.xblink.core.convert.converters.singleValue.ClassConverter;
+import org.xblink.core.convert.converters.singleValue.DateConverter;
+import org.xblink.core.convert.converters.singleValue.DoubleConverter;
+import org.xblink.core.convert.converters.singleValue.EnumConverter;
+import org.xblink.core.convert.converters.singleValue.FileConverter;
+import org.xblink.core.convert.converters.singleValue.FloatConverter;
+import org.xblink.core.convert.converters.singleValue.IntegerConverter;
+import org.xblink.core.convert.converters.singleValue.LongConverter;
+import org.xblink.core.convert.converters.singleValue.NullConverter;
+import org.xblink.core.convert.converters.singleValue.ShortConverter;
+import org.xblink.core.convert.converters.singleValue.StringBufferConverter;
+import org.xblink.core.convert.converters.singleValue.StringBuilderConverter;
+import org.xblink.core.convert.converters.singleValue.StringConverter;
+import org.xblink.core.convert.converters.singleValue.URIConverter;
+import org.xblink.core.convert.converters.singleValue.URLConverter;
+import org.xblink.core.convert.converters.singleValue.UUIDConverter;
 
 /**
  * 自动扫描converters包下的所有转换器。
@@ -36,6 +36,7 @@ import org.xblink.core.convert.converters.UUIDConverter;
  */
 public class ConverterScan {
 
+	@SuppressWarnings("unused")
 	private static final String CONVERT_PACKAGE = "org.xblink.core.convert.converters";
 
 	private static final List<Class<?>> converterList;

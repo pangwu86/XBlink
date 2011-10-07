@@ -1,6 +1,6 @@
-package org.xblink.core.convert.converters;
+package org.xblink.core.convert.converters.singleValue;
 
-import org.xblink.core.convert.Converter;
+import org.xblink.core.convert.SingleValueTypeConverter;
 
 /**
  * StringBuffer的转换器。
@@ -8,7 +8,7 @@ import org.xblink.core.convert.Converter;
  * @author 胖五(pangwu86@gmail.com)
  * 
  */
-public class StringBufferConverter implements Converter {
+public class StringBufferConverter extends SingleValueTypeConverter {
 
 	public Class<?>[] getTypes() {
 		return new Class<?>[] { StringBuffer.class };

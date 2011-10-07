@@ -4,9 +4,11 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.xblink.core.AnalysisObject;
@@ -32,11 +34,14 @@ public class Deserializer {
 	public static Object readUnknow(Class<?> objClz, Object obj, Field field, TransferInfo transferInfo)
 			throws Exception {
 		Object result = null;
-		// objClz必须有
 		if (null == objClz) {
 			if (null != obj) {
 				objClz = obj.getClass();
 			}
+		}
+		if (objClz == Object.class) {
+			// Object.class没有任何用与null等同
+			objClz = null;
 		}
 		if (null == objClz) {
 			// 最麻烦的情况了，需要根据名称进行猜测，找到对应的类进行处理
@@ -44,7 +49,7 @@ public class Deserializer {
 			result = readAnyType(transferInfo);
 		}
 		// 下面根据传入对象的类型，采用不同的策略
-		if (TypeUtil.isSingleValueType(objClz)) {
+		else if (TypeUtil.isSingleValueType(objClz)) {
 			// 单值类型
 			result = readSingleValue(objClz, transferInfo);
 		} else if (TypeUtil.isEnum(objClz)) {
@@ -59,6 +64,9 @@ public class Deserializer {
 				if (TypeUtil.isCollectionType(objClz)) {
 					// 集合类型
 					result = readCollection(objClz, obj, field, transferInfo);
+				} else if (TypeUtil.isEntryType(objClz)) {
+					// Map.Entry类型
+					result = readEntry(objClz, obj, field, transferInfo);
 				} else if (TypeUtil.isMapType(objClz)) {
 					// Map类型
 					result = readMap(objClz, obj, field, transferInfo);
@@ -92,7 +100,8 @@ public class Deserializer {
 	}
 
 	private static Object readSingleValue(Class<?> objClz, TransferInfo transferInfo) throws Exception {
-		return ConverterWarehouse.searchConverterForType(objClz).text2Obj(transferInfo.getDocReader().getTextValue());
+		return ConverterWarehouse.searchConverterForType(objClz, transferInfo).text2Obj(
+				transferInfo.getDocReader().getTextValue());
 	}
 
 	private static Object readEnum(Class<?> objClz, TransferInfo transferInfo) throws Exception {
@@ -215,6 +224,36 @@ public class Deserializer {
 		return map;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private static Object readEntry(Class<?> objClz, Object obj, Field field, TransferInfo transferInfo)
+			throws Exception {
+		DocReader docReader = transferInfo.getDocReader();
+		Map map = new HashMap();
+		// 尝试获得泛型
+		Class<?> keyClz = null;
+		Class<?> valueClz = null;
+		if (null != field) {
+			keyClz = transferInfo.getObjectOperator().getMapKeyGenericType(field.getGenericType());
+			valueClz = transferInfo.getObjectOperator().getMapValueGenericType(field.getGenericType());
+		}
+		while (docReader.hasMoreChildren()) {
+			docReader.moveDown();// 进入key
+			Object key = readUnknow(keyClz, null, null, transferInfo);
+			docReader.moveUp();// 退出key
+
+			docReader.moveDown();// 进入value
+			Object value = readUnknow(valueClz, null, null, transferInfo);
+			docReader.moveUp();// 退出value
+
+			map.put(key, value);
+		}
+		// 这里应该只有一个
+		Map.Entry entry = (Entry) map.entrySet().iterator().next();
+		// 记录引用的对象
+		SerialHelper.recordReferenceObjectByPath(entry, transferInfo);
+		return entry;
+	}
+
 	private static Object readObject(Class<?> objClz, TransferInfo transferInfo) throws Exception {
 		Object result = transferInfo.getObjectOperator().newInstance(objClz);
 		DocReader docReader = transferInfo.getDocReader();
@@ -238,7 +277,8 @@ public class Deserializer {
 					} else if (analysisObject.isFieldHasConverter(field)) {
 						fieldValue = analysisObject.getFieldConverter(field).text2Obj(fieldValueStr);
 					} else {
-						fieldValue = ConverterWarehouse.searchConverterForType(field.getType()).text2Obj(fieldValueStr);
+						fieldValue = ConverterWarehouse.searchConverterForType(field.getType(), transferInfo).text2Obj(
+								fieldValueStr);
 					}
 					transferInfo.getObjectOperator().setField(result, field, fieldValue);
 				}
@@ -270,7 +310,7 @@ public class Deserializer {
 					fieldValue = useNullConverter ? null : analysisObject.getFieldConverter(field).text2Obj(
 							fieldValueStr);
 				} else {
-					fieldValue = readUnknow(fieldClz, result, field, transferInfo);
+					fieldValue = readUnknow(fieldClz, null, field, transferInfo);
 				}
 				transferInfo.getObjectOperator().setField(result, field, fieldValue);
 				docReader.moveUp();

@@ -32,6 +32,24 @@ public class StringUtil {
 	}
 
 	/**
+	 * 判断字符串是否全部字母都是大写。
+	 * 
+	 * @param cs
+	 *            字符串
+	 * @return 是不是为空白字符串
+	 */
+	public static boolean isAllUpperCase(CharSequence cs) {
+		if (null == cs)
+			return false;
+		int length = cs.length();
+		for (int i = 0; i < length; i++) {
+			if (!(Character.isUpperCase(cs.charAt(i))))
+				return false;
+		}
+		return true;
+	}
+
+	/**
 	 * 将字符串首字母大写，其他小写
 	 * 
 	 * @param s

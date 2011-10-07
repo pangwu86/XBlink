@@ -1,10 +1,10 @@
-package org.xblink.core.convert.converters;
+package org.xblink.core.convert.converters.singleValue;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import org.xblink.core.convert.Converter;
+import org.xblink.core.convert.SingleValueTypeConverter;
 
 /**
  * GregorianCalendar与Calendar的转换器。
@@ -12,7 +12,7 @@ import org.xblink.core.convert.Converter;
  * @author 胖五(pangwu86@gmail.com)
  * 
  */
-public class CalendarConverter implements Converter {
+public class CalendarConverter extends SingleValueTypeConverter {
 
 	private static DateConverter dateConverter = new DateConverter();
 

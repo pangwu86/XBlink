@@ -3,11 +3,8 @@ package org.xblink.core.serial;
 import org.xblink.core.Constant;
 import org.xblink.core.ReferenceObject;
 import org.xblink.core.TransferInfo;
-import org.xblink.core.convert.ConverterWarehouse;
-import org.xblink.core.convert.converters.EnumConverter;
-import org.xblink.core.convert.converters.NullConverter;
-
-import com.thoughtworks.xstream.mapper.Mapper.Null;
+import org.xblink.core.convert.converters.singleValue.EnumConverter;
+import org.xblink.core.convert.converters.singleValue.NullConverter;
 
 public class SerialHelper {
 
@@ -18,12 +15,8 @@ public class SerialHelper {
 	private static NullConverter nullConverter;
 
 	static {
-		try {
-			nullConverter = (NullConverter) ConverterWarehouse.searchConverterForType(Null.class);
-			enumConverter = (EnumConverter) ConverterWarehouse.searchConverterForType(Enum.class);
-		} catch (Exception e) {
-			throw new RuntimeException("没有找到或无法生成Null的转换器。", e);
-		}
+		nullConverter = new NullConverter();
+		enumConverter = new EnumConverter();
 	}
 
 	/**

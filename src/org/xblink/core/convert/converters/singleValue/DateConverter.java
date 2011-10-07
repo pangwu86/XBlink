@@ -1,16 +1,16 @@
-package org.xblink.core.convert.converters;
+package org.xblink.core.convert.converters.singleValue;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.xblink.core.convert.Converter;
+import org.xblink.core.convert.SingleValueTypeConverter;
 
 /**
  * java.util.Date类型转换器。
  * 
  * @author 胖五(pangwu86@gmail.com)
  */
-public class DateConverter implements Converter {
+public class DateConverter extends SingleValueTypeConverter {
 
 	private static final String DATA_FORMAT_TEMPLATE = "yyyy-MM-dd HH:mm:ss";
 

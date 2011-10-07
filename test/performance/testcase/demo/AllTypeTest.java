@@ -61,6 +61,10 @@ public class AllTypeTest {
 		allTypeObject.setObjs(objs);
 		allTypeObject.setClzMap(clzMap);
 
-		System.out.println(XBlink.toXml(allTypeObject));
+		String xml = XBlink.toXml(allTypeObject);
+		System.out.println(xml);
+
+		AllTypeObject b = (AllTypeObject) XBlink.fromXml(xml);
+
 	}
 }

@@ -105,8 +105,10 @@ public class CacheInit {
 	 * @param clz
 	 */
 	public static void registerClassToBeUsedAndSetClassNameInAliasCache(Class<?> clz) {
-		UsedClassCache.registerClassToBeUsed(clz);
-		AliasCache.getClassName(clz);
+		if (!UsedClassCache.hasThisClass(clz)) {
+			UsedClassCache.registerClassToBeUsed(clz);
+			AliasCache.getClassName(clz);
+		}
 	}
 
 }

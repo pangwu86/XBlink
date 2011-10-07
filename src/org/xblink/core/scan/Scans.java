@@ -14,6 +14,7 @@ public class Scans {
 	private Scans() {
 	}
 
+	@SuppressWarnings("unused")
 	private static final String FLT_CLASS = "^.+[.]class$";
 
 	/**

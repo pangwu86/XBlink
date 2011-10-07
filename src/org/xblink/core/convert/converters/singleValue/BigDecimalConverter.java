@@ -1,15 +1,15 @@
-package org.xblink.core.convert.converters;
+package org.xblink.core.convert.converters.singleValue;
 
 import java.math.BigDecimal;
 
-import org.xblink.core.convert.Converter;
+import org.xblink.core.convert.SingleValueTypeConverter;
 
 /**
  * BigDecimal转换器。
  * 
  * @author 胖五(pangwu86@gmail.com)
  */
-public class BigDecimalConverter implements Converter {
+public class BigDecimalConverter extends SingleValueTypeConverter {
 
 	public Class<?>[] getTypes() {
 		return new Class<?>[] { BigDecimal.class };

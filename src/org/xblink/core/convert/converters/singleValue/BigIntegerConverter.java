@@ -1,15 +1,15 @@
-package org.xblink.core.convert.converters;
+package org.xblink.core.convert.converters.singleValue;
 
 import java.math.BigInteger;
 
-import org.xblink.core.convert.Converter;
+import org.xblink.core.convert.SingleValueTypeConverter;
 
 /**
  * BigInteger转换器。
  * 
  * @author 胖五(pangwu86@gmail.com)
  */
-public class BigIntegerConverter implements Converter {
+public class BigIntegerConverter extends SingleValueTypeConverter {
 
 	public Class<?>[] getTypes() {
 		return new Class<?>[] { BigInteger.class };

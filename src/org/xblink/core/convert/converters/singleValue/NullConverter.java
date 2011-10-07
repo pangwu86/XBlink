@@ -1,15 +1,13 @@
-package org.xblink.core.convert.converters;
+package org.xblink.core.convert.converters.singleValue;
 
-import org.xblink.core.convert.Converter;
-
-import com.thoughtworks.xstream.mapper.Mapper.Null;
+import org.xblink.core.convert.SingleValueTypeConverter;
 
 /**
- * Null类型转换器。
+ * Null类型转换器。这个比较特殊，不属于常规使用范围。
  * 
  * @author 胖五(pangwu86@gmail.com)
  */
-public class NullConverter implements Converter {
+public class NullConverter extends SingleValueTypeConverter {
 
 	private static String NULL_STRING = "Null";
 
@@ -18,11 +16,11 @@ public class NullConverter implements Converter {
 	}
 
 	public Class<?>[] getTypes() {
-		return new Class<?>[] { Null.class };
+		return new Class<?>[] {};
 	}
 
 	public boolean canConvert(Class<?> type) {
-		return type == Null.class;
+		return true;
 	}
 
 	public String obj2Text(Object obj) throws Exception {

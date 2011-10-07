@@ -3,14 +3,14 @@ package org.xblink.core.convert.converters;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.xblink.core.convert.Converter;
+import org.xblink.core.convert.SingleValueTypeConverter;
 
 /**
  * 测试用的一个java.util.Date类型转换器。
  * 
  * @author 胖五(pangwu86@gmail.com)
  */
-public class MyDateConverter implements Converter {
+public class MyDateConverter extends SingleValueTypeConverter {
 
 	private static final String DATA_FORMAT_TEMPLATE = "yyyy-MM-dd";
 

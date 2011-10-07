@@ -83,8 +83,27 @@ public class PathCalc {
 	 * @return
 	 */
 	protected static String calcAbsolutePath(String[] currentPath, String[] relativePath) {
-		// TODO 路径算法
-		return null;
+		// 当前 a/b/c/d/e/g/c
+		// ../../../b/g/c
+		int cDepth = currentPath.length;
+		int rDepth = relativePath.length;
+		int pnum = 0;
+		for (int i = 0; i < rDepth; i++) {
+			if (!Constant.PATH_PARENT.equals(relativePath[i])) {
+				break;
+			}
+			pnum++;
+		}
+		int abDepth = cDepth - pnum + (rDepth - pnum);
+		String[] abPath = new String[abDepth];
+		for (int i = 0; i < abDepth; i++) {
+			if (i < cDepth - pnum) {
+				abPath[i] = currentPath[i];
+			} else {
+				abPath[i] = relativePath[pnum++];
+			}
+		}
+		return getPathFromRoot(abPath);
 	}
 
 	/**
@@ -95,6 +114,9 @@ public class PathCalc {
 	 * @return 字符串路经
 	 */
 	protected static String getPathFromRoot(String[] path) {
+		if (null == path || path.length == 0) {
+			return Constant.PATH_SEPARATER;
+		}
 		StringBuilder sb = new StringBuilder();
 		for (String s : path) {
 			if (StringUtil.isBlankStr(s)) {

@@ -1,15 +1,15 @@
-package org.xblink.core.convert.converters;
+package org.xblink.core.convert.converters.singleValue;
 
 import java.io.File;
 
-import org.xblink.core.convert.Converter;
+import org.xblink.core.convert.SingleValueTypeConverter;
 
 /**
  * 文件类型转换器。
  * 
  * @author 胖五(pangwu86@gmail.com)
  */
-public class FileConverter implements Converter {
+public class FileConverter extends SingleValueTypeConverter {
 
 	public Class<?>[] getTypes() {
 		return new Class<?>[] { File.class };

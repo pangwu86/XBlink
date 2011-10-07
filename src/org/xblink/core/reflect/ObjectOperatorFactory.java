@@ -39,6 +39,8 @@ public class ObjectOperatorFactory {
 		}
 		// 添加几个默认的接口与实现
 		defaultObjectOperator.addImpl(Map.class, HashMap.class);
+		// Entry没有找到合适的实现类
+		defaultObjectOperator.addImpl(Map.Entry.class, Map.Entry.class);
 		defaultObjectOperator.addImpl(List.class, ArrayList.class);
 		defaultObjectOperator.addImpl(Set.class, HashSet.class);
 		defaultObjectOperator.addImpl(SortedSet.class, TreeSet.class);

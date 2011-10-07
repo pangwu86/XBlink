@@ -41,7 +41,8 @@ public class PersonTest {
 
 	@Test
 	public void testFromXml() throws Exception {
-		Person joe = (Person) XBlink.fromXml(new File("C:/Joe_xb.xml"), Person.class, null);
+		XBlink.registerClassToBeUsed(Person.class);
+		Person joe = (Person) XBlink.fromXml(new File("C:/Joe_xb.xml"));
 		assertTrue(joe != null);
 		assertTrue(joe.getFirstname().equals("Joe"));
 		assertTrue(joe.getLastname().equals("Walnes"));

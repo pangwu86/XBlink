@@ -1,15 +1,15 @@
-package org.xblink.core.convert.converters;
+package org.xblink.core.convert.converters.singleValue;
 
 import java.util.UUID;
 
-import org.xblink.core.convert.Converter;
+import org.xblink.core.convert.SingleValueTypeConverter;
 
 /**
  * UUID类型转换器。
  * 
  * @author 胖五(pangwu86@gmail.com)
  */
-public class UUIDConverter implements Converter {
+public class UUIDConverter extends SingleValueTypeConverter {
 
 	public Class<?>[] getTypes() {
 		return new Class<?>[] { UUID.class };

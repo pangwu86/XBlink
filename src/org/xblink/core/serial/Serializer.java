@@ -74,7 +74,7 @@ public class Serializer {
 
 	private static void writeSingleValue(Class<?> objClz, Object obj, TransferInfo transferInfo, String tagName)
 			throws Exception {
-		writeSingleValue(obj, transferInfo, tagName, ConverterWarehouse.searchConverterForType(objClz));
+		writeSingleValue(obj, transferInfo, tagName, ConverterWarehouse.searchConverterForType(objClz, transferInfo));
 	}
 
 	private static void writeEnum(Class<?> objClz, Object obj, TransferInfo transferInfo, String tagName)
@@ -169,7 +169,7 @@ public class Serializer {
 					converter = useNullConverter ? SerialHelper.getNullConverter() : analysisObject
 							.getFieldConverter(field);
 				} else {
-					converter = ConverterWarehouse.searchConverterForType(field.getType());
+					converter = ConverterWarehouse.searchConverterForType(field.getType(), transferInfo);
 				}
 				transferInfo.getDocWriter().writeAttribute(fieldName, converter.obj2Text(fieldValue));
 			}

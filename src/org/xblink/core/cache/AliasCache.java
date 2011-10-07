@@ -84,7 +84,12 @@ public class AliasCache {
 		} else {
 			// 如果没有被缓存过，则使用类的全名
 			if (UsedClassCache.hasThisClass(clz)) {
-				name = StringUtil.lowerFirst(clz.getSimpleName());
+				String simpleName = clz.getSimpleName();
+				if (StringUtil.isAllUpperCase(simpleName)) {
+					name = simpleName;
+				} else {
+					name = StringUtil.lowerFirst(simpleName);
+				}
 			} else {
 				name = clz.getName();
 			}

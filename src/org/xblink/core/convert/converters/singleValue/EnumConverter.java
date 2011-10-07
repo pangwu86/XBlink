@@ -1,6 +1,6 @@
-package org.xblink.core.convert.converters;
+package org.xblink.core.convert.converters.singleValue;
 
-import org.xblink.core.convert.Converter;
+import org.xblink.core.convert.SingleValueTypeConverter;
 import org.xblink.util.TypeUtil;
 
 /**
@@ -8,7 +8,7 @@ import org.xblink.util.TypeUtil;
  * 
  * @author 胖五(pangwu86@gmail.com)
  */
-public class EnumConverter implements Converter {
+public class EnumConverter extends SingleValueTypeConverter {
 
 	public boolean canConvert(Class<?> type) {
 		return TypeUtil.isEnum(type);

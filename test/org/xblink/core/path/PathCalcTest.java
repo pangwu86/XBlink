@@ -61,4 +61,28 @@ public class PathCalcTest {
 		String path = PathCalc.calcRelativePath(p2, p1);
 		Assert.assertTrue("../d".equals(path));
 	}
+
+	@Test
+	public void calc8() throws Exception {
+		String[] p1 = new String[] { "a", "b", "c", "d" };
+		String[] p2 = new String[] { "..", "..", "e", "f" };
+		String path = PathCalc.calcAbsolutePath(p1, p2);
+		Assert.assertTrue("/a/b/e/f".equals(path));
+	}
+
+	@Test
+	public void calc9() throws Exception {
+		String[] p1 = new String[] { "a", "b", "c", "d" };
+		String[] p2 = new String[] { "..", "..", ".." };
+		String path = PathCalc.calcAbsolutePath(p1, p2);
+		Assert.assertTrue("/a".equals(path));
+	}
+
+	@Test
+	public void calc10() throws Exception {
+		String[] p1 = new String[] { "a", "b", "c", "d" };
+		String[] p2 = new String[] { "..", "..", "..", ".." };
+		String path = PathCalc.calcAbsolutePath(p1, p2);
+		Assert.assertTrue("/".equals(path));
+	}
 }

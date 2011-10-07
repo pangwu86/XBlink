@@ -1,13 +1,13 @@
-package org.xblink.core.convert.converters;
+package org.xblink.core.convert.converters.singleValue;
 
-import org.xblink.core.convert.Converter;
+import org.xblink.core.convert.SingleValueTypeConverter;
 
 /**
  * boolean与其包装类转换器。
  * 
  * @author 胖五(pangwu86@gmail.com)
  */
-public class BooleanConverter implements Converter {
+public class BooleanConverter extends SingleValueTypeConverter {
 
 	public Class<?>[] getTypes() {
 		return new Class<?>[] { Boolean.class, boolean.class };
