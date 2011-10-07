@@ -23,7 +23,7 @@ public class LoopA100 {
 
 	@Test
 	public void XBlink() throws Exception {
-		XBConfig xbConfig = XBConfig.createXBConfig().setUseRelativePath(false);
+		XBConfig xbConfig = XBConfig.newXBConfig().setUseRelativePath(false);
 		XBlink.setGlobalXBConfig(xbConfig);
 
 		WatchTimer timer = new WatchTimer();

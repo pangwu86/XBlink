@@ -1,11 +1,17 @@
 package org.xblink.core.doc;
 
+import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.Constructor;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 import org.xblink.core.doc.impl.XPP3Reader;
 import org.xblink.core.doc.impl.XPP3Writer;
+import org.xblink.util.StringUtil;
 
 /**
  * 生成DocReader与DocWriter的工厂。
@@ -18,25 +24,52 @@ public class DocWorkerFactory {
 	private DocWorkerFactory() {
 	}
 
+	private static Map<String, String> implMap = new HashMap<String, String>();
+
+	private static String R = ".reader";
+	private static String W = ".writer";
+
 	static {
-		// TODO 根据配置文件，来选择读写实现类
-		// 尝试 默认名称 再查找配置文件中的配置信息
+		// 添加几个默认的
+		implMap.put("xml.writer", "XPP3Writer");
+		implMap.put("xml.reader", "XPP3Reader");
+		// 读取配置文件，加载其他实现类
+		try {
+			Properties prop = new Properties();
+			prop.load(DocWorkerFactory.class.getResourceAsStream("/xblink.properties"));
+			Enumeration<Object> em = prop.keys();
+			while (em.hasMoreElements()) {
+				String key = (String) em.nextElement();
+				String value = prop.getProperty(key);
+				implMap.put(key.toLowerCase(), value);
+			}
+		} catch (IOException e) {
+			//
+		}
 	}
 
-	private final static String WRITER_IMPL_CLASS_NAME = "org.xblink.core.doc.impl.%sWriter";
+	private final static String WRITER_IMPL_CLASS_NAME = "org.xblink.core.doc.impl.%s";
 
-	private final static String READER_IMPL_CLASS_NAME = "org.xblink.core.doc.impl.%sReader";
+	private final static String READER_IMPL_CLASS_NAME = "org.xblink.core.doc.impl.%s";
 
 	private static DocWriter findDocWriterByDocTypeName(Writer writer, String docTypeName) {
-		return (DocWriter) getInstance(writer, Writer.class, docTypeName, WRITER_IMPL_CLASS_NAME);
+		String writerName = implMap.get(docTypeName.toLowerCase() + W);
+		if (StringUtil.isBlankStr(writerName)) {
+			throw new UnsupportedOperationException(String.format("没有找到%s格式的Writer。", docTypeName));
+		}
+		return (DocWriter) getInstance(writer, Writer.class, writerName, WRITER_IMPL_CLASS_NAME);
 	}
 
 	private static DocReader findDocReaderByDocTypeName(Reader reader, String docTypeName) {
-		return (DocReader) getInstance(reader, Reader.class, docTypeName, READER_IMPL_CLASS_NAME);
+		String readerName = implMap.get(docTypeName.toLowerCase() + R);
+		if (StringUtil.isBlankStr(readerName)) {
+			throw new UnsupportedOperationException(String.format("没有找到%s格式的Reader。", docTypeName));
+		}
+		return (DocReader) getInstance(reader, Reader.class, readerName, READER_IMPL_CLASS_NAME);
 	}
 
-	private static Object getInstance(Object initarg, Class<?> paramClz, String docTypeName, String implClassName) {
-		String className = String.format(implClassName, docTypeName);
+	private static Object getInstance(Object initarg, Class<?> paramClz, String wName, String implClassName) {
+		String className = String.format(implClassName, wName);
 		Constructor<?> constructor = getConstructor(className, paramClz);
 		Object instance = null;
 		try {

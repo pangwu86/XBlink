@@ -11,7 +11,7 @@ public class XBConfigHelper {
 	/**
 	 * 默认的配置项，全局唯一。在没有设定临时配置项时，以此配置为主。
 	 */
-	private static XBConfig globalXbConfig = XBConfig.createXBConfig();
+	private static XBConfig globalXbConfig = XBConfig.newXBConfig();
 
 	/**
 	 * 临时的配置项，设定后调用就会采用当前配置项，调用后即抛弃。

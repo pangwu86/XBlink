@@ -36,6 +36,7 @@ public class PersonTest {
 	public void testToXml() throws Exception {
 		XBlink.registerClassToBeUsed(Person.class);
 		XBlink.toXml(getPerson(), new File("C:/Joe_xb.xml"));
+		XBlink.toAny(getPerson(), "XML", new File("C:/Joe_xb.xml"));
 		assertTrue(new File("C:/Joe_xb.xml").exists());
 	}
 

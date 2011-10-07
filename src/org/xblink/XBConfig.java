@@ -9,17 +9,19 @@ package org.xblink;
  */
 public class XBConfig {
 
-	private boolean useRelativePath = true;
+	private boolean useRelativePath;
 
-	private boolean useCache = false;
+	private boolean ignoreNull;
 
-	private boolean ignoreNull = true;
+	private boolean ignoreTransient;
 
-	private boolean ignoreTransient = true;
+	private boolean compact;
 
 	private XBConfig() {
-		// TODO 设置默认参数
 		useRelativePath = true;
+		ignoreNull = true;
+		ignoreTransient = true;
+		compact = false;
 	}
 
 	/**
@@ -27,16 +29,21 @@ public class XBConfig {
 	 * 
 	 * @return 配置项
 	 */
-	public static XBConfig createXBConfig() {
+	public static XBConfig newXBConfig() {
 		return new XBConfig();
 	}
 
+	/**
+	 * 是否使用了相对路径。
+	 * 
+	 * @return
+	 */
 	public boolean isUseRelativePath() {
 		return useRelativePath;
 	}
 
 	/**
-	 * 使用相对路径。
+	 * 设置使用相对路径。
 	 * 
 	 * @param useRelativePath
 	 * @return
@@ -46,27 +53,17 @@ public class XBConfig {
 		return this;
 	}
 
-	public boolean isUseCache() {
-		return useCache;
-	}
-
 	/**
-	 * 使用缓存。
+	 * 是否忽略空字段。
 	 * 
-	 * @param useCache
 	 * @return
 	 */
-	public XBConfig setUseCache(boolean useCache) {
-		this.useCache = useCache;
-		return this;
-	}
-
 	public boolean isIgnoreNull() {
 		return ignoreNull;
 	}
 
 	/**
-	 * 忽略空字段。
+	 * 设置忽略空字段。
 	 * 
 	 * @param ignoreNull
 	 * @return
@@ -76,12 +73,17 @@ public class XBConfig {
 		return this;
 	}
 
+	/**
+	 * 是否忽略Transient字段。
+	 * 
+	 * @return
+	 */
 	public boolean isIgnoreTransient() {
 		return ignoreTransient;
 	}
 
 	/**
-	 * 忽略Transient字段。
+	 * 设置忽略Transient字段。
 	 * 
 	 * @param ignoreNull
 	 * @return
@@ -91,6 +93,24 @@ public class XBConfig {
 		return this;
 	}
 
-	// 这里可以设定各种需要的参数
+	/**
+	 * 是否使用了紧凑模式。
+	 * 
+	 * @return
+	 */
+	public boolean isCompact() {
+		return compact;
+	}
+
+	/**
+	 * 设置使用紧凑模式。
+	 * 
+	 * @param compact
+	 * @return
+	 */
+	public XBConfig setCompact(boolean compact) {
+		this.compact = compact;
+		return this;
+	}
 
 }

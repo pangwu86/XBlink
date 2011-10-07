@@ -6,7 +6,6 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 
-import org.xblink.core.cache.AnalysisCache;
 import org.xblink.core.cache.CacheInit;
 import org.xblink.core.convert.Converter;
 import org.xblink.core.convert.ConverterRegistry;
@@ -44,27 +43,6 @@ public class XBlink {
 	}
 
 	// ********************** 各种设定项 ********************
-
-	/**
-	 * 打开缓存。(默认状态为打开)
-	 */
-	public static void openCache() {
-		AnalysisCache.setUseAnalysisCache(true);
-	}
-
-	/**
-	 * 关闭缓存。
-	 */
-	public static void closeCache() {
-		AnalysisCache.setUseAnalysisCache(false);
-	}
-
-	/**
-	 * 清空缓存。
-	 */
-	public static void cleanCache() {
-		// TODO 清空缓存
-	}
 
 	/**
 	 * 使用你设定的配置项，替换原有默认配置信息（全局唯一）。
