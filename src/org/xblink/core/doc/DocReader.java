@@ -1,5 +1,6 @@
 package org.xblink.core.doc;
 
+import java.io.Reader;
 import java.util.Iterator;
 
 /**
@@ -74,5 +75,12 @@ public interface DocReader {
 	 * 关闭输入流。
 	 */
 	public void close();
+
+	/**
+	 * 获得内容的Reader。
+	 * 
+	 * @return
+	 */
+	public Reader getReader();
 
 }

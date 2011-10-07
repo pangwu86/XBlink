@@ -68,6 +68,7 @@ class XBlinkHelper {
 	private static String serializing(Object object, DocWriter docWriter) {
 		// 准备工作
 		XBConfig xbConfig = XBConfigHelper.getXbConfig();
+		docWriter.setXBConfig(xbConfig);
 		PathTracker pathTracker = new PathTracker(xbConfig.isUseRelativePath());
 		DocWriter realDocWriter = new PathTrackingWriter(docWriter, pathTracker);
 		TransferInfo transferInfo = new TransferInfo(pathTracker, xbConfig, realDocWriter, null, null);
@@ -84,6 +85,13 @@ class XBlinkHelper {
 					realDocWriter.close();
 				} catch (Exception e) {
 					throw new RuntimeException("关闭输出流失败。", e);
+				}
+				if (null != realDocWriter.getWriter()) {
+					try {
+						realDocWriter.getWriter().close();
+					} catch (Exception e) {
+						throw new RuntimeException("关闭输出流失败。", e);
+					}
 				}
 			}
 		}
@@ -141,6 +149,13 @@ class XBlinkHelper {
 					realDocReader.close();
 				} catch (Exception e) {
 					throw new RuntimeException("关闭输入流失败。", e);
+				}
+				if (null != realDocReader.getReader()) {
+					try {
+						realDocReader.getReader().close();
+					} catch (Exception e) {
+						throw new RuntimeException("关闭输入流失败。", e);
+					}
 				}
 			}
 		}

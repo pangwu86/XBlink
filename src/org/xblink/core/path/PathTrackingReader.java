@@ -1,5 +1,6 @@
 package org.xblink.core.path;
 
+import java.io.Reader;
 import java.util.Iterator;
 
 import org.xblink.core.doc.DocReader;
@@ -59,6 +60,10 @@ public class PathTrackingReader implements DocReader {
 
 	public void close() {
 		docReader.close();
+	}
+
+	public Reader getReader() {
+		return docReader.getReader();
 	}
 
 }

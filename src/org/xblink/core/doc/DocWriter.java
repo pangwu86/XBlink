@@ -1,11 +1,22 @@
 package org.xblink.core.doc;
 
+import java.io.Writer;
+
+import org.xblink.XBConfig;
+
 /**
  * 定义了书写文本文件的几个动作。
  * 
  * @author 胖五(pangwu86@gmail.com)
  */
 public interface DocWriter {
+
+	/**
+	 * 设置XBlink运行时设置项，可以对文本格式进行部分调整。
+	 * 
+	 * @param xbConfig
+	 */
+	public void setXBConfig(XBConfig xbConfig);
 
 	/**
 	 * 编写文档开头。
@@ -113,5 +124,12 @@ public interface DocWriter {
 	 * @return 文本内容
 	 */
 	public String getString();
+
+	/**
+	 * 获得内部的Writer。
+	 * 
+	 * @return
+	 */
+	public Writer getWriter();
 
 }

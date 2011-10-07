@@ -1,5 +1,8 @@
 package org.xblink.core.path;
 
+import java.io.Writer;
+
+import org.xblink.XBConfig;
 import org.xblink.core.doc.DocWriter;
 
 /**
@@ -65,6 +68,14 @@ public class PathTrackingWriter implements DocWriter {
 
 	public String getString() {
 		return docWriter.getString();
+	}
+
+	public void setXBConfig(XBConfig xbConfig) {
+		docWriter.setXBConfig(xbConfig);
+	}
+
+	public Writer getWriter() {
+		return docWriter.getWriter();
 	}
 
 }
