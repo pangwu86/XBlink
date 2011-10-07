@@ -1,5 +1,6 @@
 package org.xblink.core.convert;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -24,10 +25,6 @@ public class ConverterWarehouse {
 
 	private static Set<Class<?>> conClzSet = Collections.synchronizedSet(new HashSet<Class<?>>());
 
-	/** 是否用在多线程环境中 */
-	@SuppressWarnings("unused")
-	private static boolean useInMultiThreaded = false;
-
 	private static final String CONVERT_IMPL = "org.xblink.core.convert.converters.%sConverter";
 
 	/**
@@ -40,16 +37,6 @@ public class ConverterWarehouse {
 			Class<?> converterClz = iterator.next();
 			setConverter(converterClz);
 		}
-	}
-
-	/**
-	 * 一个全局性开关，是否在多线程环境下运行。
-	 * 
-	 * @param useInMultiThreaded
-	 *            开关
-	 */
-	public static void useInMultiThreaded(boolean useInMultiThreaded) {
-		ConverterWarehouse.useInMultiThreaded = useInMultiThreaded;
 	}
 
 	/**
@@ -100,6 +87,15 @@ public class ConverterWarehouse {
 			converter = lookForConverterForType(clz);
 		}
 		return converter;
+	}
+
+	/**
+	 * 获得当前仓库中所有的转换器。
+	 * 
+	 * @return
+	 */
+	public static Collection<Converter> getAllConverters() {
+		return conMap.values();
 	}
 
 	private static Converter lookForConverterForType(Class<?> clz) {

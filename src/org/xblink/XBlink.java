@@ -6,9 +6,8 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 
-import org.xblink.core.cache.AliasCache;
 import org.xblink.core.cache.AnalysisCache;
-import org.xblink.core.cache.UsedClassCache;
+import org.xblink.core.cache.CacheInit;
 import org.xblink.core.convert.Converter;
 import org.xblink.core.convert.ConverterRegistry;
 import org.xblink.core.convert.ConverterWarehouse;
@@ -29,6 +28,7 @@ public class XBlink {
 	static {
 		// 初始化部分容器
 		ConverterWarehouse.init();
+		CacheInit.init();
 	}
 
 	private XBlink() {
@@ -49,8 +49,6 @@ public class XBlink {
 	 * 打开缓存。(默认状态为打开)
 	 */
 	public static void openCache() {
-		AliasCache.setUseClassAliasCache(true);
-		AliasCache.setUseFieldAliasCache(true);
 		AnalysisCache.setUseAnalysisCache(true);
 	}
 
@@ -58,8 +56,6 @@ public class XBlink {
 	 * 关闭缓存。
 	 */
 	public static void closeCache() {
-		AliasCache.setUseClassAliasCache(false);
-		AliasCache.setUseFieldAliasCache(false);
 		AnalysisCache.setUseAnalysisCache(false);
 	}
 
@@ -92,7 +88,7 @@ public class XBlink {
 	 * @param clzs
 	 */
 	public static void registerClassesToBeUsed(Class<?>[] clzs) {
-		UsedClassCache.registerClassesToBeUsed(clzs);
+		XBlinkHelper.registerClassesToBeUsed(clzs);
 	}
 
 	/**
@@ -103,7 +99,7 @@ public class XBlink {
 	 * @param classes
 	 */
 	public static void registerClassToBeUsed(Class<?> clz) {
-		UsedClassCache.registerClassToBeUsed(clz);
+		XBlinkHelper.registerClassToBeUsed(clz);
 	}
 
 	/**

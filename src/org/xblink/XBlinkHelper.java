@@ -4,6 +4,7 @@ import java.io.Reader;
 import java.io.Writer;
 
 import org.xblink.core.TransferInfo;
+import org.xblink.core.cache.CacheInit;
 import org.xblink.core.doc.DocReader;
 import org.xblink.core.doc.DocWorkerFactory;
 import org.xblink.core.doc.DocWriter;
@@ -140,5 +141,17 @@ class XBlinkHelper {
 			}
 		}
 		return result;
+	}
+
+	// *******************************
+
+	protected static void registerClassesToBeUsed(Class<?>[] clzs) {
+		for (Class<?> clz : clzs) {
+			registerClassToBeUsed(clz);
+		}
+	}
+
+	protected static void registerClassToBeUsed(Class<?> clz) {
+		CacheInit.registerClassToBeUsedAndSetClassNameInAliasCache(clz);
 	}
 }

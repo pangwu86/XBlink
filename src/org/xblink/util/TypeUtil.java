@@ -72,6 +72,16 @@ public class TypeUtil {
 	}
 
 	/**
+	 * 是否是Map.Entry类型。
+	 * 
+	 * @param clz
+	 * @return
+	 */
+	public static boolean isEntryType(Class<?> clz) {
+		return Map.Entry.class.isAssignableFrom(clz);
+	}
+
+	/**
 	 * 是否是八种基本类型之一。
 	 * 
 	 * @param clz

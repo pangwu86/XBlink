@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.xblink.core.AnalysisObject;
 import org.xblink.core.Constant;
@@ -55,6 +56,9 @@ public class Serializer {
 				if (TypeUtil.isCollectionType(objClz)) {
 					// 集合类型
 					writeCollection(objClz, obj, transferInfo, tagName);
+				} else if (TypeUtil.isEntryType(objClz)) {
+					// Map.Entry类型
+					writeEntry(objClz, obj, transferInfo, tagName);
 				} else if (TypeUtil.isMapType(objClz)) {
 					// Map类型
 					writeMap(objClz, obj, transferInfo, tagName);
@@ -116,6 +120,16 @@ public class Serializer {
 			transferInfo.getDocWriter().writeEndTag(Constant.MAP_ENTRY);
 		}
 		transferInfo.getDocWriter().writeEndTag(tagName);
+	}
+
+	private static void writeEntry(Class<?> objClz, Object obj, TransferInfo transferInfo, String tagName)
+			throws Exception {
+		transferInfo.getDocWriter().writeStartTag(tagName);
+		SerialHelper.recordReferenceObjectByObj(obj, transferInfo);
+		Map.Entry<?, ?> entry = (Entry<?, ?>) obj;
+		writeUnknow(entry.getKey(), transferInfo, null);
+		writeUnknow(entry.getValue(), transferInfo, null);
+		transferInfo.getDocWriter().writeStartTag(tagName);
 	}
 
 	private static void writeReference(Class<?> objClz, Object obj, TransferInfo transferInfo, String tagName)
