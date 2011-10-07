@@ -23,7 +23,7 @@ public class Scans {
 	 * @return
 	 */
 	public static List<Class<?>> scanPackage(String pkg) {
-		// TODO 尚未实现
+		// TODO 尚未实现扫描
 		throw new UnsupportedOperationException(String.format("当前版本[%s]未实现此功能，请不要使用。", XBlink.getVersion()));
 	}
 }

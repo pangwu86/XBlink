@@ -2,8 +2,11 @@ package org.xblink;
 
 import java.io.Reader;
 import java.io.Writer;
+import java.util.List;
+import java.util.Map;
 
 import org.xblink.core.TransferInfo;
+import org.xblink.core.UnfinishedSetField;
 import org.xblink.core.cache.CacheInit;
 import org.xblink.core.doc.DocReader;
 import org.xblink.core.doc.DocWorkerFactory;
@@ -128,7 +131,8 @@ class XBlinkHelper {
 		try {
 			realDocReader.moveDown();
 			result = Deserializer.readUnknow(clz, object, null, transferInfo);
-			// TODO 处理引用调用失败的操作
+			// 处理引用失败的例子
+			handleUnfin(transferInfo);
 		} catch (Exception e) {
 			throw new RuntimeException("反序列化失败。", e);
 		} finally {
@@ -141,6 +145,22 @@ class XBlinkHelper {
 			}
 		}
 		return result;
+	}
+
+	private static void handleUnfin(TransferInfo transferInfo) {
+		List<UnfinishedSetField> unfins = transferInfo.getUnfins();
+		if (null != unfins && unfins.size() > 0) {
+			ObjectOperator objectOperator = transferInfo.getObjectOperator();
+			Map<String, Object> pathRefMap = transferInfo.getPathRefMap();
+			for (UnfinishedSetField unfin : unfins) {
+				// 重新赋值
+				Object fiedValue = pathRefMap.get(unfin.getObjPath());
+				if (null == fiedValue) {
+					throw new RuntimeException(String.format("无法找到路径[%s]所在的对象。", unfin.getObjPath()));
+				}
+				objectOperator.setField(unfin.getObj(), unfin.getField(), fiedValue);
+			}
+		}
 	}
 
 	// *******************************

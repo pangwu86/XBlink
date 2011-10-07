@@ -8,7 +8,6 @@ public class MytypeWriter extends AbstractDocWriter {
 
 	public MytypeWriter(Writer writer) {
 		super(writer);
-		// TODO Auto-generated constructor stub
 	}
 
 	public void writeStartDocument() throws Exception {

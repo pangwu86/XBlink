@@ -1,6 +1,8 @@
 package org.xblink.core;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.xblink.XBConfig;
@@ -23,6 +25,7 @@ public class TransferInfo {
 	private final ObjectOperator objectOperator;
 	private final Map<Object, ReferenceObject> refMap;
 	private final Map<String, Object> pathRefMap;
+	private final List<UnfinishedSetField> unfins;
 
 	public TransferInfo(PathTracker pathTracker, XBConfig xbConfig, DocWriter docWriter, DocReader docReader,
 			ObjectOperator objectOperator) {
@@ -33,6 +36,7 @@ public class TransferInfo {
 		this.objectOperator = objectOperator;
 		this.refMap = new HashMap<Object, ReferenceObject>();
 		this.pathRefMap = new HashMap<String, Object>();
+		this.unfins = new ArrayList<UnfinishedSetField>();
 	}
 
 	public PathTracker getPathTracker() {
@@ -61,6 +65,10 @@ public class TransferInfo {
 
 	public ObjectOperator getObjectOperator() {
 		return objectOperator;
+	}
+
+	public List<UnfinishedSetField> getUnfins() {
+		return unfins;
 	}
 
 }

@@ -12,6 +12,7 @@ import java.util.Set;
 import org.xblink.core.AnalysisObject;
 import org.xblink.core.Constant;
 import org.xblink.core.TransferInfo;
+import org.xblink.core.UnfinishedSetField;
 import org.xblink.core.cache.AliasCache;
 import org.xblink.core.cache.AnalysisCache;
 import org.xblink.core.convert.ConverterWarehouse;
@@ -38,7 +39,7 @@ public class Deserializer {
 			}
 		}
 		if (null == objClz) {
-			// TODO 最麻烦的情况了，需要根据名称进行猜测，找到对应的类进行处理
+			// 最麻烦的情况了，需要根据名称进行猜测，找到对应的类进行处理
 			// 这里怎么处理来，主要是集合类型与Map类型，没有使用泛型的情况下，如何去做
 			result = readAnyType(transferInfo);
 		}
@@ -109,8 +110,12 @@ public class Deserializer {
 		}
 		Object result = transferInfo.getPathRefMap().get(objPath);
 		if (null == result) {
-			// TODO 记录当前状态等全部完成后再次放入
-			// obj field objPath 这三者
+			// 记录当前状态等全部完成后再次放入
+			UnfinishedSetField unfin = new UnfinishedSetField();
+			unfin.setField(field);
+			unfin.setObj(obj);
+			unfin.setObjPath(objPath);
+			transferInfo.getUnfins().add(unfin);
 		}
 		return result;
 	}
@@ -240,33 +245,36 @@ public class Deserializer {
 			}
 		}
 		// 其他类型
-		if (!analysisObject.otherIsEmpty() && docReader.hasMoreChildren()) {
-			docReader.moveDown();
-			String nodeName = docReader.getNodeName();
-			Field field = analysisObject.getOtherFieldMap().get(nodeName);
-			Class<?> fieldClz = field.getType();
-			Object fieldValue = null;
-			boolean useNullConverter = false;
-			boolean useGetTextValue = false;
-			String fieldValueStr = null;
-			if (!ignoreNull) {
-				// 尝试获得text，如果是Null，则调用NullConverter
-				fieldValueStr = docReader.getTextValue();
-				useGetTextValue = true;
-				if (null != fieldValueStr && SerialHelper.getNullConverter().canConvert(fieldValueStr)) {
-					useNullConverter = true;
-				}
-			}
-			if (analysisObject.isFieldHasConverter(field) || useNullConverter) {
-				if (!useGetTextValue) {
+		if (!analysisObject.otherIsEmpty()) {
+			while (docReader.hasMoreChildren()) {
+				docReader.moveDown();
+				String nodeName = docReader.getNodeName();
+				Field field = analysisObject.getOtherFieldMap().get(nodeName);
+				Class<?> fieldClz = field.getType();
+				Object fieldValue = null;
+				boolean useNullConverter = false;
+				boolean useGetTextValue = false;
+				String fieldValueStr = null;
+				if (!ignoreNull) {
+					// 尝试获得text，如果是Null，则调用NullConverter
 					fieldValueStr = docReader.getTextValue();
+					useGetTextValue = true;
+					if (null != fieldValueStr && SerialHelper.getNullConverter().canConvert(fieldValueStr)) {
+						useNullConverter = true;
+					}
 				}
-				fieldValue = useNullConverter ? null : analysisObject.getFieldConverter(field).text2Obj(fieldValueStr);
-			} else {
-				fieldValue = readUnknow(fieldClz, result, field, transferInfo);
+				if (analysisObject.isFieldHasConverter(field) || useNullConverter) {
+					if (!useGetTextValue) {
+						fieldValueStr = docReader.getTextValue();
+					}
+					fieldValue = useNullConverter ? null : analysisObject.getFieldConverter(field).text2Obj(
+							fieldValueStr);
+				} else {
+					fieldValue = readUnknow(fieldClz, result, field, transferInfo);
+				}
+				transferInfo.getObjectOperator().setField(result, field, fieldValue);
+				docReader.moveUp();
 			}
-			transferInfo.getObjectOperator().setField(result, field, fieldValue);
-			docReader.moveUp();
 		}
 		return result;
 	}

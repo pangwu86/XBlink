@@ -25,8 +25,6 @@ public class EnumConverter implements Converter {
 	}
 
 	public Object text2Obj(String text) throws Exception {
-		// FIXME 这里的Class怎么得到来？
-		// return Enum.valueOf(enumType, text);
 		throw new UnsupportedOperationException();
 	}
 

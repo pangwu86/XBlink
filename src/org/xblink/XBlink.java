@@ -63,7 +63,7 @@ public class XBlink {
 	 * 清空缓存。
 	 */
 	public static void cleanCache() {
-		// TODO
+		// TODO 清空缓存
 	}
 
 	/**

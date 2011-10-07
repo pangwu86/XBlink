@@ -89,7 +89,6 @@ public class XPP3Writer extends AbstractDocWriter {
 	}
 
 	public void close() throws Exception {
-		// TODO
 	}
 
 	public void flush() throws Exception {

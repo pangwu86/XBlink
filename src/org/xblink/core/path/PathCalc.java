@@ -60,8 +60,7 @@ public class PathCalc {
 			}
 			if (0 == dif) {
 				// 这个比较特别 两者路径相同，即同一个对象下存放了两个相同的东东
-				// 除非两个名字还一样，否则不会出现这样的问题
-				// FIXME
+				// FIXME 除非两个名字还一样，否则不会出现这样的问题
 				return "../" + targetPath[tDepth - 1];
 			}
 			// 编辑路程
@@ -84,7 +83,7 @@ public class PathCalc {
 	 * @return
 	 */
 	protected static String calcAbsolutePath(String[] currentPath, String[] relativePath) {
-		// TODO
+		// TODO 路径算法
 		return null;
 	}
 

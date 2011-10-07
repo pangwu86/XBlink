@@ -17,11 +17,6 @@ public interface DocReader {
 	public boolean hasMoreChildren();
 
 	/**
-	 * 开始遍历文件。
-	 */
-	public void moveStart();
-
-	/**
 	 * 进去下一个节点。
 	 */
 	public void moveDown();
@@ -75,6 +70,9 @@ public interface DocReader {
 	 */
 	public String getAttribute(int index);
 
-	void close();
+	/**
+	 * 关闭输入流。
+	 */
+	public void close();
 
 }
