@@ -20,6 +20,7 @@ public class DocWorkerFactory {
 
 	static {
 		// TODO 根据配置文件，来选择读写实现类
+		// 尝试 默认名称 再查找配置文件中的配置信息
 	}
 
 	private final static String WRITER_IMPL_CLASS_NAME = "org.xblink.core.doc.impl.%sWriter";
@@ -60,7 +61,6 @@ public class DocWorkerFactory {
 	// ******************** 生成Writer ********************
 
 	public static DocWriter createXmlWriter(Writer writer) {
-		// TODO 不同的实现
 		return new XPP3Writer(writer);
 	}
 
@@ -71,7 +71,6 @@ public class DocWorkerFactory {
 	// ******************** 生成Reader ********************
 
 	public static DocReader createXmlReader(Reader reader) {
-		// TODO 不同的实现
 		return new XPP3Reader(reader);
 	}
 

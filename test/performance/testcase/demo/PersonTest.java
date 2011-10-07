@@ -34,13 +34,14 @@ public class PersonTest {
 
 	@Test
 	public void testToXml() throws Exception {
+		XBlink.registerClassToBeUsed(Person.class);
 		XBlink.toXml(getPerson(), new File("C:/Joe_xb.xml"));
 		assertTrue(new File("C:/Joe_xb.xml").exists());
 	}
 
 	@Test
 	public void testFromXml() throws Exception {
-		Person joe = (Person) XBlink.fromXml(new File("C:/Joe_xb.xml"), Person.class);
+		Person joe = (Person) XBlink.fromXml(new File("C:/Joe_xb.xml"), Person.class, null);
 		assertTrue(joe != null);
 		assertTrue(joe.getFirstname().equals("Joe"));
 		assertTrue(joe.getLastname().equals("Walnes"));

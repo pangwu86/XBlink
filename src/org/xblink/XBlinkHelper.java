@@ -4,7 +4,6 @@ import java.io.Reader;
 import java.io.Writer;
 
 import org.xblink.core.TransferInfo;
-import org.xblink.core.convert.ConverterWarehouse;
 import org.xblink.core.doc.DocReader;
 import org.xblink.core.doc.DocWorkerFactory;
 import org.xblink.core.doc.DocWriter;
@@ -24,10 +23,6 @@ import org.xblink.util.StringUtil;
  */
 class XBlinkHelper {
 
-	static {
-		ConverterWarehouse.init();
-	}
-
 	private XBlinkHelper() {
 	}
 
@@ -44,15 +39,9 @@ class XBlinkHelper {
 		}
 	}
 
-	private static void deserializeNull(Object object, Class<?> clz) {
-		if (null == object && null == clz) {
-			throw new IllegalArgumentException("没有参考对象或参考类，无法进行反序列化操作。");
-		}
-	}
-
 	// ***************************************序列化****************************************
 
-	protected static String toAny(Object object, Writer writer, String docTypeName) {
+	protected static String toAny(Object object, String docTypeName, Writer writer) {
 		missDocTypeName(docTypeName);
 		serializeNull(object);
 		return serializing(object, DocWorkerFactory.createAnyWriter(writer, docTypeName));
@@ -99,44 +88,35 @@ class XBlinkHelper {
 
 	// ***************************************反序列化****************************************
 
-	@SuppressWarnings("unchecked")
-	protected static <T> T fromAny(Class<T> clz, Reader reader, String docTypeName) {
+	protected static Object fromAny(Reader reader, String docTypeName) {
+		return fromAny(reader, docTypeName, null, null);
+	}
+
+	protected static Object fromAny(Reader reader, String docTypeName, Class<?> clz, Object object) {
 		missDocTypeName(docTypeName);
-		deserializeNull(null, clz);
-		return (T) deserializing(null, clz, DocWorkerFactory.createAnyReader(reader, docTypeName));
+		return deserializing(DocWorkerFactory.createAnyReader(reader, docTypeName), clz, object);
 	}
 
-	protected static Object fromAny(Object object, Reader reader, String docTypeName) {
-		missDocTypeName(docTypeName);
-		deserializeNull(object, null);
-		return deserializing(object, null, DocWorkerFactory.createAnyReader(reader, docTypeName));
+	protected static Object fromXml(Reader reader) {
+		return fromXml(reader, null, null);
 	}
 
-	@SuppressWarnings("unchecked")
-	protected static <T> T fromXml(Class<T> clz, Reader reader) {
-		deserializeNull(null, clz);
-		return (T) deserializing(null, clz, DocWorkerFactory.createXmlReader(reader));
-	}
-
-	protected static Object fromXml(Object object, Reader reader) {
-		deserializeNull(object, null);
-		return deserializing(object, null, DocWorkerFactory.createXmlReader(reader));
+	protected static Object fromXml(Reader reader, Class<?> clz, Object object) {
+		return deserializing(DocWorkerFactory.createXmlReader(reader), clz, object);
 	}
 
 	/**
 	 * 反序列化。
 	 * 
-	 * @param object
-	 *            参考对象
-	 * @param clz
-	 *            参考类
-	 * @param xbConfig
-	 *            XBlink配置信息
 	 * @param DocReader
 	 *            文档读取器
-	 * @return 字符串
+	 * @param clz
+	 *            参考类
+	 * @param object
+	 *            参考对象
+	 * @return 对象
 	 */
-	private static Object deserializing(Object object, Class<?> clz, DocReader docReader) {
+	private static Object deserializing(DocReader docReader, Class<?> clz, Object object) {
 		// 准备工作
 		XBConfig xbConfig = XBConfigHelper.getXbConfig();
 		PathTracker pathTracker = new PathTracker(xbConfig.isUseRelativePath());

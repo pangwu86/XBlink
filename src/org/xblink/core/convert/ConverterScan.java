@@ -8,6 +8,7 @@ import org.xblink.core.convert.converters.BigIntegerConverter;
 import org.xblink.core.convert.converters.BooleanConverter;
 import org.xblink.core.convert.converters.ByteConverter;
 import org.xblink.core.convert.converters.CharacterConverter;
+import org.xblink.core.convert.converters.ClassConverter;
 import org.xblink.core.convert.converters.DateConverter;
 import org.xblink.core.convert.converters.DoubleConverter;
 import org.xblink.core.convert.converters.EnumConverter;
@@ -33,7 +34,7 @@ import org.xblink.core.convert.converters.UUIDConverter;
  */
 public class ConverterScan {
 
-	private static final String FLT_CLASS = "^.+[.]class$";
+	private static final String CONVERT_PACKAGE = "org.xblink.core.convert.converters";
 
 	private static final List<Class<?>> converterList = new ArrayList<Class<?>>();
 
@@ -48,6 +49,7 @@ public class ConverterScan {
 		converterList.add(BooleanConverter.class);
 		converterList.add(CharacterConverter.class);
 		// JAVA中常见类型
+		converterList.add(ClassConverter.class);
 		converterList.add(NullConverter.class);
 		converterList.add(EnumConverter.class);
 		converterList.add(FileConverter.class);
@@ -63,18 +65,14 @@ public class ConverterScan {
 	}
 
 	/**
-	 * 搜索并返回给定包下所有的类（递归）
+	 * 扫描转换器。(默认包下的所有转换器类)
 	 * 
-	 * @param pkg
-	 *            包名或者包路径
 	 * @return
 	 */
-	public static List<Class<?>> scanPackage(String pkg) {
-		return scanPackage(pkg, FLT_CLASS);
-	}
-
-	private static List<Class<?>> scanPackage(String pkg, String fltClass) {
-		// TODO 改为自动扫描
+	public static List<Class<?>> scanConverter() {
+		// return Scans.scanPackage(CONVERT_PACKAGE);
+		// TODO 当前版本扫描未实现
 		return converterList;
 	}
+
 }

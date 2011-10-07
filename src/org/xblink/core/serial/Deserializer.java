@@ -12,6 +12,7 @@ import java.util.Set;
 import org.xblink.core.AnalysisObject;
 import org.xblink.core.Constant;
 import org.xblink.core.TransferInfo;
+import org.xblink.core.cache.AliasCache;
 import org.xblink.core.cache.AnalysisCache;
 import org.xblink.core.convert.ConverterWarehouse;
 import org.xblink.core.doc.DocReader;
@@ -77,8 +78,16 @@ public class Deserializer {
 	}
 
 	private static Class<?> tryFindTypeByNodeName(String nodeName) {
-		// TODO 如何根据名称找到对应的类
-		return null;
+		Class<?> type = AliasCache.getClassByAliasName(nodeName);
+		if (null == type) {
+			// 尝试根据名称去加载
+			try {
+				type = Class.forName(nodeName);
+			} catch (ClassNotFoundException e) {
+				throw new RuntimeException(String.format("无法根据节点名称[%s]找个对应的类。", nodeName), e);
+			}
+		}
+		return type;
 	}
 
 	private static Object readSingleValue(Class<?> objClz, TransferInfo transferInfo) throws Exception {
@@ -183,14 +192,17 @@ public class Deserializer {
 			valueClz = transferInfo.getObjectOperator().getMapValueGenericType(field.getGenericType());
 		}
 		while (docReader.hasMoreChildren()) {
-			docReader.moveDown();
+			docReader.moveDown(); // 进入entry
+
+			docReader.moveDown();// 进入key
 			Object key = readUnknow(keyClz, null, null, transferInfo);
-			docReader.moveUp();
+			docReader.moveUp();// 退出key
 
-			docReader.moveDown();
+			docReader.moveDown();// 进入value
 			Object value = readUnknow(valueClz, null, null, transferInfo);
-			docReader.moveUp();
+			docReader.moveUp();// 退出value
 
+			docReader.moveUp();// 退出entry
 			map.put(key, value);
 		}
 		// 记录引用的对象

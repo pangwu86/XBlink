@@ -28,8 +28,6 @@ public class ConverterWarehouse {
 	@SuppressWarnings("unused")
 	private static boolean useInMultiThreaded = false;
 
-	private static final String CONVERT_PACKAGE = "org.xblink.core.convert.converters";
-
 	private static final String CONVERT_IMPL = "org.xblink.core.convert.converters.%sConverter";
 
 	/**
@@ -37,7 +35,7 @@ public class ConverterWarehouse {
 	 */
 	public static void init() {
 		// 扫描Classpath路径的转换器类，加载到缓存中
-		List<Class<?>> convertersClzs = ConverterScan.scanPackage(CONVERT_PACKAGE);
+		List<Class<?>> convertersClzs = ConverterScan.scanConverter();
 		for (Iterator<Class<?>> iterator = convertersClzs.iterator(); iterator.hasNext();) {
 			Class<?> converterClz = iterator.next();
 			setConverter(converterClz);

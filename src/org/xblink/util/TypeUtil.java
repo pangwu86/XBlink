@@ -2,8 +2,9 @@ package org.xblink.util;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.xblink.annotation.XBlinkAsAttribute;
 import org.xblink.annotation.XBlinkConverter;
@@ -19,8 +20,7 @@ public class TypeUtil {
 	private TypeUtil() {
 	}
 
-	private static Map<Class<?>, Integer> singleValueTypeMap = new HashMap<Class<?>, Integer>();
-	private static Integer n = new Integer(1);
+	private static Set<Class<?>> singleValueTypeSet = new HashSet<Class<?>>();
 
 	/**
 	 * 添加一个类型到单值集合中。
@@ -28,7 +28,7 @@ public class TypeUtil {
 	 * @param clz
 	 */
 	public static void add2SingaleValueMap(Class<?> clz) {
-		singleValueTypeMap.put(clz, n);
+		singleValueTypeSet.add(clz);
 	}
 
 	/**
@@ -48,7 +48,7 @@ public class TypeUtil {
 	 * @return
 	 */
 	public static boolean isSingleValueType(Class<?> clz) {
-		return null != singleValueTypeMap.get(clz);
+		return singleValueTypeSet.contains(clz);
 	}
 
 	/**
@@ -78,8 +78,7 @@ public class TypeUtil {
 	 * @return
 	 */
 	public static boolean isPrimitiveType(Class<?> clz) {
-		return byte.class == clz || short.class == clz || int.class == clz || float.class == clz || double.class == clz
-				|| long.class == clz || boolean.class == clz || char.class == clz;
+		return clz.isPrimitive();
 	}
 
 	/**

@@ -38,8 +38,8 @@ public class XPP3Writer extends AbstractDocWriter {
 	}
 
 	public void writeStartDocument() throws Exception {
-		// TODO 不写了
-		// innerWriter.startDocument(encoding, null);
+		// TODO 还写不写来？
+		innerWriter.startDocument(encoding, null);
 	}
 
 	public void writeEndDocument() throws Exception {

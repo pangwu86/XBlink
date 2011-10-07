@@ -8,6 +8,10 @@ import java.io.Writer;
 
 import org.xblink.core.cache.AliasCache;
 import org.xblink.core.cache.AnalysisCache;
+import org.xblink.core.cache.UsedClassCache;
+import org.xblink.core.convert.Converter;
+import org.xblink.core.convert.ConverterRegistry;
+import org.xblink.core.convert.ConverterWarehouse;
 import org.xblink.util.IOUtil;
 
 /**
@@ -19,12 +23,27 @@ import org.xblink.util.IOUtil;
  * 
  * 
  * @author 胖五(pangwu86@gmail.com)
- * 
  */
 public class XBlink {
 
+	static {
+		// 初始化部分容器
+		ConverterWarehouse.init();
+	}
+
 	private XBlink() {
 	}
+
+	/**
+	 * 获得版本信息。
+	 * 
+	 * @return 版本信息
+	 */
+	public static String getVersion() {
+		return "1.0.0";
+	}
+
+	// ********************** 各种设定项 ********************
 
 	/**
 	 * 打开缓存。(默认状态为打开)
@@ -45,6 +64,13 @@ public class XBlink {
 	}
 
 	/**
+	 * 清空缓存。
+	 */
+	public static void cleanCache() {
+		// TODO
+	}
+
+	/**
 	 * 使用你设定的配置项，替换原有默认配置信息（全局唯一）。
 	 */
 	public static void setGlobalXBConfig(XBConfig xbConfig) {
@@ -59,20 +85,45 @@ public class XBlink {
 	}
 
 	/**
-	 * 清空缓存。
+	 * 注册一批将要被序列化或反序列化的类。<br>
+	 * 
+	 * 注册之后，生成的序列化文件中，节点名称将更加简洁。
+	 * 
+	 * @param clzs
 	 */
-	public static void cleanCache() {
-		// TODO
+	public static void registerClassesToBeUsed(Class<?>[] clzs) {
+		UsedClassCache.registerClassesToBeUsed(clzs);
+	}
+
+	/**
+	 * 注册一个将要被序列化或反序列化的类。<br>
+	 * 
+	 * 注册之后，生成的序列化文件中，节点名称将更加简洁。
+	 * 
+	 * @param classes
+	 */
+	public static void registerClassToBeUsed(Class<?> clz) {
+		UsedClassCache.registerClassToBeUsed(clz);
+	}
+
+	/**
+	 * 注册一个转换器。
+	 * 
+	 * @param converterClz
+	 */
+	public static void registerConverter(Class<? extends Converter> converterClz) {
+		ConverterRegistry.register(converterClz);
 	}
 
 	// ********************************* 通用序列化 *********************************
 
 	/**
-	 * toAny意味着你可以通过对象获得你想要的格式的文件
+	 * toAny意味着你可以通过对象获得你想要的格式的文件<br>
 	 * 
-	 * XBlink最NB的序列化方法，生成任意你想要的格式文件。
+	 * XBlink最NB的序列化方法，生成任意你想要的格式文件。<br>
+	 * <br>
 	 * 
-	 * 获得你需要的格式的字符串。
+	 * 根据docTypeName，返回对应格式的文件字符串。
 	 * 
 	 * @param obj
 	 *            需要被序列化对象
@@ -81,199 +132,226 @@ public class XBlink {
 	 * @return 字符串
 	 */
 	public static String toAny(Object obj, String docTypeName) {
-		return XBlinkHelper.toAny(obj, IOUtil.createWriter(), docTypeName);
+		return XBlinkHelper.toAny(obj, docTypeName, IOUtil.createWriter());
 	}
 
 	/**
-	 * toAny意味着你可以通过对象获得你想要的格式的文件
+	 * toAny意味着你可以通过对象获得你想要的格式的文件<br>
 	 * 
-	 * XBlink最NB的序列化方法，生成任意你想要的格式文件。
+	 * XBlink最NB的序列化方法，生成任意你想要的格式文件。<br>
+	 * <br>
 	 * 
-	 * 生成对应的文件。
+	 * 根据docTypeName，生成文件。
 	 * 
 	 * @param obj
 	 *            需要被序列化对象
+	 * @param docTypeName
+	 *            任意你想要的文档格式名称，例如JSON或者XML
 	 * @param file
 	 *            要保存的文件
-	 * @param docTypeName
-	 *            任意你想要的文档格式名称，例如JSON或者XML
 	 */
-	public static void toAny(Object obj, File file, String docTypeName) {
-		XBlinkHelper.toAny(obj, IOUtil.createWriter(file), docTypeName);
+	public static void toAny(Object obj, String docTypeName, File file) {
+		XBlinkHelper.toAny(obj, docTypeName, IOUtil.createWriter(file));
 	}
 
 	/**
-	 * toAny意味着你可以通过对象获得你想要的格式的文件
+	 * toAny意味着你可以通过对象获得你想要的格式的文件<br>
 	 * 
-	 * XBlink最NB的序列化方法，生成任意你想要的格式文件。
+	 * XBlink最NB的序列化方法，生成任意你想要的格式文件。<br>
+	 * <br>
 	 * 
-	 * 生成对应的文件。
+	 * 根据docTypeName，生成文件。
 	 * 
 	 * @param obj
 	 *            需要被序列化对象
+	 * @param docTypeName
+	 *            任意你想要的文档格式名称，例如JSON或者XML
 	 * @param outputStream
 	 *            输出流
-	 * @param docTypeName
-	 *            任意你想要的文档格式名称，例如JSON或者XML
 	 */
-	public static void toAny(Object obj, OutputStream outputStream, String docTypeName) {
-		XBlinkHelper.toAny(obj, IOUtil.createWriter(outputStream), docTypeName);
+	public static void toAny(Object obj, String docTypeName, OutputStream outputStream) {
+		XBlinkHelper.toAny(obj, docTypeName, IOUtil.createWriter(outputStream));
 	}
 
 	/**
-	 * toAny意味着你可以通过对象获得你想要的格式的文件
+	 * toAny意味着你可以通过对象获得你想要的格式的文件<br>
 	 * 
-	 * XBlink最NB的序列化方法，生成任意你想要的格式文件。
+	 * XBlink最NB的序列化方法，生成任意你想要的格式文件。<br>
+	 * <br>
 	 * 
-	 * 生成对应的文件。
+	 * 根据docTypeName，生成文件。
 	 * 
 	 * @param obj
 	 *            需要被序列化对象
-	 * @param writer
-	 *            字符输出流
 	 * @param docTypeName
 	 *            任意你想要的文档格式名称，例如JSON或者XML
+	 * @param writer
+	 *            字符输出流
 	 */
-	public static void toAny(Object obj, Writer writer, String docTypeName) {
-		XBlinkHelper.toAny(obj, IOUtil.createWriter(writer), docTypeName);
+	public static void toAny(Object obj, String docTypeName, Writer writer) {
+		XBlinkHelper.toAny(obj, docTypeName, IOUtil.createWriter(writer));
 	}
 
 	// ****************************** 通用反序列化 ******************************
 
 	/**
-	 * fromAny意味着可以从任意格式的文件中得到你想要的那个对象
+	 * fromAny意味着可以从任意格式的文件中得到你想要的那个对象。<br>
 	 * 
-	 * XBlink最NB的反序列方法，生成你需要的对象。
+	 * XBlink最NB的反序列方法，生成你需要的对象。<br>
+	 * <br>
 	 * 
-	 * @param cs
-	 *            字符信息
-	 * @param clz
-	 *            參考类
-	 * @param docTypeName
-	 *            任意你想要的文档格式名称，例如JSON或者XML
-	 * @return 参考类的实例化对象
-	 */
-	public static <T> T fromAny(CharSequence cs, Class<T> clz, String docTypeName) {
-		return XBlinkHelper.fromAny(clz, IOUtil.createReader(cs), docTypeName);
-	}
-
-	/**
-	 * fromAny意味着可以从任意格式的文件中得到你想要的那个对象
-	 * 
-	 * XBlink最NB的反序列方法，生成你需要的对象。
+	 * 根据docTypeName与其格式特点，进行反序列化生成对象。
 	 * 
 	 * @param cs
 	 *            字符信息
-	 * @param obj
-	 *            参考对象
 	 * @param docTypeName
 	 *            任意你想要的文档格式名称，例如JSON或者XML
-	 * @return 与参考对象类型相同的对象
+	 * @return 对象
 	 */
-	public static Object fromAny(CharSequence cs, Object obj, String docTypeName) {
-		return XBlinkHelper.fromAny(obj, IOUtil.createReader(cs), docTypeName);
+	public static Object fromAny(CharSequence cs, String docTypeName) {
+		return XBlinkHelper.fromAny(IOUtil.createReader(cs), docTypeName);
 	}
 
 	/**
-	 * fromAny意味着可以从任意格式的文件中得到你想要的那个对象
+	 * fromAny意味着可以从任意格式的文件中得到你想要的那个对象。<br>
 	 * 
-	 * XBlink最NB的反序列方法，生成你需要的对象。
+	 * XBlink最NB的反序列方法，生成你需要的对象。<br>
+	 * <br>
 	 * 
-	 * @param file
-	 *            待解析的文件
+	 * 根据docTypeName与其格式特点，进行反序列化生成对象。
+	 * 
+	 * @param cs
+	 *            字符信息
+	 * @param docTypeName
+	 *            任意你想要的文档格式名称，例如JSON或者XML
 	 * @param clz
 	 *            參考类
-	 * @param docTypeName
-	 *            任意你想要的文档格式名称，例如JSON或者XML
-	 * @return 参考类的实例化对象
-	 */
-	public static <T> T fromAny(File file, Class<T> clz, String docTypeName) {
-		return XBlinkHelper.fromAny(clz, IOUtil.createReader(file), docTypeName);
-	}
-
-	/**
-	 * fromAny意味着可以从任意格式的文件中得到你想要的那个对象
-	 * 
-	 * XBlink最NB的反序列方法，生成你需要的对象。
-	 * 
-	 * @param file
-	 *            待解析的文件
 	 * @param obj
 	 *            参考对象
-	 * @param docTypeName
-	 *            任意你想要的文档格式名称，例如JSON或者XML
-	 * @return 与参考对象类型相同的对象
+	 * @return 对象
 	 */
-	public static Object fromAny(File file, Object obj, String docTypeName) {
-		return XBlinkHelper.fromAny(obj, IOUtil.createReader(file), docTypeName);
+	public static Object fromAny(CharSequence cs, String docTypeName, Class<?> clz, Object obj) {
+		return XBlinkHelper.fromAny(IOUtil.createReader(cs), docTypeName, clz, obj);
 	}
 
 	/**
-	 * fromAny意味着可以从任意格式的文件中得到你想要的那个对象
+	 * fromAny意味着可以从任意格式的文件中得到你想要的那个对象。<br>
 	 * 
-	 * XBlink最NB的反序列方法，生成你需要的对象。
+	 * XBlink最NB的反序列方法，生成你需要的对象。<br>
+	 * <br>
+	 * 
+	 * 根据docTypeName与其格式特点，进行反序列化生成对象。
+	 * 
+	 * @param file
+	 *            需要解析的文件
+	 * @param docTypeName
+	 *            任意你想要的文档格式名称，例如JSON或者XML
+	 * @return 对象
+	 */
+	public static Object fromAny(File file, String docTypeName) {
+		return XBlinkHelper.fromAny(IOUtil.createReader(file), docTypeName);
+	}
+
+	/**
+	 * fromAny意味着可以从任意格式的文件中得到你想要的那个对象。<br>
+	 * 
+	 * XBlink最NB的反序列方法，生成你需要的对象。<br>
+	 * <br>
+	 * 
+	 * 根据docTypeName与其格式特点，进行反序列化生成对象。
+	 * 
+	 * @param file
+	 *            需要解析的文件
+	 * @param docTypeName
+	 *            任意你想要的文档格式名称，例如JSON或者XML
+	 * @param clz
+	 *            參考类
+	 * @param obj
+	 *            参考对象
+	 * @return 对象
+	 */
+	public static Object fromAny(File file, String docTypeName, Class<?> clz, Object obj) {
+		return XBlinkHelper.fromAny(IOUtil.createReader(file), docTypeName, clz, obj);
+	}
+
+	/**
+	 * fromAny意味着可以从任意格式的文件中得到你想要的那个对象。<br>
+	 * 
+	 * XBlink最NB的反序列方法，生成你需要的对象。<br>
+	 * <br>
+	 * 
+	 * 根据docTypeName与其格式特点，进行反序列化生成对象。
 	 * 
 	 * @param in
 	 *            输入流
-	 * @param clz
-	 *            參考类
 	 * @param docTypeName
 	 *            任意你想要的文档格式名称，例如JSON或者XML
-	 * @return 参考类的实例化对象
+	 * @return 对象
 	 */
-	public static <T> T fromAny(InputStream in, Class<T> clz, String docTypeName) {
-		return XBlinkHelper.fromAny(clz, IOUtil.createReader(in), docTypeName);
+	public static Object fromAny(InputStream in, String docTypeName) {
+		return XBlinkHelper.fromAny(IOUtil.createReader(in), docTypeName);
 	}
 
 	/**
-	 * fromAny意味着可以从任意格式的文件中得到你想要的那个对象
+	 * fromAny意味着可以从任意格式的文件中得到你想要的那个对象。<br>
 	 * 
-	 * XBlink最NB的反序列方法，生成你需要的对象。
+	 * XBlink最NB的反序列方法，生成你需要的对象。<br>
+	 * <br>
+	 * 
+	 * 根据docTypeName与其格式特点，进行反序列化生成对象。
 	 * 
 	 * @param in
 	 *            输入流
-	 * @param obj
-	 *            参考对象
 	 * @param docTypeName
 	 *            任意你想要的文档格式名称，例如JSON或者XML
-	 * @return 与参考对象类型相同的对象
-	 */
-	public static Object fromAny(InputStream in, Object obj, String docTypeName) {
-		return XBlinkHelper.fromAny(obj, IOUtil.createReader(in), docTypeName);
-	}
-
-	/**
-	 * fromAny意味着可以从任意格式的文件中得到你想要的那个对象
-	 * 
-	 * XBlink最NB的反序列方法，生成你需要的对象。
-	 * 
-	 * @param reader
-	 *            字符输入流
 	 * @param clz
 	 *            參考类
-	 * @param docTypeName
-	 *            任意你想要的文档格式名称，例如JSON或者XML
-	 * @return 参考类的实例化对象
+	 * @param obj
+	 *            参考对象
+	 * @return 对象
 	 */
-	public static <T> T fromAny(Reader reader, Class<T> clz, String docTypeName) {
-		return XBlinkHelper.fromAny(clz, IOUtil.createReader(reader), docTypeName);
+	public static Object fromAny(InputStream in, String docTypeName, Class<?> clz, Object obj) {
+		return XBlinkHelper.fromAny(IOUtil.createReader(in), docTypeName, clz, obj);
 	}
 
 	/**
-	 * fromAny意味着可以从任意格式的文件中得到你想要的那个对象
+	 * fromAny意味着可以从任意格式的文件中得到你想要的那个对象。<br>
 	 * 
-	 * XBlink最NB的反序列方法，生成你需要的对象。
+	 * XBlink最NB的反序列方法，生成你需要的对象。<br>
+	 * <br>
+	 * 
+	 * 根据docTypeName与其格式特点，进行反序列化生成对象。
 	 * 
 	 * @param reader
 	 *            字符输入流
-	 * @param obj
-	 *            参考对象
 	 * @param docTypeName
 	 *            任意你想要的文档格式名称，例如JSON或者XML
-	 * @return 与参考对象类型相同的对象
+	 * @return 对象
 	 */
-	public static Object fromAny(Reader reader, Object obj, String docTypeName) {
-		return XBlinkHelper.fromAny(obj, IOUtil.createReader(reader), docTypeName);
+	public static Object fromAny(Reader reader, String docTypeName) {
+		return XBlinkHelper.fromAny(IOUtil.createReader(reader), docTypeName);
+	}
+
+	/**
+	 * fromAny意味着可以从任意格式的文件中得到你想要的那个对象。<br>
+	 * 
+	 * XBlink最NB的反序列方法，生成你需要的对象。<br>
+	 * <br>
+	 * 
+	 * 根据docTypeName与其格式特点，进行反序列化生成对象。
+	 * 
+	 * @param reader
+	 *            字符输入流
+	 * @param docTypeName
+	 *            任意你想要的文档格式名称，例如JSON或者XML
+	 * @param clz
+	 *            參考类
+	 * @param obj
+	 *            参考对象
+	 * @return 对象
+	 */
+	public static Object fromAny(Reader reader, String docTypeName, Class<?> clz, Object obj) {
+		return XBlinkHelper.fromAny(IOUtil.createReader(reader), docTypeName, clz, obj);
 	}
 
 	// ****************************** XML序列化 *********************************
@@ -328,107 +406,107 @@ public class XBlink {
 	// ****************************** XML反序列化 ********************************
 
 	/**
-	 * 输入XML信息，根据参考类进行反序列化，返回对应对象。
+	 * 输入XML信息，返回对应对象。
+	 * 
+	 * @param cs
+	 *            字符信息
+	 * @return 对象
+	 */
+	public static Object fromXml(CharSequence cs) {
+		return XBlinkHelper.fromXml(IOUtil.createReader(cs));
+	}
+
+	/**
+	 * 输入XML信息，根据参考类（参考对象）进行反序列化，返回对应对象。
 	 * 
 	 * @param cs
 	 *            字符信息
 	 * @param clz
 	 *            參考类
-	 * @return 参考类的实例化对象
-	 */
-	public static <T> T fromXml(CharSequence cs, Class<T> clz) {
-		return XBlinkHelper.fromXml(clz, IOUtil.createReader(cs));
-	}
-
-	/**
-	 * 输入XML信息，根据参考对象进行反序列化，返回对应对象。
-	 * 
-	 * @param cs
-	 *            字符信息
 	 * @param obj
 	 *            參考对象
-	 * @return 与参考对象类型相同的对象
+	 * @return 对象
 	 */
-	public static Object fromXml(CharSequence cs, Object obj) {
-		return XBlinkHelper.fromXml(obj, IOUtil.createReader(cs));
+	public static Object fromXml(CharSequence cs, Class<?> clz, Object obj) {
+		return XBlinkHelper.fromXml(IOUtil.createReader(cs), clz, obj);
 	}
 
 	/**
-	 * 输入XML信息，根据参考类进行反序列化，返回对应对象。
+	 * 输入XML信息，返回对应对象。
+	 * 
+	 * @param file
+	 *            需要解析的文件
+	 * @return 对象
+	 */
+	public static Object fromXml(File file) {
+		return XBlinkHelper.fromXml(IOUtil.createReader(file));
+	}
+
+	/**
+	 * 输入XML信息，根据参考类（参考对象）进行反序列化，返回对应对象。
 	 * 
 	 * @param file
 	 *            需要解析的文件
 	 * @param clz
 	 *            參考类
-	 * @return 参考类的实例化对象
-	 */
-	public static <T> T fromXml(File file, Class<T> clz) {
-		return XBlinkHelper.fromXml(clz, IOUtil.createReader(file));
-	}
-
-	/**
-	 * 输入XML信息，根据参考对象进行反序列化，返回对应对象。
-	 * 
-	 * @param file
-	 *            需要解析的文件
 	 * @param obj
 	 *            參考对象
-	 * @return 与参考对象类型相同的对象
+	 * @return 对象
 	 */
-	public static Object fromXml(File file, Object obj) {
-		return XBlinkHelper.fromXml(obj, IOUtil.createReader(file));
+	public static Object fromXml(File file, Class<?> clz, Object obj) {
+		return XBlinkHelper.fromXml(IOUtil.createReader(file), clz, obj);
 	}
 
 	/**
-	 * 输入XML信息，根据参考类进行反序列化，返回对应对象。
+	 * 输入XML信息，返回对应对象。
+	 * 
+	 * @param in
+	 *            输入流
+	 * @return 对象
+	 */
+	public static Object fromXml(InputStream in) {
+		return XBlinkHelper.fromXml(IOUtil.createReader(in));
+	}
+
+	/**
+	 * 输入XML信息，根据参考类（参考对象）进行反序列化，返回对应对象。
 	 * 
 	 * @param in
 	 *            输入流
 	 * @param clz
 	 *            參考类
-	 * @return 参考类的实例化对象
-	 */
-	public static <T> T fromXml(InputStream in, Class<T> clz) {
-		return XBlinkHelper.fromXml(clz, IOUtil.createReader(in));
-	}
-
-	/**
-	 * 输入XML信息，根据参考对象进行反序列化，返回对应对象。
-	 * 
-	 * @param in
-	 *            输入流
 	 * @param obj
 	 *            參考对象
-	 * @return 与参考对象类型相同的对象
+	 * @return 对象
 	 */
-	public static Object fromXml(InputStream in, Object obj) {
-		return XBlinkHelper.fromXml(obj, IOUtil.createReader(in));
+	public static Object fromXml(InputStream in, Class<?> clz, Object obj) {
+		return XBlinkHelper.fromXml(IOUtil.createReader(in), clz, obj);
 	}
 
 	/**
-	 * 输入XML信息，根据参考类进行反序列化，返回对应对象。
+	 * 输入XML信息，返回对应对象。
+	 * 
+	 * @param reader
+	 *            字符输入流
+	 * @return 对象
+	 */
+	public static Object fromXml(Reader reader) {
+		return XBlinkHelper.fromXml(IOUtil.createReader(reader));
+	}
+
+	/**
+	 * 输入XML信息，根据参考类（参考对象）进行反序列化，返回对应对象。
 	 * 
 	 * @param reader
 	 *            字符输入流
 	 * @param clz
 	 *            參考类
-	 * @return 参考类的实例化对象
-	 */
-	public static <T> T fromXml(Reader reader, Class<T> clz) {
-		return XBlinkHelper.fromXml(clz, IOUtil.createReader(reader));
-	}
-
-	/**
-	 * 输入XML信息，根据参考对象进行反序列化，返回对应对象。
-	 * 
-	 * @param reader
-	 *            字符输入流
 	 * @param obj
 	 *            參考对象
-	 * @return 与参考对象类型相同的对象
+	 * @return 对象
 	 */
-	public static Object fromXml(Reader reader, Object obj) {
-		return XBlinkHelper.fromXml(obj, IOUtil.createReader(reader));
+	public static Object fromXml(Reader reader, Class<?> clz, Object obj) {
+		return XBlinkHelper.fromXml(IOUtil.createReader(reader), clz, obj);
 	}
 
 }

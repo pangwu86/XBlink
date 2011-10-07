@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.xblink.annotation.XBlinkAlias;
+import org.xblink.util.StringUtil;
 
 /**
  * 别名的缓存。
@@ -24,6 +25,8 @@ public class AliasCache {
 	private static boolean useFieldAliasCache = true;
 
 	private static Map<Class<?>, String> classAliasMap = new ConcurrentHashMap<Class<?>, String>();
+
+	private static Map<String, Class<?>> aliasClassMap = new ConcurrentHashMap<String, Class<?>>();
 
 	private static Map<Class<?>, Map<Field, String>> fieldAliasMap = new ConcurrentHashMap<Class<?>, Map<Field, String>>();
 
@@ -92,6 +95,7 @@ public class AliasCache {
 				className = getClassNameByAlias(clz);
 			}
 			classAliasMap.put(clz, className);
+			aliasClassMap.put(className, clz);
 		} else {
 			className = getClassNameByAlias(clz);
 		}
@@ -104,11 +108,23 @@ public class AliasCache {
 		if (null != classNameAlias) {
 			name = classNameAlias.value();
 		} else {
-			// TODO 这里到底采用哪种格式呢？
-			// name = StringUtil.lowerFirst(clz.getSimpleName());
-			// name = clz.getSimpleName().toLowerCase();
-			name = clz.getSimpleName();
+			// 如果没有被缓存过，则使用类的全名
+			if (UsedClassCache.hasThisClass(clz)) {
+				name = StringUtil.lowerFirst(clz.getSimpleName());
+			} else {
+				name = clz.getName();
+			}
 		}
 		return name;
+	}
+
+	/**
+	 * 根据别名名称拿到对应的类。
+	 * 
+	 * @param aliasName
+	 * @return
+	 */
+	public static Class<?> getClassByAliasName(String aliasName) {
+		return aliasClassMap.get(aliasName);
 	}
 }
