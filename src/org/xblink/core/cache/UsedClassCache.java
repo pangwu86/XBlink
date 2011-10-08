@@ -16,7 +16,7 @@ public class UsedClassCache {
 	 * 判断该类是否已经被注册过。
 	 * 
 	 * @param clz
-	 * @return
+	 * @return 判断结果
 	 */
 	public static boolean hasThisClass(Class<?> clz) {
 		return usedClass.contains(clz);
@@ -25,7 +25,7 @@ public class UsedClassCache {
 	/**
 	 * 注册将要被使用的类。
 	 * 
-	 * @param clzes
+	 * @param clz
 	 */
 	public static void registerClassToBeUsed(Class<?> clz) {
 		usedClass.add(clz);

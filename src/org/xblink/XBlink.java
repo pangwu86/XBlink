@@ -74,7 +74,7 @@ public class XBlink {
 	 * 
 	 * 注册之后，生成的序列化文件中，节点名称将更加简洁。
 	 * 
-	 * @param classes
+	 * @param clz
 	 */
 	public static void registerClassToBeUsed(Class<?> clz) {
 		XBlinkHelper.registerClassToBeUsed(clz);

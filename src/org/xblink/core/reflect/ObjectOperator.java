@@ -63,7 +63,7 @@ public interface ObjectOperator {
 	 * 获得Map类Key的泛型类型。
 	 * 
 	 * @param gtype
-	 *            map类
+	 *            gtype类型
 	 * @return 泛型类型
 	 */
 	public Class<?> getMapKeyGenericType(Type gtype);
@@ -71,8 +71,8 @@ public interface ObjectOperator {
 	/**
 	 * 获得Map类Value的泛型类型。
 	 * 
-	 * @param mapClz
-	 *            map类
+	 * @param gtype
+	 *            gtype类型
 	 * @return 泛型类型
 	 */
 	public Class<?> getMapValueGenericType(Type gtype);

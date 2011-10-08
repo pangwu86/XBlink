@@ -66,7 +66,7 @@ public interface DocReader {
 	/**
 	 * 根据指定名称获得当前节点的属性值(通过索引值)。
 	 * 
-	 * @param name
+	 * @param index
 	 * @return
 	 */
 	public String getAttribute(int index);

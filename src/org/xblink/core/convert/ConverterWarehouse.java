@@ -44,7 +44,7 @@ public class ConverterWarehouse {
 	 * 缓存中是否已经存在该转换器。
 	 * 
 	 * @param converterClz
-	 * @return
+	 * @return 判断结果
 	 */
 	public static boolean hasThisConverter(Class<?> converterClz) {
 		return conClzSet.contains(converterClz);
@@ -77,7 +77,7 @@ public class ConverterWarehouse {
 	/**
 	 * 获得当前仓库中所有的转换器。
 	 * 
-	 * @return
+	 * @return 转换器集合
 	 */
 	public static Collection<Converter> getAllConverters() {
 		return converterMap.values();

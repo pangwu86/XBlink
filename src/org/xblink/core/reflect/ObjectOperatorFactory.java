@@ -50,7 +50,7 @@ public class ObjectOperatorFactory {
 	/**
 	 * 生成一个对象操作者。
 	 * 
-	 * @return
+	 * @return 对象操作者
 	 */
 	public static ObjectOperator createObjectOperator() {
 		// 感觉设置成单例就够用了。

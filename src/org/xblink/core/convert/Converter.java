@@ -28,7 +28,7 @@ public interface Converter {
 	/**
 	 * 是单值类型吗?
 	 * 
-	 * @return
+	 * @return 判断结果
 	 */
 	public boolean isSingleValueType();
 

@@ -74,7 +74,7 @@ public class PathTracker {
 	/**
 	 * 以字符串形式获得引用路径。
 	 * 
-	 * @param path
+	 * @param refPath
 	 *            引用对象路径
 	 * @return 字符串路径
 	 */
@@ -90,7 +90,7 @@ public class PathTracker {
 	 * 
 	 * @param relativePath
 	 *            引用对象相对路径
-	 * @return
+	 * @return 绝对路径
 	 */
 	public String getTargetNodeAbsolutePathAsString(String relativePath) {
 		return PathCalc.calcAbsolutePath(getCurrentPath(), PathCalc.getSts(relativePath));

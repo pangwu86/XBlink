@@ -85,7 +85,7 @@ public class XBConfig {
 	/**
 	 * 设置忽略Transient字段。
 	 * 
-	 * @param ignoreNull
+	 * @param ignoreTransient
 	 * @return
 	 */
 	public XBConfig setIgnoreTransient(boolean ignoreTransient) {

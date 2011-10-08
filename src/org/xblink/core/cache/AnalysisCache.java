@@ -28,7 +28,7 @@ public class AnalysisCache {
 	 * 
 	 * @param clz
 	 * @param ignoreTransient
-	 * @return
+	 * @return 分析对象
 	 */
 	public static AnalysisObject getAnalysisObject(Class<?> clz, boolean ignoreTransient) {
 		AnalysisObject analysisObject = null;

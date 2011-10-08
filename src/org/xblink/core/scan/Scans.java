@@ -21,7 +21,7 @@ public class Scans {
 	 * 扫描指定包下的所有Class。（递归调用，包含子目录）
 	 * 
 	 * @param pkg
-	 * @return
+	 * @return 类集合
 	 */
 	public static List<Class<?>> scanPackage(String pkg) {
 		// TODO 尚未实现扫描

@@ -140,7 +140,7 @@ public class AnalysisObject {
 	 * 根据Field获取对应的自定义转换器
 	 * 
 	 * @param field
-	 * @return
+	 * @return 转换器
 	 */
 	public Converter getFieldConverter(Field field) {
 		return customizedFieldMap.get(field);
@@ -150,7 +150,7 @@ public class AnalysisObject {
 	 * 判断Field是否有对应的自定义转换器
 	 * 
 	 * @param field
-	 * @return
+	 * @return 判断结果
 	 */
 	public boolean isFieldHasConverter(Field field) {
 		return customizedFieldMap.containsKey(field);

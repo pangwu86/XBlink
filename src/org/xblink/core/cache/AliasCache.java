@@ -31,7 +31,7 @@ public class AliasCache {
 	 * 
 	 * @param clz
 	 * @param field
-	 * @return
+	 * @return 成员名称
 	 */
 	public static String getFieldName(Class<?> clz, Field field) {
 		String fieldName = null;
@@ -64,7 +64,7 @@ public class AliasCache {
 	 * 获得类名称。
 	 * 
 	 * @param clz
-	 * @return
+	 * @return 名称
 	 */
 	public static String getClassName(Class<?> clz) {
 		String className = null;
@@ -103,7 +103,7 @@ public class AliasCache {
 	 * 根据类名(别名)名称拿到对应的类。
 	 * 
 	 * @param aliasName
-	 * @return
+	 * @return 类
 	 */
 	public static Class<?> getClassByAliasName(String aliasName) {
 		// 数组类需要修正
@@ -118,20 +118,11 @@ public class AliasCache {
 	}
 
 	/**
-	 * 手动注册一个类与其名称。
-	 * 
-	 * @param clz
-	 * @param name
-	 */
-	public static void registerClassAndName(Class<?> clz, String name) {
-		// TODO
-	}
-
-	/**
 	 * 手动注册一个数组类。
 	 * 
 	 * @param clz
-	 * @param name
+	 *            数组类
+	 * 
 	 */
 	public static void registerArrayClass(Class<?> clz) {
 		String clzName = Constant.ARRAY_CLZ + AliasCache.getClassName(ArrayUtil.getComponentClass(clz.getName()));
