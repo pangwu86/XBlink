@@ -7,26 +7,6 @@ import java.io.Writer;
 
 import org.xblink.rep.org.xmlpull.v1.XmlSerializer;
 
-/**
- * Implementation of XmlSerializer interface from XmlPull V1 API. This
- * implementation is optimzied for performance and low memory footprint.
- * 
- * <p>
- * Implemented features:
- * <ul>
- * <li>FEATURE_NAMES_INTERNED - when enabled all returned names (namespaces,
- * prefixes) will be interned and it is required that all names passed as
- * arguments MUST be interned
- * <li>FEATURE_SERIALIZER_ATTVALUE_USE_APOSTROPHE
- * </ul>
- * <p>
- * Implemented properties:
- * <ul>
- * <li>PROPERTY_SERIALIZER_INDENTATION
- * <li>PROPERTY_SERIALIZER_LINE_SEPARATOR
- * </ul>
- * 
- */
 public class MXSerializer implements XmlSerializer {
 	protected final static String XML_URI = "http://www.w3.org/XML/1998/namespace";
 	protected final static String XMLNS_URI = "http://www.w3.org/2000/xmlns/";
@@ -39,7 +19,6 @@ public class MXSerializer implements XmlSerializer {
 	protected final String PROPERTY_SERIALIZER_LINE_SEPARATOR = "http://xmlpull.org/v1/doc/properties.html#serializer-line-separator";
 	protected final static String PROPERTY_LOCATION = "http://xmlpull.org/v1/doc/properties.html#location";
 
-	// properties/features
 	protected boolean namesInterned;
 	protected boolean attributeUseApostrophe;
 	protected String indentationString = null; // " ";
@@ -52,13 +31,11 @@ public class MXSerializer implements XmlSerializer {
 
 	protected int depth = 0;
 
-	// element stack
 	protected String elNamespace[] = new String[2];
 	protected String elName[] = new String[elNamespace.length];
 	protected String elPrefix[] = new String[elNamespace.length];
 	protected int elNamespaceCount[] = new int[elNamespace.length];
 
-	// namespace stack
 	protected int namespaceEnd = 0;
 	protected String namespacePrefix[] = new String[8];
 	protected String namespaceUri[] = new String[namespacePrefix.length];
@@ -74,7 +51,6 @@ public class MXSerializer implements XmlSerializer {
 	protected boolean seenBracket;
 	protected boolean seenBracketBracket;
 
-	// buffer output if neede to write escaped String see text(String)
 	private static final int BUF_LEN = Runtime.getRuntime().freeMemory() > 1000000L ? 8 * 1024 : 256;
 	protected char buf[] = new char[BUF_LEN];
 
@@ -112,16 +88,6 @@ public class MXSerializer implements XmlSerializer {
 
 		namespaceEnd = 0;
 
-		// NOTE: no need to intern() as all literal strings and string-valued
-		// constant expressions
-		// are interned. String literals are defined in 3.10.5 of the Java
-		// Language Specification
-		// just checking ...
-		// assert "xmlns" == "xmlns".intern();
-		// assert XMLNS_URI == XMLNS_URI.intern();
-
-		// TODO: how to prevent from reporting this namespace?
-		// this is special namespace declared for consistensy with XML infoset
 		namespacePrefix[namespaceEnd] = "xmlns";
 		namespaceUri[namespaceEnd] = XMLNS_URI;
 		++namespaceEnd;
@@ -179,12 +145,6 @@ public class MXSerializer implements XmlSerializer {
 	}
 
 	protected void ensureNamespacesCapacity() { // int size) {
-		// int namespaceSize = namespacePrefix != null ? namespacePrefix.length
-		// : 0;
-		// assert (namespaceEnd >= namespacePrefix.length);
-
-		// if(size >= namespaceSize) {
-		// int newSize = size > 7 ? 2 * size : 8; // = lucky 7 + 1 //25
 		final int newSize = namespaceEnd > 7 ? 2 * namespaceEnd : 8;
 		if (TRACE_SIZING) {
 			System.err.println(getClass().getName() + " namespaceSize " + namespacePrefix.length + " ==> " + newSize);
@@ -197,19 +157,6 @@ public class MXSerializer implements XmlSerializer {
 		}
 		namespacePrefix = newNamespacePrefix;
 		namespaceUri = newNamespaceUri;
-
-		// TODO use hashes for quick namespace->prefix lookups
-		// if( ! allStringsInterned ) {
-		// int[] newNamespacePrefixHash = new int[newSize];
-		// if(namespacePrefixHash != null) {
-		// System.arraycopy(
-		// namespacePrefixHash, 0, newNamespacePrefixHash, 0, namespaceEnd);
-		// }
-		// namespacePrefixHash = newNamespacePrefixHash;
-		// }
-		// prefixesSize = newSize;
-		// ////assert nsPrefixes.length > size && nsPrefixes.length == newSize
-		// }
 	}
 
 	public void setFeature(String name, boolean state) throws IllegalArgumentException, IllegalStateException {
@@ -246,11 +193,6 @@ public class MXSerializer implements XmlSerializer {
 	protected boolean writeLineSepartor; // should end-of-line be written
 	protected boolean writeIndentation; // is indentation used?
 
-	/**
-	 * For maximum efficiency when writing indents the required output is
-	 * pre-computed This is internal function that recomputes buffer after user
-	 * requested chnages.
-	 */
 	protected void rebuildIndentationBuf() {
 		if (doIndent == false)
 			return;
@@ -335,8 +277,6 @@ public class MXSerializer implements XmlSerializer {
 		return location != null ? " @" + location : "";
 	}
 
-	// this is special method that can be accessed directly to retrieve Writer
-	// serializer is using
 	public Writer getWriter() {
 		return out;
 	}
@@ -380,22 +320,14 @@ public class MXSerializer implements XmlSerializer {
 				out.write("no");
 			}
 			out.write(attributeUseApostrophe ? '\'' : '"');
-			// if(standalone.booleanValue()) {
-			// out.write(" standalone='yes'");
-			// } else {
-			// out.write(" standalone='no'");
-			// }
 		}
 		out.write("?>");
 	}
 
 	public void endDocument() throws IOException {
-		// close all unclosed tag;
 		while (depth > 0) {
 			endTag(elNamespace[depth], elName[depth]);
 		}
-		// assert depth == 0;
-		// assert startTagIncomplete == false;
 		finished = pastRoot = startTagIncomplete = true;
 		out.flush();
 	}
@@ -403,8 +335,6 @@ public class MXSerializer implements XmlSerializer {
 	public void setPrefix(String prefix, String namespace) throws IOException {
 		if (startTagIncomplete)
 			closeStartTag();
-		// assert prefix != null;
-		// assert namespace != null;
 		if (prefix == null) {
 			prefix = "";
 		}
@@ -488,22 +418,16 @@ public class MXSerializer implements XmlSerializer {
 	}
 
 	private String generatePrefix(String namespace) {
-		// assert namespace == namespace.intern();
 		while (true) {
 			++autoDeclaredPrefixes;
-			// fast lookup uses table that was pre-initialized in static{} ....
 			final String prefix = autoDeclaredPrefixes < precomputedPrefixes.length ? precomputedPrefixes[autoDeclaredPrefixes]
 					: ("n" + autoDeclaredPrefixes).intern();
-			// make sure this prefix is not declared in any scope (avoid hiding
-			// in-scope prefixes)!
 			for (int i = namespaceEnd - 1; i >= 0; --i) {
 				if (prefix == namespacePrefix[i]) {
 					continue; // prefix is already declared - generate new and
 								// try again
 				}
 			}
-			// declare prefix
-
 			if (namespaceEnd >= namespacePrefix.length) {
 				ensureNamespacesCapacity();
 			}
@@ -542,13 +466,9 @@ public class MXSerializer implements XmlSerializer {
 		if ((depth + 1) >= elName.length) {
 			ensureElementsCapacity();
 		}
-		// //assert namespace != null;
-
 		if (checkNamesInterned && namesInterned)
 			checkInterning(namespace);
 		elNamespace[depth] = (namesInterned || namespace == null) ? namespace : namespace.intern();
-		// assert name != null;
-		// elName[ depth ] = name;
 		if (checkNamesInterned && namesInterned)
 			checkInterning(name);
 		elName[depth] = (namesInterned || name == null) ? name : name.intern();
@@ -561,13 +481,9 @@ public class MXSerializer implements XmlSerializer {
 				// ALEK: in future make this algo a feature on serializer
 				String prefix = null;
 				if (depth > 0 && (namespaceEnd - elNamespaceCount[depth - 1]) == 1) {
-					// if only one prefix was declared un-declare it if the
-					// prefix is already declared on parent el with the same URI
 					String uri = namespaceUri[namespaceEnd - 1];
 					if (uri == namespace || uri.equals(namespace)) {
 						String elPfx = namespacePrefix[namespaceEnd - 1];
-						// 2 == to skip predefined namesapces (xml and xmlns
-						// ...)
 						for (int pos = elNamespaceCount[depth - 1] - 1; pos >= 2; --pos) {
 							String pf = namespacePrefix[pos];
 							if (pf == elPfx || pf.equals(elPfx)) {
@@ -585,8 +501,6 @@ public class MXSerializer implements XmlSerializer {
 				if (prefix == null) {
 					prefix = lookupOrDeclarePrefix(namespace);
 				}
-				// assert prefix != null;
-				// make sure that default ("") namespace to not print ":"
 				if (prefix.length() > 0) {
 					elPrefix[depth] = prefix;
 					out.write(prefix);
@@ -622,35 +536,22 @@ public class MXSerializer implements XmlSerializer {
 		if (!startTagIncomplete) {
 			throw new IllegalArgumentException("startTag() must be called before attribute()" + getLocation());
 		}
-		// assert setPrefixCalled == false;
 		out.write(' ');
-		// //assert namespace != null;
 		if (namespace != null && namespace.length() > 0) {
-			// namespace = namespace.intern();
 			if (!namesInterned) {
 				namespace = namespace.intern();
 			} else if (checkNamesInterned) {
 				checkInterning(namespace);
 			}
 			String prefix = getPrefix(namespace, false, true);
-			// assert( prefix != null);
-			// if(prefix.length() == 0) {
 			if (prefix == null) {
-				// needs to declare prefix to hold default namespace
-				// NOTE: attributes such as a='b' are in NO namespace
 				prefix = generatePrefix(namespace);
 			}
 			out.write(prefix);
 			out.write(':');
-			// if(prefix.length() > 0) {
-			// out.write(prefix);
-			// out.write(':');
-			// }
 		}
-		// assert name != null;
 		out.write(name);
 		out.write('=');
-		// assert value != null;
 		out.write(attributeUseApostrophe ? '\'' : '"');
 		writeAttributeValue(value, out);
 		out.write(attributeUseApostrophe ? '\'' : '"');
@@ -673,7 +574,6 @@ public class MXSerializer implements XmlSerializer {
 				throw new IllegalArgumentException("trying to close start tag that is not opened" + getLocation());
 			}
 
-			// write all namespace delcarations!
 			writeNamespaceDeclarations();
 			out.write('>');
 			elNamespaceCount[depth] = namespaceEnd;
@@ -682,7 +582,6 @@ public class MXSerializer implements XmlSerializer {
 	}
 
 	private void writeNamespaceDeclarations() throws IOException {
-		// int start = elNamespaceCount[ depth - 1 ];
 		for (int i = elNamespaceCount[depth - 1]; i < namespaceEnd; i++) {
 			if (doIndent && namespaceUri[i].length() > 40) {
 				writeIndent();
@@ -697,7 +596,6 @@ public class MXSerializer implements XmlSerializer {
 			}
 			out.write(attributeUseApostrophe ? '\'' : '"');
 
-			// NOTE: escaping of namespace value the same way as attributes!!!!
 			writeAttributeValue(namespaceUri[i], out);
 
 			out.write(attributeUseApostrophe ? '\'' : '"');
@@ -705,11 +603,6 @@ public class MXSerializer implements XmlSerializer {
 	}
 
 	public XmlSerializer endTag(String namespace, String name) throws IOException {
-		// check that level is valid
-		// //assert namespace != null;
-		// if(namespace != null) {
-		// namespace = namespace.intern();
-		// }
 		seenBracket = seenBracketBracket = false;
 		if (namespace != null) {
 			if (!namesInterned) {
@@ -750,16 +643,6 @@ public class MXSerializer implements XmlSerializer {
 				out.write(startTagPrefix);
 				out.write(':');
 			}
-
-			// if(namespace != null && namespace.length() > 0) {
-			// //TODO prefix should be alredy known from matching start tag ...
-			// final String prefix = lookupOrDeclarePrefix( namespace );
-			// //assert( prefix != null);
-			// if(prefix.length() > 0) {
-			// out.write(prefix);
-			// out.write(':');
-			// }
-			// }
 			out.write(name);
 			out.write('>');
 			--depth;
@@ -771,7 +654,6 @@ public class MXSerializer implements XmlSerializer {
 	}
 
 	public XmlSerializer text(String text) throws IOException {
-		// assert text != null;
 		if (startTagIncomplete || setPrefixCalled)
 			closeStartTag();
 		if (doIndent && seenTag)
@@ -856,8 +738,6 @@ public class MXSerializer implements XmlSerializer {
 		out.flush();
 	}
 
-	// --- utility methods
-
 	protected void writeAttributeValue(String value, Writer out) throws IOException {
 		// .[apostrophe and <, & escaped],
 		final char quot = attributeUseApostrophe ? '\'' : '"';
@@ -883,9 +763,6 @@ public class MXSerializer implements XmlSerializer {
 				out.write(quotEntity);
 				pos = i + 1;
 			} else if (ch < 32) {
-				// in XML 1.0 only legal character are #x9 | #xA | #xD
-				// and they must be escaped otherwise in attribute value they
-				// are normalized to spaces
 				if (ch == 13 || ch == 10 || ch == 9) {
 					if (i > pos)
 						out.write(value.substring(pos, i));
@@ -902,17 +779,6 @@ public class MXSerializer implements XmlSerializer {
 					// "character "+Integer.toString(ch)+" is not allowed in output"+getLocation());
 							"character " + printable(ch) + " (" + Integer.toString(ch) + ") is not allowed in output"
 									+ getLocation() + " (attr value=" + printable(value) + ")");
-					// in XML 1.1 legal are [#x1-#xD7FF]
-					// if(ch > 0) {
-					// if(i > pos) out.write(text.substring(pos, i));
-					// out.write("&#");
-					// out.write(Integer.toString(ch));
-					// out.write(';');
-					// pos = i + 1;
-					// } else {
-					// throw new IllegalStateException(
-					// "character zero is not allowed in XML 1.1 output"+getLocation());
-					// }
 				}
 			}
 		}
@@ -925,11 +791,8 @@ public class MXSerializer implements XmlSerializer {
 	}
 
 	protected void writeElementContent(String text, Writer out) throws IOException {
-		// esccape '<', '&', ']]>', <32 if necessary
 		int pos = 0;
 		for (int i = 0; i < text.length(); i++) {
-			// TODO: check if doing char[] text.getChars() would be faster than
-			// getCharAt(i) ...
 			char ch = text.charAt(i);
 			if (ch == ']') {
 				if (seenBracket) {
@@ -956,31 +819,12 @@ public class MXSerializer implements XmlSerializer {
 				} else if (ch < 32) {
 					// in XML 1.0 only legal character are #x9 | #xA | #xD
 					if (ch == 9 || ch == 10 || ch == 13) {
-						// pass through
-
-						// } else if(ch == 13) { //escape
-						// if(i > pos) out.write(text.substring(pos, i));
-						// out.write("&#");
-						// out.write(Integer.toString(ch));
-						// out.write(';');
-						// pos = i + 1;
 					} else {
 						if (TRACE_ESCAPING)
 							System.err.println(getClass().getName() + " DEBUG TEXT value.len=" + text.length() + " "
 									+ printable(text));
 						throw new IllegalStateException("character " + Integer.toString(ch)
 								+ " is not allowed in output" + getLocation() + " (text value=" + printable(text) + ")");
-						// in XML 1.1 legal are [#x1-#xD7FF]
-						// if(ch > 0) {
-						// if(i > pos) out.write(text.substring(pos, i));
-						// out.write("&#");
-						// out.write(Integer.toString(ch));
-						// out.write(';');
-						// pos = i + 1;
-						// } else {
-						// throw new IllegalStateException(
-						// "character zero is not allowed in XML 1.1 output"+getLocation());
-						// }
 					}
 				}
 				if (seenBracket) {
@@ -998,7 +842,6 @@ public class MXSerializer implements XmlSerializer {
 	}
 
 	protected void writeElementContent(char[] buf, int off, int len, Writer out) throws IOException {
-		// esccape '<', '&', ']]>'
 		final int end = off + len;
 		int pos = off;
 		for (int i = off; i < end; i++) {
@@ -1030,35 +873,13 @@ public class MXSerializer implements XmlSerializer {
 					out.write("&gt;");
 					pos = i + 1;
 				} else if (ch < 32) {
-					// in XML 1.0 only legal character are #x9 | #xA | #xD
 					if (ch == 9 || ch == 10 || ch == 13) {
-						// pass through
-
-						// } else if(ch == 13 ) { //if(ch == '\r') {
-						// if(i > pos) {
-						// out.write(buf, pos, i - pos);
-						// }
-						// out.write("&#");
-						// out.write(Integer.toString(ch));
-						// out.write(';');
-						// pos = i + 1;
 					} else {
 						if (TRACE_ESCAPING)
 							System.err.println(getClass().getName() + " DEBUG TEXT value.len=" + len + " "
 									+ printable(new String(buf, off, len)));
 						throw new IllegalStateException("character " + printable(ch) + " (" + Integer.toString(ch)
 								+ ") is not allowed in output" + getLocation());
-						// in XML 1.1 legal are [#x1-#xD7FF]
-						// if(ch > 0) {
-						// if(i > pos) out.write(text.substring(pos, i));
-						// out.write("&#");
-						// out.write(Integer.toString(ch));
-						// out.write(';');
-						// pos = i + 1;
-						// } else {
-						// throw new IllegalStateException(
-						// "character zero is not allowed in XML 1.1 output"+getLocation());
-						// }
 					}
 				}
 				if (seenBracket) {
