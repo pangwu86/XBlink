@@ -22,4 +22,7 @@ public class Constant {
 	/** Map集合中每个对象 */
 	public final static String MAP_ENTRY = "entry";
 
+	/** 组数类的前缀 */
+	public final static String ARRAY_CLZ = "array-";
+
 }

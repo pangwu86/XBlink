@@ -27,6 +27,8 @@ public class TransferInfo {
 	private final Map<String, Object> pathRefMap;
 	private final List<UnfinishedSetField> unfins;
 
+	private boolean isArrayClass;
+
 	public TransferInfo(PathTracker pathTracker, XBConfig xbConfig, DocWriter docWriter, DocReader docReader,
 			ObjectOperator objectOperator) {
 		this.pathTracker = pathTracker;
@@ -37,6 +39,7 @@ public class TransferInfo {
 		this.refMap = new HashMap<Object, ReferenceObject>();
 		this.pathRefMap = new HashMap<String, Object>();
 		this.unfins = new ArrayList<UnfinishedSetField>();
+		this.isArrayClass = false;
 	}
 
 	public PathTracker getPathTracker() {
@@ -69,6 +72,14 @@ public class TransferInfo {
 
 	public List<UnfinishedSetField> getUnfins() {
 		return unfins;
+	}
+
+	public boolean isArrayClass() {
+		return isArrayClass;
+	}
+
+	public void setArrayClass(boolean isArrayClass) {
+		this.isArrayClass = isArrayClass;
 	}
 
 }

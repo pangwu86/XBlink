@@ -12,7 +12,6 @@ public class BasicObjectTest {
 		BasicObject basicObject = new BasicObject();
 		basicObject.setName("wupw");
 		basicObject.setAddress("87hao");
-
 		System.out.println(XBlink.toXml(basicObject));
 	}
 

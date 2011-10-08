@@ -110,4 +110,20 @@ public class TypeUtil {
 	public static boolean isCustomizedField(Field field) {
 		return null != field.getAnnotation(XBlinkConverter.class);
 	}
+
+	/**
+	 * 尝试寻找并加载这个类。
+	 * 
+	 * @param clzName
+	 * @return
+	 */
+	public static Class<?> tryFindThisClass(String clzName) {
+		Class<?> clz = null;
+		try {
+			clz = Class.forName(clzName);
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException(String.format("无法加载[%s]这个类。", clzName), e);
+		}
+		return clz;
+	}
 }

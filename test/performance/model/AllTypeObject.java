@@ -25,9 +25,9 @@ public class AllTypeObject {
 
 	private List<String> strs;
 
-	private Set<Object> objs;
+	private Set<Object> objSet;
 
-	private Map<Integer, Object> clzMap;
+	private Map<Integer, Object> objMap;
 
 	public int getI() {
 		return i;
@@ -77,20 +77,20 @@ public class AllTypeObject {
 		this.strs = strs;
 	}
 
-	public Set<Object> getObjs() {
-		return objs;
+	public Set<Object> getObjSet() {
+		return objSet;
 	}
 
-	public void setObjs(Set<Object> objs) {
-		this.objs = objs;
+	public void setObjSet(Set<Object> objSet) {
+		this.objSet = objSet;
 	}
 
-	public Map<Integer, Object> getClzMap() {
-		return clzMap;
+	public Map<Integer, Object> getObjMap() {
+		return objMap;
 	}
 
-	public void setClzMap(Map<Integer, Object> clzMap) {
-		this.clzMap = clzMap;
+	public void setObjMap(Map<Integer, Object> objMap) {
+		this.objMap = objMap;
 	}
 
 }

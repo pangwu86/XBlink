@@ -15,6 +15,7 @@ import org.xblink.core.cache.AliasCache;
 import org.xblink.core.cache.AnalysisCache;
 import org.xblink.core.convert.Converter;
 import org.xblink.core.convert.ConverterWarehouse;
+import org.xblink.util.ArrayUtil;
 import org.xblink.util.StringUtil;
 import org.xblink.util.TypeUtil;
 
@@ -89,6 +90,12 @@ public class Serializer {
 
 	private static void writeCollection(Class<?> objClz, Object obj, TransferInfo transferInfo, String tagName)
 			throws Exception {
+		// 数组类型的tagName要修正
+		if (objClz.isArray() && ArrayUtil.tagNameIsArrayName(tagName)) {
+			// 注册该类并获得新名称
+			AliasCache.registerArrayClass(objClz);
+			tagName = AliasCache.getClassName(objClz);
+		}
 		transferInfo.getDocWriter().writeStartTag(tagName);
 		SerialHelper.recordReferenceObjectByObj(obj, transferInfo);
 		if (objClz.isArray()) {

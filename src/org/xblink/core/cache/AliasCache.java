@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.xblink.annotation.XBlinkAlias;
+import org.xblink.core.Constant;
+import org.xblink.util.ArrayUtil;
 import org.xblink.util.StringUtil;
 
 /**
@@ -104,6 +106,36 @@ public class AliasCache {
 	 * @return
 	 */
 	public static Class<?> getClassByAliasName(String aliasName) {
-		return aliasClassMap.get(aliasName);
+		// 数组类需要修正
+		Class<?> clz = aliasClassMap.get(aliasName);
+		if (null == clz) {
+			// 如果是数组类的话
+			if (ArrayUtil.tagNameIsArrayClass(aliasName)) {
+				clz = ArrayUtil.getComponentClassByArrayName(aliasName);
+			}
+		}
+		return clz;
+	}
+
+	/**
+	 * 手动注册一个类与其名称。
+	 * 
+	 * @param clz
+	 * @param name
+	 */
+	public static void registerClassAndName(Class<?> clz, String name) {
+		// TODO
+	}
+
+	/**
+	 * 手动注册一个数组类。
+	 * 
+	 * @param clz
+	 * @param name
+	 */
+	public static void registerArrayClass(Class<?> clz) {
+		String clzName = Constant.ARRAY_CLZ + AliasCache.getClassName(ArrayUtil.getComponentClass(clz.getName()));
+		aliasClassMap.put(clzName, clz);
+		classAliasMap.put(clz, clzName);
 	}
 }

@@ -19,6 +19,7 @@ import org.xblink.core.cache.AliasCache;
 import org.xblink.core.cache.AnalysisCache;
 import org.xblink.core.convert.ConverterWarehouse;
 import org.xblink.core.doc.DocReader;
+import org.xblink.util.ArrayUtil;
 import org.xblink.util.TypeUtil;
 
 /**
@@ -43,7 +44,11 @@ public class Deserializer {
 			// Object.class没有任何用与null等同
 			objClz = null;
 		}
-		if (null == objClz) {
+		// 数组的特殊处理
+		if (transferInfo.isArrayClass()) {
+			// 集合类型
+			result = readCollection(objClz, obj, field, transferInfo);
+		} else if (null == objClz) {
 			// 最麻烦的情况了，需要根据名称进行猜测，找到对应的类进行处理
 			// 这里怎么处理来，主要是集合类型与Map类型，没有使用泛型的情况下，如何去做
 			result = readAnyType(transferInfo);
@@ -83,18 +88,17 @@ public class Deserializer {
 		// 只能根据名称去猜测类型
 		String nodeName = transferInfo.getDocReader().getNodeName();
 		Class<?> classType = tryFindTypeByNodeName(nodeName);
+		// 如果是数组类，需要特殊处理
+		if (!classType.isArray() && ArrayUtil.tagNameIsArrayClass(nodeName)) {
+			transferInfo.setArrayClass(true);
+		}
 		return readUnknow(classType, null, null, transferInfo);
 	}
 
 	private static Class<?> tryFindTypeByNodeName(String nodeName) {
 		Class<?> type = AliasCache.getClassByAliasName(nodeName);
 		if (null == type) {
-			// 尝试根据名称去加载
-			try {
-				type = Class.forName(nodeName);
-			} catch (ClassNotFoundException e) {
-				throw new RuntimeException(String.format("无法根据节点名称[%s]找个对应的类。", nodeName), e);
-			}
+			type = TypeUtil.tryFindThisClass(nodeName);
 		}
 		return type;
 	}
@@ -134,8 +138,14 @@ public class Deserializer {
 			throws Exception {
 		DocReader docReader = transferInfo.getDocReader();
 		Object result = null;
-		if (objClz.isArray()) {
-			Class<?> arrayItemClz = objClz.getComponentType();
+		if (transferInfo.isArrayClass() || objClz.isArray()) {
+			Class<?> arrayItemClz = null;
+			if (transferInfo.isArrayClass()) {
+				arrayItemClz = objClz;
+				transferInfo.setArrayClass(false);
+			} else {
+				arrayItemClz = objClz.getComponentType();
+			}
 			List<Object> items = new ArrayList<Object>();
 			while (docReader.hasMoreChildren()) {
 				docReader.moveDown();
