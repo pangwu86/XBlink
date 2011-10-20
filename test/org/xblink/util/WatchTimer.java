@@ -51,6 +51,7 @@ public class WatchTimer {
 	 * @return
 	 */
 	public float getSpeedKPerSecond() {
+		//不需要这样转吧??
 		return (float) (bytes / 1024) / (float) (getSpan() / (float) (1000 * 1000 * 1000));
 	}
 

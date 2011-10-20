@@ -26,7 +26,7 @@ public class ConverterWareHouseTest {
 	public void findNotExist() throws Exception {
 		boolean notExist = false;
 		try {
-			Converter sConverter = ConverterWarehouse.searchConverterForType(java.sql.Date.class, null);
+			ConverterWarehouse.searchConverterForType(java.sql.Date.class, null);
 		} catch (Exception e) {
 			notExist = true;
 		}

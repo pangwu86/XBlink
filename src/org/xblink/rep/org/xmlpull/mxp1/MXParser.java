@@ -2043,6 +2043,7 @@ public class MXParser implements XmlPullParser {
 			// throw new XmlPullParserException(
 			// "processing instruction must have PITarget name", this, null);
 		}
+		//这两个赋值,没意义吧?
 		piTargetStart -= bufAbsoluteStart;
 		piTargetEnd -= bufAbsoluteStart;
 		if (tokenize) {

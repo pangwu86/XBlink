@@ -24,9 +24,10 @@ public class SchoolFactory {
 		return school;
 	}
 
+	private static final Random rd = new Random();
 	public static Grade getGrade(int s, int b, School school) throws Exception {
 		Grade grade = new Grade();
-		grade.setLevel(new Random().nextLong());
+		grade.setLevel(rd.nextLong());
 		Student[] students = new Student[s];
 		for (int i = 0; i < s; i++) {
 			students[i] = getStudent(b, grade, school);
@@ -38,7 +39,7 @@ public class SchoolFactory {
 	public static Student getStudent(int b, Grade grade, School school) throws Exception {
 		Student student = new Student();
 		student.setAge(new Random().nextInt(100));
-		student.setName("Stu_" + String.valueOf(new Random().nextDouble()));
+		student.setName("Stu_" + String.valueOf(rd.nextDouble()));
 		// student.setGrade(grade);
 		// student.setSchool(school);
 		Set<Book> books = new HashSet<Book>();
