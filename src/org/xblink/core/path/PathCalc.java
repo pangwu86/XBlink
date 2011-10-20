@@ -52,6 +52,7 @@ public class PathCalc {
 			int dif = 0;
 			// 从头开始比较
 			for (int i = 0; i < cDepth; i++) {
+				//为何要用!=呢? 字符串对比,这样不太好吧
 				if (currentPath[i] != targetPath[i]) {
 					// 分支路口
 					dif = i;
