@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="XBlink" default="run" basedir="../">
+	<description>
+		说明:
+			修改xblink.jar.pre 可生成正式版与快照版发布包
+		
+		本构建用来生成一个 zip 包，其中包括
+			* API 文档
+			* JDK1.5 版本 jar
+			* JDK1.6 版本 jar
+			* JUnit 测试结果
+		
+		环境变量 ${OUTPUT} 声明了 zip 文件包的输出位置
+		
+		构建结束后，会删除所有临时文件
+    </description>
+
+	<property environment="env" />
+
+	<property name="OUTPUT" value="build" />
+
+	<tstamp>
+		<format property="now-date" locale="zh" pattern="yyyyMMdd" />
+	</tstamp>
+
+	<property name="xblink-version" value="1.0.1" />
+	<property name="tmp-dir" value="build/tmp" />
+	<property name="pub-dir" value="build/pub" />
+	<property name="classes-dir-jdk5" value="${tmp-dir}/jdk5" />
+	<property name="classes-dir-jdk6" value="${tmp-dir}/jdk6" />
+	<property name="classes-dir-test" value="${tmp-dir}/test" />
+	<property name="javadoc-dir" value="${pub-dir}/api" />
+	<property name="tmp-junitreport-dir" value="${tmp-dir}/junit-report" />
+	<property name="pub-junitreport-dir" value="${pub-dir}/junit-report" />
+
+
+	<property name="xblink.jar.pre" value="xblink-${xblink-version}" />
+	<!-- 用于快照版 -->
+	<!-- <property name="xblink.jar.pre" value="xblink-${xblink-version}-snapshot-${now-date}" /> -->
+	<!-- 用于正式版 -->
+	<!-- <property name="xblink.jar.pre" value="xblink-${xblink-version}" /> -->
+
+	<property name="xblink.jar.source" value="${pub-dir}/${xblink.jar.pre}-source.jar" />
+	<property name="xblink.jar.jdk5" value="${pub-dir}/${xblink.jar.pre}-jdk5.jar" />
+	<property name="xblink.jar.jdk6" value="${pub-dir}/${xblink.jar.pre}-jdk6.jar" />
+	<property name="xblink.jar.jdoc" value="${pub-dir}/${xblink.jar.pre}-javadoc.jar" />
+	<property name="xblink.pub.zip" value="${OUTPUT}/${xblink.jar.pre}.zip" />
+
+	<path id="xblink-classpath">
+		<pathelement location="${basedir}/lib" />
+		<path>
+			<fileset dir="${basedir}/lib" includes="**/*.jar" />
+		</path>
+		<pathelement location="${JAVA_HOME}/lib/tools.jar" />
+	</path>
+
+
+	<target name="clean">
+		<delete dir="${tmp-dir}" />
+		<delete dir="${pub-dir}" />
+	</target>
+
+	<target name="init">
+		<mkdir dir="${tmp-dir}" />
+		<mkdir dir="${classes-dir-jdk5}" />
+		<mkdir dir="${classes-dir-jdk6}" />
+		<mkdir dir="${classes-dir-test}" />
+		<mkdir dir="${tmp-junitreport-dir}" />
+		<mkdir dir="${pub-dir}" />
+		<mkdir dir="${pub-junitreport-dir}" />
+		<mkdir dir="${javadoc-dir}" />
+	</target>
+
+	<target name="create-jar">
+		<jar destfile="${xblink.jar.source}" basedir="src" encoding="utf-8">
+		</jar>
+
+		<javac destdir="${classes-dir-jdk5}" debuglevel="lines,vars,source" debug="true" srcdir="src" source="1.5" target="1.5" encoding="utf-8" classpathref="xblink-classpath" includeantruntime="false" />
+		<copy todir="${classes-dir-jdk5}">
+			<fileset dir="src" excludes="**/*.java" />
+		</copy>
+		<jar destfile="${xblink.jar.jdk5}" basedir="${classes-dir-jdk5}" index="true" />
+
+		<javac destdir="${classes-dir-jdk6}" debuglevel="lines,vars,source" debug="true" srcdir="src" source="1.6" target="1.6" encoding="utf-8" classpathref="xblink-classpath" includeantruntime="false" />
+		<copy todir="${classes-dir-jdk6}">
+			<fileset dir="src" excludes="**/*.java" />
+		</copy>
+		<jar destfile="${xblink.jar.jdk6}" basedir="${classes-dir-jdk6}" index="true" />
+	</target>
+
+	<target name="test">
+		<javac destdir="${classes-dir-test}" debuglevel="lines,vars,source" debug="true" srcdir="test" target="1.6" encoding="utf-8" includeantruntime="false">
+			<classpath>
+				<path refid="xblink-classpath" />
+				<path path="${classes-dir-jdk6}" />
+			</classpath>
+		</javac>
+		<copy todir="${classes-dir-test}">
+			<fileset excludes="**/*.java" dir="test">
+			</fileset>
+		</copy>
+		<junit fork="true" showoutput="false" printsummary="yes" filtertrace="true" maxmemory="256M" haltonerror="true" haltonfailure="true">
+			<classpath>
+				<path path="${classes-dir-test}" />
+				<path path="${classes-dir-jdk6}" />
+				<path refid="xblink-classpath" />
+			</classpath>
+			<batchtest todir="${tmp-junitreport-dir}">
+				<fileset dir="test">
+					<include name="org/xblink/TestAll.java" />
+				</fileset>
+				<formatter type="xml" />
+			</batchtest>
+		</junit>
+		<junitreport todir="${pub-junitreport-dir}">
+			<report format="frames" todir="${pub-junitreport-dir}" />
+			<fileset dir="${tmp-junitreport-dir}" includes="*.xml" />
+		</junitreport>
+	</target>
+
+	<target name="jdoc">
+		<javadoc sourcepath="src" classpathref="xblink-classpath" encoding="UTF-8" destdir="${javadoc-dir}" charset="utf-8" docencoding="utf-8" />
+		<jar destfile="${xblink.jar.jdoc}">
+			<fileset dir="${javadoc-dir}" />
+		</jar>
+	</target>
+
+	<target name="create-zip">
+		<zip destfile="${xblink.pub.zip}">
+			<fileset dir="${pub-dir}" />
+		</zip>
+	</target>
+
+	<target name="run">
+		<antcall target="clean" />
+		<antcall target="init" />
+		<antcall target="create-jar" />
+		<antcall target="jdoc" />
+		<antcall target="create-zip" />
+		<antcall target="clean" />
+	</target>
+</project>
