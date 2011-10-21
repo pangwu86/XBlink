@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,41 +39,52 @@ public class AnalysisObject {
 	}
 
 	private void analysing(boolean ignoreTransient) {
-		// 遍历所有字段，分门别类的存放
-		for (Field field : clz.getDeclaredFields()) {
-			// 先判断该字段是否要忽略
-			if (null != field.getAnnotation(XBlinkOmitField.class)) {
-				continue;
-			}
-			// 判断transient类型的是否需要序列化
-			if (Modifier.isTransient(field.getModifiers()) && ignoreTransient) {
-				continue;
-			}
-			// 设置可访问行
-			if (!field.isAccessible()) {
-				field.setAccessible(true);
-			}
-			Class<?> fieldClz = field.getType();
-			if (TypeUtil.isCustomizedField(field)) {
-				// 自定义转换器优先
-				if (TypeUtil.isAttributeField(field)) {
-					// 比较特殊的类型，同时添加了两个注解，这就需要以Attribute类型进行处理了
-					add2Attribute(field);
+		LinkedList<Class<?>> clzChain = new LinkedList<Class<?>>();
+		// 所有父类的也要加入到当前子类中
+		while (Object.class != clz) {
+			clzChain.add(clz);
+			// 查找父类
+			clz = clz.getSuperclass();
+		}
+		while (!clzChain.isEmpty()) {
+			clz = clzChain.removeLast();
+			// 遍历所有字段，分门别类的存放
+			for (Field field : clz.getDeclaredFields()) {
+				// 先判断该字段是否要忽略
+				if (null != field.getAnnotation(XBlinkOmitField.class)) {
+					continue;
+				}
+				// 判断transient类型的是否需要序列化
+				if (Modifier.isTransient(field.getModifiers()) && ignoreTransient) {
+					continue;
+				}
+				// 设置可访问行
+				if (!field.isAccessible()) {
+					field.setAccessible(true);
+				}
+				Class<?> fieldClz = field.getType();
+				if (TypeUtil.isCustomizedField(field)) {
+					// 自定义转换器优先
+					if (TypeUtil.isAttributeField(field)) {
+						// 比较特殊的类型，同时添加了两个注解，这就需要以Attribute类型进行处理了
+						add2Attribute(field);
+					} else {
+						record2Customized(field);
+						add2Other(field);
+					}
+				} else if (TypeUtil.isSingleValueType(fieldClz)) {
+					// 基本类型可以以Attribute的方式展现（目前仅限XML格式）
+					if (TypeUtil.isAttributeField(field)) {
+						add2Attribute(field);
+					} else {
+						add2Other(field);
+					}
 				} else {
-					record2Customized(field);
 					add2Other(field);
 				}
-			} else if (TypeUtil.isSingleValueType(fieldClz)) {
-				// 基本类型可以以Attribute的方式展现（目前仅限XML格式）
-				if (TypeUtil.isAttributeField(field)) {
-					add2Attribute(field);
-				} else {
-					add2Other(field);
-				}
-			} else {
-				add2Other(field);
 			}
 		}
+		clzChain = null;
 	}
 
 	private Converter createFieldConverter(Field field) {
