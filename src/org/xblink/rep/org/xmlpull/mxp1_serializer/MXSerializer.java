@@ -66,6 +66,7 @@ public class MXSerializer implements XmlSerializer {
 	private boolean checkNamesInterned = false;
 
 	private void checkInterning(String name) {
+		//Why use != ??
 		if (namesInterned && name != name.intern()) {
 			throw new IllegalArgumentException("all names passed as arguments must be interned"
 					+ "when NAMES INTERNED feature is enabled");

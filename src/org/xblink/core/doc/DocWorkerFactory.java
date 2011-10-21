@@ -1,6 +1,7 @@
 package org.xblink.core.doc;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.Constructor;
@@ -34,9 +35,11 @@ public class DocWorkerFactory {
 		implMap.put("xml.writer", "XPP3Writer");
 		implMap.put("xml.reader", "XPP3Reader");
 		// 读取配置文件，加载其他实现类
+		InputStream in = null;
 		try {
 			Properties prop = new Properties();
-			prop.load(DocWorkerFactory.class.getResourceAsStream("/xblink.properties"));
+			in = DocWorkerFactory.class.getResourceAsStream("/xblink.properties");
+			prop.load(in);
 			Enumeration<Object> em = prop.keys();
 			while (em.hasMoreElements()) {
 				String key = (String) em.nextElement();
@@ -45,6 +48,12 @@ public class DocWorkerFactory {
 			}
 		} catch (IOException e) {
 			//
+		} finally {
+			if (in != null) {
+				try {
+					in.close();
+				} catch (Throwable e){}
+			}
 		}
 	}
 
