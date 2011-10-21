@@ -9,10 +9,21 @@ import org.xblink.core.convert.SingleValueTypeConverter;
  */
 public class NullConverter extends SingleValueTypeConverter {
 
+	private boolean useStringNull = true;
+
 	private static String NULL_STRING = "Null";
 
+	public void useStringNull(boolean useStringNull) {
+		this.useStringNull = useStringNull;
+	}
+
 	public boolean canConvert(String text) {
-		return NULL_STRING.equals(text);
+		if (useStringNull) {
+			return NULL_STRING.equals(text);
+		} else {
+			return false;
+			// return StringUtil.isBlankStr(text);
+		}
 	}
 
 	public Class<?>[] getTypes() {
@@ -24,7 +35,10 @@ public class NullConverter extends SingleValueTypeConverter {
 	}
 
 	public String obj2Text(Object obj) throws Exception {
-		return NULL_STRING;
+		if (useStringNull) {
+			return NULL_STRING;
+		}
+		return null;
 	}
 
 	public Object text2Obj(String text) throws Exception {

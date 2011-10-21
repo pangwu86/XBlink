@@ -17,6 +17,7 @@ import org.xblink.core.path.PathTrackingWriter;
 import org.xblink.core.reflect.ObjectOperator;
 import org.xblink.core.reflect.ObjectOperatorFactory;
 import org.xblink.core.serial.Deserializer;
+import org.xblink.core.serial.SerialHelper;
 import org.xblink.core.serial.Serializer;
 import org.xblink.util.StringUtil;
 
@@ -72,6 +73,8 @@ class XBlinkHelper {
 		PathTracker pathTracker = new PathTracker(xbConfig.isUseRelativePath());
 		DocWriter realDocWriter = new PathTrackingWriter(docWriter, pathTracker);
 		TransferInfo transferInfo = new TransferInfo(pathTracker, xbConfig, realDocWriter, null, null);
+		// 关于Null的格式问题，暂时这里处理下
+		SerialHelper.setUseStringNull(xbConfig.isUseStringNull());
 		try {
 			// 开始序列化
 			realDocWriter.writeStartDocument();
@@ -136,6 +139,8 @@ class XBlinkHelper {
 		ObjectOperator objectOperator = ObjectOperatorFactory.createObjectOperator();
 		TransferInfo transferInfo = new TransferInfo(pathTracker, xbConfig, null, realDocReader, objectOperator);
 		Object result = null;
+		// 关于Null的格式问题，暂时这里处理下
+		SerialHelper.setUseStringNull(xbConfig.isUseStringNull());
 		try {
 			realDocReader.moveDown();
 			result = Deserializer.readUnknow(clz, object, null, transferInfo);

@@ -20,6 +20,7 @@ import org.xblink.core.cache.AnalysisCache;
 import org.xblink.core.convert.ConverterWarehouse;
 import org.xblink.core.doc.DocReader;
 import org.xblink.util.ArrayUtil;
+import org.xblink.util.StringUtil;
 import org.xblink.util.TypeUtil;
 
 /**
@@ -303,22 +304,26 @@ public class Deserializer {
 				Class<?> fieldClz = field.getType();
 				Object fieldValue = null;
 				boolean useNullConverter = false;
-				boolean useGetTextValue = false;
-				String fieldValueStr = null;
+				String fieldValueStr = docReader.getTextValue();
+				boolean isEmptyStr = StringUtil.isBlankStr(fieldValueStr);
+				boolean isStrType = field.getType() == String.class;
 				if (!ignoreNull) {
-					// 尝试获得text，如果是Null，则调用NullConverter
-					fieldValueStr = docReader.getTextValue();
-					useGetTextValue = true;
-					if (null != fieldValueStr && SerialHelper.getNullConverter().canConvert(fieldValueStr)) {
-						useNullConverter = true;
+					// 非String类型
+					if (isEmptyStr) {
+						if (!isStrType) {
+							useNullConverter = true;
+						}
+					} else {
+						if (SerialHelper.getNullConverter().canConvert(fieldValueStr)) {
+							useNullConverter = true;
+						}
 					}
 				}
 				if (analysisObject.isFieldHasConverter(field) || useNullConverter) {
-					if (!useGetTextValue) {
-						fieldValueStr = docReader.getTextValue();
-					}
 					fieldValue = useNullConverter ? null : analysisObject.getFieldConverter(field).text2Obj(
 							fieldValueStr);
+				} else if (isEmptyStr && isStrType) {
+					fieldValue = fieldValueStr;
 				} else {
 					fieldValue = readUnknow(fieldClz, null, field, transferInfo);
 				}

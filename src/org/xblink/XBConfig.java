@@ -17,11 +17,14 @@ public class XBConfig {
 
 	private boolean compact;
 
+	private boolean useStringNull;
+
 	private XBConfig() {
 		useRelativePath = true;
 		ignoreNull = true;
 		ignoreTransient = true;
 		compact = false;
+		useStringNull = true;
 	}
 
 	/**
@@ -70,6 +73,26 @@ public class XBConfig {
 	 */
 	public XBConfig setIgnoreNull(boolean ignoreNull) {
 		this.ignoreNull = ignoreNull;
+		return this;
+	}
+
+	/**
+	 * 是否使用字符串类型的Null。
+	 * 
+	 * @return
+	 */
+	public boolean isUseStringNull() {
+		return useStringNull;
+	}
+
+	/**
+	 * 设置使用字符串类型的Null。
+	 * 
+	 * @param useStringNull
+	 * @return
+	 */
+	public XBConfig setUseStringNull(boolean useStringNull) {
+		this.useStringNull = useStringNull;
 		return this;
 	}
 

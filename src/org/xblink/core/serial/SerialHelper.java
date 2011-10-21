@@ -19,6 +19,10 @@ public class SerialHelper {
 		enumConverter = new EnumConverter();
 	}
 
+	public static void setUseStringNull(boolean useStringNull) {
+		nullConverter.useStringNull(useStringNull);
+	}
+
 	/**
 	 * 获得NullConverter。
 	 * 

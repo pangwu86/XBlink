@@ -23,8 +23,7 @@ public class DocWorkerFactoryTest {
 
 	@Test
 	public void createANYWriter2() throws Exception {
-		DocWriter docWriter = DocWorkerFactory.createAnyWriter(new StringWriter(), "XPP3");
-		// Assert.assertFalse(docWriter instanceof JDK16Writer);
+		DocWriter docWriter = DocWorkerFactory.createAnyWriter(new StringWriter(), "xml");
 		Assert.assertTrue(docWriter instanceof XPP3Writer);
 	}
 

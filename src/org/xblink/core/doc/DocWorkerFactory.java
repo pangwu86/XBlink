@@ -37,22 +37,24 @@ public class DocWorkerFactory {
 		// 读取配置文件，加载其他实现类
 		InputStream in = null;
 		try {
-			Properties prop = new Properties();
 			in = DocWorkerFactory.class.getResourceAsStream("/xblink.properties");
-			prop.load(in);
-			Enumeration<Object> em = prop.keys();
-			while (em.hasMoreElements()) {
-				String key = (String) em.nextElement();
-				String value = prop.getProperty(key);
-				implMap.put(key.toLowerCase(), value);
+			if (null != in) {
+				Properties prop = new Properties();
+				prop.load(in);
+				Enumeration<Object> em = prop.keys();
+				while (em.hasMoreElements()) {
+					String key = (String) em.nextElement();
+					String value = prop.getProperty(key);
+					implMap.put(key.toLowerCase(), value);
+				}
 			}
 		} catch (IOException e) {
-			//
 		} finally {
 			if (in != null) {
 				try {
 					in.close();
-				} catch (Throwable e){}
+				} catch (Throwable e) {
+				}
 			}
 		}
 	}
