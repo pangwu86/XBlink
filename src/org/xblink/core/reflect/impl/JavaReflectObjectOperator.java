@@ -38,25 +38,29 @@ public class JavaReflectObjectOperator extends AbstractObjectOperator {
 			if (Serializable.class.isAssignableFrom(clz)) {
 				return newInstanceUsingJavaSerialization(clz);
 			} else {
-				throw new UnsupportedOperationException(String.format(
-						"当前使用的JDK版本无法对%s这个类进行实例化操作，即没有默认构造函数也不支持JAVA的序列化。", clz.getName()));
+				throw new UnsupportedOperationException(String.format(	"Can't instance class [%s], the class must have default constructor",
+																		clz.getName()));
 			}
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			throw new UnsupportedOperationException(e);
 		}
 	}
 
 	private Object newInstanceUsingJavaSerialization(Class<?> clz) {
 		// TODO 如果该类是实现了java的序列化接口的话，可以尝试采用序列化的方式生成实例
-		throw new UnsupportedOperationException("当前版本不支持通过JAVA的序列化方式生成实例对象。");
+		throw new UnsupportedOperationException();
 	}
 
 	protected void setFieldWithoutNull(Object obj, Field field, Object fieldValue) {
 		try {
 			field.set(obj, fieldValue);
-		} catch (Exception e) {
-			throw new UnsupportedOperationException(
-					String.format("无法为这个类%s的这个字段%s赋值。", obj.getClass(), field.getType()), e);
+		}
+		catch (Exception e) {
+			throw new UnsupportedOperationException(String.format(	"Can't set the class [%s] field [%s] value",
+																	obj.getClass(),
+																	field.getType()),
+													e);
 
 		}
 	}

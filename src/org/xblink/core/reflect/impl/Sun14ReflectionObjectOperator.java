@@ -35,7 +35,8 @@ public class Sun14ReflectionObjectOperator extends AbstractObjectOperator {
 			Field unsafeField = clz.getDeclaredField("theUnsafe");
 			unsafeField.setAccessible(true);
 			unsafe = (Unsafe) unsafeField.get(null);
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
@@ -44,7 +45,8 @@ public class Sun14ReflectionObjectOperator extends AbstractObjectOperator {
 		try {
 			Constructor<?> constructor = getConstructor(clz);
 			return newInstanceUsingConstructor(constructor);
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			throw new UnsupportedOperationException(e);
 		}
 	}
@@ -52,8 +54,8 @@ public class Sun14ReflectionObjectOperator extends AbstractObjectOperator {
 	private Constructor<?> getConstructor(Class<?> clz) throws Exception {
 		Constructor<?> constructor = constructorCache.get(clz);
 		if (null == constructor) {
-			constructor = reflectionFactory.newConstructorForSerialization(clz,
-					Object.class.getDeclaredConstructor(new Class[0]));
+			constructor = reflectionFactory.newConstructorForSerialization(	clz,
+																			Object.class.getDeclaredConstructor(new Class[0]));
 			constructorCache.put(clz, constructor);
 		}
 		return constructor;
@@ -84,9 +86,12 @@ public class Sun14ReflectionObjectOperator extends AbstractObjectOperator {
 			} else {
 				unsafe.putObject(obj, offset, fieldValue);
 			}
-		} catch (IllegalArgumentException e) {
-			throw new UnsupportedOperationException(
-					String.format("无法为这个类%s的这个字段%s赋值。", obj.getClass(), field.getType()), e);
+		}
+		catch (IllegalArgumentException e) {
+			throw new UnsupportedOperationException(String.format(	"Can't set the class [%s] field [%s] value",
+																	obj.getClass(),
+																	field.getType()),
+													e);
 		}
 	}
 
