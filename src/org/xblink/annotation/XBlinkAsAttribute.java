@@ -28,10 +28,9 @@ import java.lang.annotation.Target;
  * </code>
  * </pre>
  * 
- * @author pangwu86(pangwu86@gmail.com)
+ * @author 胖五(pangwu86@gmail.com)
  * 
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface XBlinkAsAttribute {
-}
+public @interface XBlinkAsAttribute {}

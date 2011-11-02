@@ -173,7 +173,8 @@ public class Deserializer {
 				} else if (Set.class.isAssignableFrom(objClz)) {
 					collection = (Collection) transferInfo.getObjectOperator().newInstance(Set.class);
 				} else {
-					throw new RuntimeException(String.format("无法根据%s生成Collection对象。", objClz.getName()));
+					throw new RuntimeException(String.format("Can't convert the type [%s] to collection.",
+							objClz.getName()));
 				}
 			}
 			// 尝试获得泛型
@@ -206,7 +207,7 @@ public class Deserializer {
 			if (Map.class.isAssignableFrom(objClz)) {
 				map = (Map) transferInfo.getObjectOperator().newInstance(Map.class);
 			} else {
-				throw new RuntimeException(String.format("无法根据%s生成Map对象。", objClz.getName()));
+				throw new RuntimeException(String.format("Can't convert the type [%s] to map.", objClz.getName()));
 			}
 		}
 		// 尝试获得泛型

@@ -21,8 +21,9 @@ public class XPP3Writer extends AbstractDocWriter {
 		innerWriter = new MXSerializer();
 		try {
 			innerWriter.setOutput(writer);
-		} catch (Exception e) {
-			throw new RuntimeException("XPP3Writer无法初始化。", e);
+		}
+		catch (Exception e) {
+			throw new RuntimeException("XPP3Writer Unable To Initialize", e);
 		}
 	}
 
@@ -89,8 +90,7 @@ public class XPP3Writer extends AbstractDocWriter {
 		indentIndex--;
 	}
 
-	public void close() throws Exception {
-	}
+	public void close() throws Exception {}
 
 	public void flush() throws Exception {
 		innerWriter.flush();

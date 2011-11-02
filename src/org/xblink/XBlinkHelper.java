@@ -34,13 +34,13 @@ class XBlinkHelper {
 	private static void missDocTypeName(String docTypeName) {
 		// 格式名称
 		if (StringUtil.isBlankStr(docTypeName)) {
-			throw new IllegalArgumentException("没有输入或指定转换文件的[格式名称]，无法执行对应格式的序列化或反序列化操作。");
+			throw new IllegalArgumentException("File format name not given.");
 		}
 	}
 
 	private static void serializeNull(Object object) {
 		if (null == object) {
-			throw new IllegalArgumentException("无法对一个空对象(null)进行序列化操作。");
+			throw new IllegalArgumentException("Can't operate on an empty object.");
 		}
 	}
 
@@ -81,19 +81,19 @@ class XBlinkHelper {
 			Serializer.writeUnknow(object, transferInfo, null);
 			realDocWriter.writeEndDocument();
 		} catch (Exception e) {
-			throw new RuntimeException("序列化失败。", e);
+			throw new RuntimeException("Serialization failed.", e);
 		} finally {
 			if (null != realDocWriter) {
 				try {
 					realDocWriter.close();
 				} catch (Exception e) {
-					throw new RuntimeException("关闭输出流失败。", e);
+					throw new RuntimeException(e);
 				}
 				if (null != realDocWriter.getWriter()) {
 					try {
 						realDocWriter.getWriter().close();
 					} catch (Exception e) {
-						throw new RuntimeException("关闭输出流失败。", e);
+						throw new RuntimeException(e);
 					}
 				}
 			}
@@ -147,19 +147,19 @@ class XBlinkHelper {
 			// 处理引用失败的例子
 			handleUnfin(transferInfo);
 		} catch (Exception e) {
-			throw new RuntimeException("反序列化失败。", e);
+			throw new RuntimeException("Deserialization failed.", e);
 		} finally {
 			if (null != realDocReader) {
 				try {
 					realDocReader.close();
 				} catch (Exception e) {
-					throw new RuntimeException("关闭输入流失败。", e);
+					throw new RuntimeException(e);
 				}
 				if (null != realDocReader.getReader()) {
 					try {
 						realDocReader.getReader().close();
 					} catch (Exception e) {
-						throw new RuntimeException("关闭输入流失败。", e);
+						throw new RuntimeException(e);
 					}
 				}
 			}
@@ -176,7 +176,8 @@ class XBlinkHelper {
 				// 重新赋值
 				Object fiedValue = pathRefMap.get(unfin.getObjPath());
 				if (null == fiedValue) {
-					throw new RuntimeException(String.format("无法找到路径[%s]所在的对象。", unfin.getObjPath()));
+					throw new RuntimeException(String.format("Can't find the reference object by Path [%s]",
+							unfin.getObjPath()));
 				}
 				objectOperator.setField(unfin.getObj(), unfin.getField(), fiedValue);
 			}

@@ -122,7 +122,7 @@ public class TypeUtil {
 		try {
 			clz = Class.forName(clzName);
 		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(String.format("无法加载[%s]这个类。", clzName), e);
+			throw new RuntimeException(String.format("Can't load the class [%s].", clzName), e);
 		}
 		return clz;
 	}

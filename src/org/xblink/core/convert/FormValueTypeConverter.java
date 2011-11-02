@@ -26,7 +26,8 @@ public abstract class FormValueTypeConverter implements Converter {
 
 	private void checkTransferInfo() {
 		if (!hasTransferInfo) {
-			throw new RuntimeException(String.format("当前的转换器[%s]没有设置TransferInfo。", getClass()));
+			throw new RuntimeException(String.format(	"This converter [%s] dosen't set the TransferInfo",
+														getClass()));
 		}
 	}
 

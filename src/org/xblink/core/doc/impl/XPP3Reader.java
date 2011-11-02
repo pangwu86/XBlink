@@ -138,8 +138,9 @@ public class XPP3Reader extends AbstractDocReader {
 		parser = new MXParser();
 		try {
 			parser.setInput(reader);
-		} catch (Exception e) {
-			throw new RuntimeException("XPP3Reader无法初始化。", e);
+		}
+		catch (Exception e) {
+			throw new RuntimeException("XPP3Readr Unable To Initialize", e);
 		}
 	}
 
@@ -199,7 +200,7 @@ public class XPP3Reader extends AbstractDocReader {
 		while (elementStack.size() <= currentDepth) {
 			move();
 			if (elementStack.size() < currentDepth) {
-				throw new RuntimeException(); // sanity check
+				throw new RuntimeException();
 			}
 		}
 	}
@@ -284,7 +285,8 @@ public class XPP3Reader extends AbstractDocReader {
 			default:
 				return OTHER;
 			}
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}

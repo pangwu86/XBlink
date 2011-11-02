@@ -28,8 +28,10 @@ public abstract class AbstractObjectOperator implements ObjectOperator {
 		Object instance = null;
 		try {
 			instance = constructor.newInstance(new Object[0]);
-		} catch (Exception e) {
-			throw new UnsupportedOperationException("无法通过newInstance方法实例化对象。", e);
+		}
+		catch (Exception e) {
+			throw new UnsupportedOperationException("Can't instance an Object by the method newInstance",
+													e);
 		}
 		return instance;
 	}
@@ -41,7 +43,8 @@ public abstract class AbstractObjectOperator implements ObjectOperator {
 	public Class<?> getImpl(Class<?> type) {
 		Class<?> impl = implCache.get(type);
 		if (null == impl) {
-			throw new RuntimeException(String.format("没有找到%s的实现类。", type.getName()));
+			throw new RuntimeException(String.format(	"Can't find the impl class [%s]",
+														type.getName()));
 		}
 		return impl;
 	}

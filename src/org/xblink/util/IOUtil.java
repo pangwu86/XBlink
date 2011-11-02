@@ -45,7 +45,7 @@ public class IOUtil {
 		try {
 			fileWriter = new FileWriter(file);
 		} catch (IOException e) {
-			throw new RuntimeException("输出文件出现异常", e);
+			throw new RuntimeException(e);
 		}
 		return addBuffered(fileWriter);
 	}
@@ -66,7 +66,7 @@ public class IOUtil {
 		try {
 			fileReader = new FileReader(file);
 		} catch (FileNotFoundException e) {
-			throw new RuntimeException("访问文件不存在。", e);
+			throw new RuntimeException(e);
 		}
 		return addBuffered(fileReader);
 	}

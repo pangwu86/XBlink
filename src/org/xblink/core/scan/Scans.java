@@ -2,8 +2,6 @@ package org.xblink.core.scan;
 
 import java.util.List;
 
-import org.xblink.XBlink;
-
 /**
  * 提供了对一些资源的查找方法。
  * 
@@ -25,6 +23,6 @@ public class Scans {
 	 */
 	public static List<Class<?>> scanPackage(String pkg) {
 		// TODO 尚未实现扫描
-		throw new UnsupportedOperationException(String.format("当前版本[%s]未实现此功能，请不要使用。", XBlink.getVersion()));
+		throw new UnsupportedOperationException();
 	}
 }

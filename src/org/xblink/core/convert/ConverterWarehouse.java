@@ -19,8 +19,7 @@ import org.xblink.util.TypeUtil;
  */
 public class ConverterWarehouse {
 
-	private ConverterWarehouse() {
-	}
+	private ConverterWarehouse() {}
 
 	private static Map<Class<?>, Converter> converterMap = new ConcurrentHashMap<Class<?>, Converter>();
 
@@ -60,7 +59,8 @@ public class ConverterWarehouse {
 	 * @return 转换器
 	 * @throws Exception
 	 */
-	public static Converter searchConverterForType(Class<?> clz, TransferInfo transferInfo) throws Exception {
+	public static Converter searchConverterForType(Class<?> clz, TransferInfo transferInfo)
+			throws Exception {
 		Converter converter = converterMap.get(clz);
 		if (null == converter) {
 			converter = lookForConverterForType(clz);
@@ -89,8 +89,11 @@ public class ConverterWarehouse {
 		try {
 			Class<?> converterClz = Class.forName(converterClzName);
 			setConverter(converterClz);
-		} catch (ClassNotFoundException e) {
-			throw new UnsupportedOperationException(String.format("没有找到[%s]这个类的转换器。", clz.getName()), e);
+		}
+		catch (ClassNotFoundException e) {
+			throw new UnsupportedOperationException(String.format(	"Can't find converter for [%s]",
+																	clz.getName()),
+													e);
 		}
 		return converterMap.get(clz);
 	}
@@ -109,11 +112,14 @@ public class ConverterWarehouse {
 						TypeUtil.add2SingaleValueMap(cls);
 					}
 				}
-			} catch (Exception e) {
-				throw new UnsupportedOperationException(String.format("无法生成[%s]这个转换器。", converterClz.getName()));
+			}
+			catch (Exception e) {
+				throw new UnsupportedOperationException(String.format(	"Can't instantiation this converter [%s]",
+																		converterClz.getName()));
 			}
 		} else {
-			throw new UnsupportedOperationException(String.format("[%s]不是XBlink支持的转换器类型。", converterClz.getName()));
+			throw new UnsupportedOperationException(String.format(	"XBlink don't support this converter [%s]",
+																	converterClz.getName()));
 		}
 	}
 }

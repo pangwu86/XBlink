@@ -8,10 +8,9 @@ import java.lang.annotation.Target;
 /**
  * 用来定义别名。
  * 
- * @author pangwu86(pangwu86@gmail.com)
- * 
+ * @author 胖五(pangwu86@gmail.com)
  */
-@Target({ ElementType.TYPE, ElementType.FIELD })
+@Target({ElementType.TYPE, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface XBlinkAlias {
 	String value();
