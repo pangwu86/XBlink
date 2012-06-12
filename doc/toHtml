@@ -1,0 +1,2 @@
+#!/bin/sh
+zdoc site zdoc html

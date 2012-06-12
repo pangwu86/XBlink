@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<doc title="This is XBlink" author="pangwu86(pangwu86@gmail.com)">
+    <doc path="xb_preface.zdoc"/>
+    <doc path="xb_trailer.zdoc"/>
+    <doc path="xb_2m_tutorial.zdoc"/>
+    <doc path="manual" title="使用手册">
+    </doc>    
+    <doc path="release_node" title="发行注记">
+        <doc path="xb_release_node_1.0.0.zdoc"/>
+        <doc path="xb_release_node_0.7.0.zdoc"/>
+        <doc path="xb_release_node_0.6.0.zdoc"/>
+        <doc path="xb_release_node_0.5.0.zdoc"/>
+    </doc>
+</doc>
