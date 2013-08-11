@@ -12,31 +12,31 @@ import com.thoughtworks.xstream.io.xml.Xpp3Driver;
 
 public class Do100000 {
 
-	public static int number = 100000;
-	public static BasicObject basicObject = DataCreater.getLoopBasicObject();
+    public static int number = 100000;
+    public static BasicObject basicObject = DataCreater.getLoopBasicObject();
 
-	@Test
-	public void XBlink() throws Exception {
-		WatchTimer timer = new WatchTimer();
-		for (int i = 0; i < number; i++) {
-			XBlink.toXml(basicObject);
-		}
-		String spendTime = timer.getTimer();
-		System.out.println("XBlink : " + number + " : " + spendTime);
-	}
+    @Test
+    public void XBlink() throws Exception {
+        WatchTimer timer = new WatchTimer();
+        for (int i = 0; i < number; i++) {
+            XBlink.toXml(basicObject);
+        }
+        String spendTime = timer.getTimer();
+        System.out.println("XBlink : " + number + " : " + spendTime);
+    }
 
-	@Test
-	public void XStream() throws Exception {
-		XStream xStream = new XStream(new Xpp3Driver());
-		xStream.processAnnotations(new Class[] { BasicObject.class });
+    @Test
+    public void XStream() throws Exception {
+        XStream xStream = new XStream(new Xpp3Driver());
+        xStream.processAnnotations(new Class[]{BasicObject.class});
 
-		WatchTimer timer = new WatchTimer();
-		for (int i = 0; i < number; i++) {
-			xStream.toXML(basicObject);
-		}
-		String spendTime = timer.getTimer();
-		System.out.println("XStream : " + number + " : " + spendTime);
-		System.out.println();
-	}
+        WatchTimer timer = new WatchTimer();
+        for (int i = 0; i < number; i++) {
+            xStream.toXML(basicObject);
+        }
+        String spendTime = timer.getTimer();
+        System.out.println("XStream : " + number + " : " + spendTime);
+        System.out.println();
+    }
 
 }
